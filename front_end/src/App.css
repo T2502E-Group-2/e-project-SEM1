@@ -36,3 +36,24 @@
     transform: rotate(360deg);
   }
 }
+
+.badge-pop {
+  animation: pop 0.3s ease-out;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1) translate(-50%, -50%);
+  }
+  50% {
+    transform: scale(1.4) translate(-35%, -35%);
+  }
+  100% {
+    transform: scale(1) translate(-50%, -50%);
+  }
+}
+
+.header {
+  background-color: #f8f9fa;
+  padding: 5px 20px;
+}

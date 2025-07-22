@@ -18,13 +18,13 @@ const Menu = () => {
   return (
     <Navbar
       bg="light"
-      expand="lg"
-      className="mb-3"
+      className="mb-2"
       style={{
-        position: "relative",
         justifyContent: "space-between",
         alignItems: "center",
-        gap: "20px",
+        fontSize: "18px",
+        fontFamily: "sans-serif",
+        padding: "10px",
       }}>
       <Container>
         <Navbar.Toggle aria-controls="main-navbar" />
@@ -48,7 +48,7 @@ const Menu = () => {
               })}
             </NavDropdown>
 
-            <NavDropdown title="Post" id="post-dropdown">
+            <NavDropdown title="Posts" id="post-dropdown">
               <NavDropdown.Item as={Link} to="/blog">
                 Blog
               </NavDropdown.Item>

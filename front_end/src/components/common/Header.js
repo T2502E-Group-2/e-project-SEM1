@@ -7,20 +7,20 @@ const Header = () => {
   const { state } = useContext(UserContext);
   return (
     <header className="header">
-      <Row>
+      <Row className="align-items-center">
         <Col xs={2}>
           <Image
             src="/logo.png"
             alt="Logo"
-            width={"130px"}
-            height={"130px"}
+            width={"120px"}
+            height={"110px"}
             fluid
           />
         </Col>
         <Col
           xs={7}
           className="container-fluid d-flex justify-content-between align-items-center"
-          style={{ paddingTop: "10px", gap: "10px" }}>
+          style={{ gap: "10px" }}>
           <Form className="flex-grow-1">
             <Form.Group controlId="search">
               <Form.Control
@@ -51,8 +51,7 @@ const Header = () => {
         </Col>
         <Col
           xs={3}
-          className="text-end"
-          style={{ paddingTop: "50px", gap: "10px" }}>
+          className="container-fluid d-flex justify-content-center align-items-center">
           <Button
             as={Link}
             to="/login"
