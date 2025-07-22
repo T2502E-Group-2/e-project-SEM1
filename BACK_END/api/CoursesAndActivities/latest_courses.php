@@ -6,7 +6,7 @@ header("Access-Control-Allow-Headers: *");
 
 require_once("../../db/connect.php");
 
-$sql = "select * from courses order by id desc limit 5";
+$sql = "select * from courses order by course_id desc limit 5";
 $rs = query($sql);
 $list = [];
 while($row = $rs->fetch_assoc()){

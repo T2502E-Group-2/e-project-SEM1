@@ -4,9 +4,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: *");
 header("Access-Control-Allow-Headers: *");
 
-require_once(__DIR__ ."/../../db/connect.php");
-$s = $_GET["search"];
-$sql = "select * from courses where title like '%$s%' order by course_id desc limit 8";
+require_once("../../db/connect.php");
+
+$sql = "select * from activities order by activity_id desc limit 5";
 $rs = query($sql);
 $list = [];
 while($row = $rs->fetch_assoc()){

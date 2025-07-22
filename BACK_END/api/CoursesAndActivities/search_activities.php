@@ -6,7 +6,7 @@ header("Access-Control-Allow-Headers: *");
 
 require_once(__DIR__ ."/../../db/connect.php");
 $s = $_GET["search"];
-$sql = "select * from courses where title like '%$s%' order by course_id desc limit 8";
+$sql = "select * from activities where title like '%$s%' order by activity_id desc limit 8";
 $rs = query($sql);
 $list = [];
 while($row = $rs->fetch_assoc()){

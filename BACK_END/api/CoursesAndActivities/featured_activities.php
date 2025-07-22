@@ -5,9 +5,20 @@ header("Access-Control-Allow-Methods: *");
 header("Access-Control-Allow-Headers: *");
 
 require_once(__DIR__ ."/../../db/connect.php");
-$s = $_GET["search"];
-$sql = "select * from courses where title like '%$s%' order by course_id desc limit 8";
+
+$sql = "select * from activities where is_featured=1 order by activity_id desc limit 5";
 $rs = query($sql);
+
+if (!$rs) {
+    http_response_code(500);
+    echo json_encode([
+        "status" => false,
+        "message" => "Query failed",
+        "data" => []
+    ]);
+    exit;
+}
+
 $list = [];
 while($row = $rs->fetch_assoc()){
     $list[] = $row;

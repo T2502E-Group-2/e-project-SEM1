@@ -6,7 +6,7 @@ header("Access-Control-Allow-Headers: *");
 
 require_once("../../db/connect.php");
 $s = $_GET["category_id"];
-$sql = "select * from activities where category_id = $s order by id desc limit 8";
+$sql = "select * from activities where category_id = $s order by activity_id desc limit 8";
 $rs = query($sql);
 $list = [];
 while($row = $rs->fetch_assoc()){
