@@ -1,0 +1,12 @@
+{
+    "name": "xavie/back_end",
+    "description": "e-project-1",
+    "autoload": {
+        "psr-4": {
+            "Xavie\\BackEnd\\": "src/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.9"
+    }
+}
