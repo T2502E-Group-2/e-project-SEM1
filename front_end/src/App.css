@@ -79,6 +79,7 @@
   text-overflow: ellipsis;
   height: calc(1.2em * 2);
   min-height: calc(1.2em * 2);
+  margin-bottom: 10 px;
 }
 
 .card-body {
@@ -89,4 +90,8 @@
 
 .card-body .btn {
   margin-top: auto;
+}
+
+.card-text {
+  margin-bottom: 1rem;
 }

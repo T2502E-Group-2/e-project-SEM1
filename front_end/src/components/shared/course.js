@@ -19,17 +19,21 @@ const Course = ({ course }) => {
           }}>
           {course.title}
         </h4>
-        <p className="card-text mb-1">
+        <p className="card-text">
           <strong>Start date:</strong> {formatDate(course.start_date)}
         </p>
-        <p className="card-text mb-1">
+        <p className="card-text">
           <strong>End date:</strong> {formatDate(course.end_date)}
         </p>
-        <p className="card-text mb-3">
+        <p className="card-text">
           <strong>Registration deadline:</strong>{" "}
           {formatDate(course.enrollment_deadline)}
         </p>
-        <p className="card-text">${course.price}</p>
+        <p className="card-text">
+          {" "}
+          <strong>Fee: </strong>
+          {course.price}
+        </p>
         <Link
           to={"/detail/" + course.course_id}
           className="btn btn-primary mt-auto">
