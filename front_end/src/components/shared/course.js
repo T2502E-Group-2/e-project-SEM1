@@ -31,8 +31,7 @@ const Course = ({ course }) => {
         </p>
         <p className="card-text">
           {" "}
-          <strong>Fee: </strong>
-          {course.price}
+          <strong>Fee: </strong>${course.price}
         </p>
         <Link
           to={"/detail/" + course.course_id}
