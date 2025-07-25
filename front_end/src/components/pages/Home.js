@@ -2,25 +2,25 @@ import { Col, Container, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
-import Course from "../shared/course";
+import Activity from "../shared/activity";
 import Slider from "react-slick";
 
 const Home = () => {
-  const [featuredCourses, setFeaturedCourses] = useState([]);
-  const [latestCourses, setLatestCourses] = useState([]);
-  // get data featured courses
+  const [featuredActivities, setFeaturedActivities] = useState([]);
+  const [latestActivities, setLatestActivities] = useState([]);
+  // get data featured activities
   const get_featured = async () => {
-    const url = URL.FEATURED_COURSES;
+    const url = URL.FEATURED_ACTIVITIES;
     const rs = await axios_instance.get(url);
     const data = rs.data.data;
-    setFeaturedCourses(data);
+    setFeaturedActivities(data);
   };
-  // get data latest courses
+  // get data latest activities
   const get_latest = async () => {
-    const url = URL.LATEST_COURSES;
+    const url = URL.LATEST_ACTIVITIES;
     const rs = await axios_instance.get(url);
     const data = rs.data.data;
-    setLatestCourses(data);
+    setLatestActivities(data);
   };
   useEffect(() => {
     get_featured();
@@ -67,25 +67,25 @@ const Home = () => {
   //*****/
   return (
     <Container>
-      {/*Featured Courses */}
-      <h2 className="mt-5">Featured Courses</h2>
+      {/*Featured Activities */}
+      <h2 className="mt-5">Featured Activities</h2>
       <Slider {...sliderSettings}>
-        {featuredCourses.map((e, k) => {
+        {featuredActivities.map((e, k) => {
           return (
             <div className="slider-item" key={k}>
-              <Course course={e} />
+              <Activity activity={e} />
             </div>
           );
         })}
       </Slider>
 
-      {/*Latest Courses */}
-      <h2 className="mt-5">Latest Courses</h2>
+      {/*Latest Activities */}
+      <h2 className="mt-5">Latest Activities</h2>
       <Slider {...sliderSettings}>
-        {latestCourses.map((e, k) => {
+        {latestActivities.map((e, k) => {
           return (
             <div className="slider-item" key={k}>
-              <Course course={e} />
+              <Activity activity={e} />
             </div>
           );
         })}

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Course = ({ course }) => {
+const Activity = ({ activity }) => {
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
@@ -8,7 +8,11 @@ const Course = ({ course }) => {
   };
   return (
     <div className="card">
-      <img src={course.thumbnail_url} class="card-img-top" alt={course.title} />
+      <img
+        src={activity.thumbnail_url}
+        class="card-img-top"
+        alt={activity.title}
+      />
       <div className="card-body">
         <h4
           className="card-title"
@@ -16,30 +20,32 @@ const Course = ({ course }) => {
             fontWeight: "bold",
             fontFamily: "Palatino Linotype, serif",
             color: "darkorange",
-          }}>
-          {course.title}
+          }}
+        >
+          {activity.title}
         </h4>
         <p className="card-text">
-          <strong>Start date:</strong> {formatDate(course.start_date)}
+          <strong>Start date:</strong> {formatDate(activity.start_date)}
         </p>
         <p className="card-text">
-          <strong>End date:</strong> {formatDate(course.end_date)}
+          <strong>End date:</strong> {formatDate(activity.end_date)}
         </p>
         <p className="card-text">
           <strong>Registration deadline:</strong>{" "}
-          {formatDate(course.enrollment_deadline)}
+          {formatDate(activity.enrollment_deadline)}
         </p>
         <p className="card-text">
           {" "}
-          <strong>Fee: </strong>${course.price}
+          <strong>Fee: </strong>${activity.price}
         </p>
         <Link
-          to={"/detail/" + course.course_id}
-          className="btn btn-primary mt-auto">
+          to={"/detail/" + activity.activity_id}
+          className="btn btn-primary mt-auto"
+        >
           Detail
         </Link>
       </div>
     </div>
   );
 };
-export default Course;
+export default Activity;

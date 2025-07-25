@@ -6,7 +6,12 @@ header("Access-Control-Allow-Headers: *");
 
 require_once(__DIR__ ."/../../db/connect.php");
 
-$sql = "select * from activities where is_featured=1 order by activity_id desc limit 5";
+$sql = "SELECT c.*, g.url AS thumbnail_url
+        FROM activities c
+        LEFT JOIN galleries g ON c.thumbnail_id = g.media_id
+        WHERE c.is_featured=1
+        ORDER BY c.activity_id DESC
+        LIMIT 5";
 $rs = query($sql);
 
 if (!$rs) {

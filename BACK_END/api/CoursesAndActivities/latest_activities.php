@@ -6,7 +6,12 @@ header("Access-Control-Allow-Headers: *");
 
 require_once("../../db/connect.php");
 
-$sql = "select * from activities order by activity_id desc limit 5";
+$sql = "SELECT c.*, g.url AS thumbnail_url
+        FROM activities c
+        LEFT JOIN galleries g ON c.thumbnail_id = g.media_id
+        ORDER BY c.activity_id DESC
+        LIMIT 5";
+        
 $rs = query($sql);
 $list = [];
 while($row = $rs->fetch_assoc()){

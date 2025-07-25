@@ -2,31 +2,31 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios_instance from "../../util/axios_instance";
 import { Col, Container, Row } from "react-bootstrap";
-import Course from "../shared/course";
+import Activity from "../shared/activity";
 import URL from "../../util/url";
 
 const Category = () => {
   const { id } = useParams();
-  const [courses, setCourses] = useState([]);
-  // get courses by category id
-  const get_courses = async () => {
-    const url = URL.CATEGORY_COURSES + id;
+  const [activities, setActivities] = useState([]);
+  // get activities by category id
+  const get_activities = async () => {
+    const url = URL.CATEGORY_ACTIVITIES + id;
     const rs = await axios_instance.get(url);
     const data = rs.data.data;
-    setCourses(data);
+    setActivities(data);
   };
   useEffect(() => {
-    get_courses();
+    get_activities();
   }, [id]);
 
   return (
     <Container>
-      <h1>Courses:</h1>
+      <h1>Activities:</h1>
       <Row>
-        {courses.map((e, k) => {
+        {activities.map((e, k) => {
           return (
             <Col xs={3} key={k}>
-              <Course course={e} />
+              <Activity activity={e} />
             </Col>
           );
         })}

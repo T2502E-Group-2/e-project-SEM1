@@ -25,7 +25,8 @@ const Menu = () => {
         fontSize: "18px",
         fontFamily: "sans-serif",
         padding: "10px",
-      }}>
+      }}
+    >
       <Container>
         <Navbar.Toggle aria-controls="main-navbar" />
         <Navbar.Collapse id="main-navbar">
@@ -36,7 +37,7 @@ const Menu = () => {
             <Nav.Link as={Link} to="/about">
               About Us
             </Nav.Link>
-            <NavDropdown title="Courses & Activities" id="courses-dropdown">
+            <NavDropdown title="Activities" id="activities-dropdown">
               {categories.map((e, k) => {
                 return (
                   <li key={k} className="nav-item">
@@ -55,6 +56,9 @@ const Menu = () => {
               <NavDropdown.Item as={Link} to="/success">
                 Success Stories
               </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/news">
+                Records
+              </NavDropdown.Item>
             </NavDropdown>
 
             <NavDropdown title="Equipments" id="equipments-dropdown">
@@ -68,10 +72,6 @@ const Menu = () => {
                 Tents
               </NavDropdown.Item>
             </NavDropdown>
-
-            <Nav.Link as={Link} to="/records">
-              Records
-            </Nav.Link>
             <Nav.Link as={Link} to="/contact">
               Contact Us
             </Nav.Link>
