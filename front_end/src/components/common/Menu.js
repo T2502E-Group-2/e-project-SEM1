@@ -25,8 +25,7 @@ const Menu = () => {
         fontSize: "18px",
         fontFamily: "sans-serif",
         padding: "10px",
-      }}
-    >
+      }}>
       <Container>
         <Navbar.Toggle aria-controls="main-navbar" />
         <Navbar.Collapse id="main-navbar">

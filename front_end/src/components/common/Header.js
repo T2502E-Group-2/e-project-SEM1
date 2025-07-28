@@ -12,8 +12,8 @@ const Header = () => {
           <Image
             src="/logo.png"
             alt="Logo"
-            width={"120px"}
-            height={"110px"}
+            width={"150px"}
+            height={"150px"}
             fluid
           />
         </Col>
