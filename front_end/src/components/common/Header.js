@@ -62,7 +62,8 @@ const Header = () => {
           <Col
             xs={7}
             className="container-fluid d-flex justify-content-between align-items-center"
-            style={{ gap: "10px" }}>
+            style={{ gap: "10px" }}
+          >
             <Form className="flex-grow-1">
               <Form.Group controlId="search">
                 <Form.Control
@@ -75,7 +76,8 @@ const Header = () => {
             <Link
               className="nav-link position-relative"
               to={"/cart"}
-              style={{ paddingLeft: "25px", marginRight: "1rem" }}>
+              style={{ paddingLeft: "25px", marginRight: "1rem" }}
+            >
               <Image
                 className="cart-icon"
                 src="../cart-icon.png"
@@ -86,7 +88,8 @@ const Header = () => {
               <Badge
                 pill
                 bg="danger"
-                className="position-absolute top-0 start-100 translate-middle">
+                className="position-absolute top-0 start-100 translate-middle"
+              >
                 {state.cart.length}
                 <span className="visually-hidden">items in cart</span>
               </Badge>
@@ -94,18 +97,20 @@ const Header = () => {
           </Col>
           <Col
             xs={3}
-            className="container-fluid d-flex justify-content-center align-items-center">
-            <Button
-              as={Link}
+            className="container-fluid d-flex justify-content-center align-items-center"
+          >
+            <Link
+              className="user-link"
               to="/login"
               style={{
                 paddingTop: "5px",
                 paddingBottom: "5px",
-              }}>
+              }}
+            >
               Login
-            </Button>
-            <Button
-              as={Link}
+            </Link>
+            <Link
+              className="user-link"
               to="/register"
               style={{
                 marginLeft: "10px",
@@ -113,9 +118,9 @@ const Header = () => {
                 paddingTop: "5px",
                 paddingBottom: "5px",
               }}
-              className="btn btn-warning">
+            >
               Register
-            </Button>
+            </Link>
           </Col>
         </Row>
       </header>
@@ -128,7 +133,8 @@ const Header = () => {
           fontSize: "18px",
           fontFamily: "sans-serif",
           padding: "10px",
-        }}>
+        }}
+      >
         <Container fluid>
           <Navbar.Toggle aria-controls="main-navbar" />
           <Navbar.Collapse id="main-navbar">
@@ -141,13 +147,15 @@ const Header = () => {
               </Nav.Link>
               <NavDropdown
                 title="Courses & Activities"
-                id="activities-dropdown">
+                id="activities-dropdown"
+              >
                 {categories.map((e, k) => {
                   return (
                     <NavDropdown.Item
                       as={Link}
                       to={`/category/${e.id}`}
-                      key={k}>
+                      key={k}
+                    >
                       {e.name}
                     </NavDropdown.Item>
                   );

@@ -81,6 +81,17 @@
   filter: none;
 }
 
+/* User link */
+.header-and-menu-container .user-link {
+  color: #fff !important;
+  transition: color 0.3s ease-in-out;
+  font-size: large;
+}
+
+.header-and-menu-container.scrolled .user-link {
+  color: #222 !important;
+}
+
 /*Banner Style*/
 .banner-slider {
   position: relative;
