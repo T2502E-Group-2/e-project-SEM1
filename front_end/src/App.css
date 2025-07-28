@@ -16,6 +16,12 @@
 
 /* Header and Menu Styles */
 /* Default*/
+.navbar-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
 .header-and-menu-container {
   position: fixed;
   top: 0;
@@ -63,11 +69,14 @@
 
 /* Logo */
 .header-and-menu-container .logo-image {
+  display: flex;
+  justify-content: center;
   filter: brightness(0) invert(1);
   transition: filter 0.3s ease-in-out;
 }
 
 .header-and-menu-container.scrolled .logo-image {
+  align-items: center;
   filter: none;
 }
 
@@ -120,50 +129,59 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.5),
-    rgba(0, 0, 0, 0.5)
+    to right,
+    rgba(0, 0, 0, 0.6) 20%,
+    rgba(0, 0, 0, 0.1) 60%,
+    transparent 100%
   );
   z-index: 1;
 }
 
 .banner-content {
-  position: absolute; /* CHÍNH SỬA TẠI ĐÂY */
+  position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  left: 15%;
+  transform: translateY(-50%);
   z-index: 2;
   color: #fff;
-  text-align: center;
+  text-align: left;
   padding: 1rem;
-  width: 100%;
+  max-width: 50%;
 }
 
 .banner-title {
-  font-size: 3.5rem;
+  font-size: 4rem;
+  font-weight: 700;
   margin-bottom: 1rem;
   white-space: pre-line;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .banner-subtitle {
   font-size: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   white-space: pre-line;
+  font-weight: 400;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
 }
 
-.banner-button {
-  padding: 0.7rem 1.5rem;
-  background-color: #ffce00;
-  color: #000;
+.banner-content .btn-primary {
+  padding: 0.8rem 2.5rem;
+  background-color: transparent;
+  color: #fff !important;
   font-weight: bold;
   text-decoration: none;
-  border-radius: 3px;
+  border-radius: 50px;
   transition: all 0.3s ease;
+  border: 2px solid #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.banner-button:hover {
-  background-color: #ffc107;
-  color: #222;
+.banner-content .btn-primary:hover {
+  background-color: #fff;
+  color: #222 !important;
+  border-color: #fff;
 }
 
 /* Card Styles */

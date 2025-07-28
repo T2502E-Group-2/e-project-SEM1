@@ -49,18 +49,16 @@ const Header = () => {
       {/* =================== Header Logo + Cart + Login =================== */}
       <header className="header">
         <Row className="align-items-center">
-          <Col xs={2}>
+          <Col className="logo-image" xs={3}>
             <Image
-              className="logo-image"
               src="/logo.png"
               alt="Logo"
               width={"150px"}
               height={"150px"}
-              fluid
             />
           </Col>
           <Col
-            xs={7}
+            xs={6}
             className="container-fluid d-flex justify-content-between align-items-center"
             style={{ gap: "10px" }}
           >
@@ -76,7 +74,7 @@ const Header = () => {
             <Link
               className="nav-link position-relative"
               to={"/cart"}
-              style={{ paddingLeft: "25px", marginRight: "1rem" }}
+              style={{ paddingLeft: "30px", marginRight: "1rem" }}
             >
               <Image
                 className="cart-icon"
@@ -99,14 +97,7 @@ const Header = () => {
             xs={3}
             className="container-fluid d-flex justify-content-center align-items-center"
           >
-            <Link
-              className="user-link"
-              to="/login"
-              style={{
-                paddingTop: "5px",
-                paddingBottom: "5px",
-              }}
-            >
+            <Link className="user-link" to="/login">
               Login
             </Link>
             <Link
@@ -115,8 +106,6 @@ const Header = () => {
               style={{
                 marginLeft: "10px",
                 marginRight: "10px",
-                paddingTop: "5px",
-                paddingBottom: "5px",
               }}
             >
               Register
@@ -127,18 +116,17 @@ const Header = () => {
 
       {/* =================== Navigation Menu =================== */}
       <Navbar
-        expand="lg"
-        className="mb-2 custom-navbar "
+        className="custom-navbar"
         style={{
           fontSize: "18px",
           fontFamily: "sans-serif",
-          padding: "10px",
+          padding: "2px",
         }}
       >
         <Container fluid>
           <Navbar.Toggle aria-controls="main-navbar" />
           <Navbar.Collapse id="main-navbar">
-            <Nav className="me-auto">
+            <Nav className="navbar-links mx-auto">
               <Nav.Link as={Link} to="/">
                 Home
               </Nav.Link>
