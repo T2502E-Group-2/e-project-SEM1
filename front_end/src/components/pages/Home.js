@@ -1,9 +1,10 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
 import Activity from "../shared/activity";
 import Slider from "react-slick";
+import BannerSlider from "../common/Banner_slider";
 
 const Home = () => {
   const [featuredActivities, setFeaturedActivities] = useState([]);
@@ -66,7 +67,8 @@ const Home = () => {
   };
   //*****/
   return (
-    <Container>
+    <Container fluid>
+      <BannerSlider />
       {/*Featured Activities */}
       <h2 className="mt-5">Featured Activities</h2>
       <Slider {...sliderSettings}>
