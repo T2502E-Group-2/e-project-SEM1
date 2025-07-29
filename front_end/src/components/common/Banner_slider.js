@@ -1,29 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import axios_instance from "../../util/axios_instance";
-import URL from "../../util/url";
+
+const bannerData = [
+  {
+    image: "../../../../public/Banners/banner_1.jp",
+    title: "Chinh phục đỉnh cao\nVới chuyên gia",
+    subtitle:
+      "Tham gia các khóa học và hoạt động ngoại khóa để mở rộng kiến thức.",
+    buttonText: "Khám phá ngay",
+    buttonLink: "#",
+  },
+  {
+    image: "../Banners/banner_2.jpg",
+    title: "Khám phá thế giới\nTheo cách riêng của bạn",
+    subtitle: "Đắm mình vào những trải nghiệm độc đáo và đáng nhớ.",
+    buttonText: "Tìm hiểu thêm",
+    buttonLink: "#",
+  },
+  {
+    image: "/Banners/banner_3.jpg",
+    title: "Thách thức bản thân\nVượt qua giới hạn",
+    subtitle: "Các hoạt động mạo hiểm giúp bạn phát triển bản thân.",
+    buttonText: "Đăng ký",
+    buttonLink: "#",
+  },
+  {
+    image: "/Banners/banner_4.jpg",
+    title: "Hành trình mới\nKiến thức mới",
+    subtitle: "Học hỏi từ những người giỏi nhất và trở thành chuyên gia.",
+    buttonText: "Xem khóa học",
+    buttonLink: "#",
+  },
+  {
+    image: "/Banners/banner_5.jpg",
+    title: "Kết nối cộng đồng\nVà chia sẻ đam mê",
+    subtitle: "Tham gia các sự kiện và gặp gỡ những người cùng sở thích.",
+    buttonText: "Tham gia",
+    buttonLink: "#",
+  },
+];
 
 const BannerSlider = () => {
-  const [bannerData, setBannerData] = useState([]);
-  const fetchBanners = async () => {
-    try {
-      const response = await axios_instance.get(URL.GET_BANNERS);
-      if (response.data.status) {
-        setBannerData(response.data.data);
-      } else {
-        console.error("Failed to fetch banners:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching banners:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchBanners();
-  }, []);
-
   const settings = {
     dots: true,
     arrows: true,
@@ -56,8 +75,7 @@ const BannerSlider = () => {
             <div
               key={k}
               className="banner-slide"
-              style={{ backgroundImage: `url(${e.image})` }}
-            >
+              style={{ backgroundImage: `url(${e.image})` }}>
               <div className="overlay-gradient" />
               <div className="banner-content">
                 <h1 className="banner-title animated fadeInUp">
@@ -68,8 +86,7 @@ const BannerSlider = () => {
                 </h2>
                 <a
                   href={e.buttonLink}
-                  className="btn btn-primary animated fadeInUp"
-                >
+                  className="btn btn-primary animated fadeInUp">
                   {e.buttonText}
                 </a>
               </div>
@@ -85,9 +102,8 @@ const BannerSlider = () => {
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "#f0f0f0",
-          }}
-        >
-          Loading banners...
+          }}>
+          Đang tải banner...
         </div>
       )}
     </div>

@@ -10,7 +10,7 @@ const Activity = ({ activity }) => {
     <div className="card">
       <img
         src={activity.thumbnail_url}
-        class="card-img-top"
+        className="card-img-top"
         alt={activity.title}
       />
       <div className="card-body">
@@ -20,8 +20,7 @@ const Activity = ({ activity }) => {
             fontWeight: "bold",
             fontFamily: "Palatino Linotype, serif",
             color: "darkorange",
-          }}
-        >
+          }}>
           {activity.title}
         </h4>
         <p className="card-text">
@@ -40,9 +39,8 @@ const Activity = ({ activity }) => {
         </p>
         <Link
           to={"/detail/" + activity.activity_id}
-          className="btn btn-primary mt-auto"
-        >
-          Detail
+          className="btn btn-primary mt-auto">
+          More Info
         </Link>
       </div>
     </div>

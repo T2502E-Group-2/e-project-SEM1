@@ -37,7 +37,7 @@ $apiBaseUrl = "https://api.imagekit.io/v1/files";
 $guzzleClient = new Client(['verify' => false]);
 $mediaType = 'image';
 
-$folders = ['/images/aconcagua','/images/annapurna','/images/assiniboine','/images/atlas', '/images/ausangate', '/images/bennevis','/images/everest','/images/fansipan','/images/fuji','/images/grossglockner','/images/kangchenjunga','/images/kenya','/images/kilimanjaro','/images/lhotse','/images/matterhorn','/images/mckinley','/images/meru','/images/mont_blanc','/images/roraima','/images/simien','/images/zugspitze'];
+$folders = ['/images/aconcagua','/images/annapurna','/images/assiniboine','/images/atlas', '/images/ausangate', '/images/bennevis','/images/everest','/images/fansipan','/images/fuji','/images/grossglockner','/images/kangchenjunga','/images/kenya','/images/kilimanjaro','/images/lhotse','/images/matterhorn','/images/mckinley','/images/meru','/images/mont_blanc','/images/roraima','/images/simien','/images/zugspitze', '/images/banner'];
 
 $total_inserted_count = 0;
 $total_updated_count = 0;

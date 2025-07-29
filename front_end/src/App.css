@@ -101,6 +101,26 @@
   color: #222 !important;
 }
 
+/* Background image */
+
+main {
+  background-image: linear-gradient(
+      rgba(100, 80, 50, 0.4),
+      rgba(100, 80, 50, 0.4)
+    ),
+    url("../public/Background/bg_8.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: calc(100vh);
+  position: relative;
+}
+.container-fluid {
+  padding-top: 20px; /* Ví dụ */
+  padding-bottom: 20px; /* Ví dụ */
+}
+
 /*Banner Style*/
 .banner-slider {
   position: relative;
@@ -128,12 +148,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(1, 76, 12, 0.6) 20%,
-    rgba(1, 62, 5, 0.337) 60%,
-    transparent 100%
-  );
+
   z-index: 1;
 }
 

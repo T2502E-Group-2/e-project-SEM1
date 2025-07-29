@@ -16,6 +16,22 @@ const Home = () => {
     const data = rs.data.data;
     setFeaturedActivities(data);
   };
+  // get banners
+  const [banners, setBanners] = useState([]);
+
+  const get_banners = async () => {
+    const url = URL.GET_BANNERS;
+    const rs = await axios_instance.get(url);
+    const data = rs.data.data;
+    setBanners(data);
+  };
+
+  useEffect(() => {
+    get_featured();
+    get_latest();
+    get_banners(); // gọi thêm
+  }, []);
+
   // get data latest activities
   const get_latest = async () => {
     const url = URL.LATEST_ACTIVITIES;
@@ -68,7 +84,7 @@ const Home = () => {
   //*****/
   return (
     <Container fluid>
-      <BannerSlider />
+      <BannerSlider banners={banners} />
       {/*Featured Activities */}
       <h2 className="mt-5">Featured Activities</h2>
       <Slider {...sliderSettings}>
@@ -95,4 +111,5 @@ const Home = () => {
     </Container>
   );
 };
+
 export default Home;
