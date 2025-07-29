@@ -8,14 +8,14 @@ import URL from "../../util/url";
 const Category = () => {
   const { id } = useParams();
   const [activities, setActivities] = useState([]);
-  // get activities by category id
-  const get_activities = async () => {
-    const url = URL.CATEGORY_ACTIVITIES + id;
-    const rs = await axios_instance.get(url);
-    const data = rs.data.data;
-    setActivities(data);
-  };
   useEffect(() => {
+    // get activities by category id
+    const get_activities = async () => {
+      const url = URL.CATEGORY_ACTIVITIES + id;
+      const rs = await axios_instance.get(url);
+      const data = rs.data.data;
+      setActivities(data);
+    };
     get_activities();
   }, [id]);
 
@@ -25,7 +25,7 @@ const Category = () => {
       <Row>
         {activities.map((e, k) => {
           return (
-            <Col xs={3} key={k}>
+            <Col xs={12} sm={6} md={4} lg={3} key={k} className="mb-4">
               <Activity activity={e} />
             </Col>
           );

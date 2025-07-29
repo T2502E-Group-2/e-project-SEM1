@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
 import Activity from "../shared/activity";
@@ -9,6 +9,10 @@ import BannerSlider from "../common/Banner_slider";
 const Home = () => {
   const [featuredActivities, setFeaturedActivities] = useState([]);
   const [latestActivities, setLatestActivities] = useState([]);
+  const featuredRef = useRef(null);
+  const latestRef = useRef(null);
+  const featuredTitleRef = useRef(null);
+  const latestTitleRef = useRef(null);
   // get data featured activities
   const get_featured = async () => {
     const url = URL.FEATURED_ACTIVITIES;
@@ -16,21 +20,6 @@ const Home = () => {
     const data = rs.data.data;
     setFeaturedActivities(data);
   };
-  // get banners
-  const [banners, setBanners] = useState([]);
-
-  const get_banners = async () => {
-    const url = URL.GET_BANNERS;
-    const rs = await axios_instance.get(url);
-    const data = rs.data.data;
-    setBanners(data);
-  };
-
-  useEffect(() => {
-    get_featured();
-    get_latest();
-    get_banners(); // gọi thêm
-  }, []);
 
   // get data latest activities
   const get_latest = async () => {
@@ -40,40 +29,72 @@ const Home = () => {
     setLatestActivities(data);
   };
   useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (entry.target.classList.contains("topic-card-text")) {
+            entry.target.classList.add("animate-in");
+          } else {
+            // Animate slider items with staggered delay
+            const sliderItems = entry.target.querySelectorAll(".slider-item");
+            sliderItems.forEach((item, index) => {
+              setTimeout(() => {
+                item.classList.add("animate-in");
+              }, index * 100);
+            });
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements
+    if (featuredTitleRef.current) observer.observe(featuredTitleRef.current);
+    if (latestTitleRef.current) observer.observe(latestTitleRef.current);
+    if (featuredRef.current) observer.observe(featuredRef.current);
+    if (latestRef.current) observer.observe(latestRef.current);
+
+    return () => observer.disconnect();
+  }, [featuredActivities, latestActivities]);
+  //*****/
+
+  useEffect(() => {
     get_featured();
     get_latest();
   }, []);
 
   // Slider settings
   const sliderSettings = {
+    className: "center-slider",
+    centerMode: true,
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    autoplay: false,
+    autoplay: true,
     autoplaySpeed: 3000,
     responsive: [
-      // Display settings for different screen sizes
       {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 600,
+        breakpoint: 1400, // Tablets
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
-          initialSlide: 2,
         },
       },
       {
-        breakpoint: 480,
+        breakpoint: 992, // Mobile phones
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 768,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -84,31 +105,40 @@ const Home = () => {
   //*****/
   return (
     <>
-      <BannerSlider banners={banners} />
+      <BannerSlider />
       <Container fluid className="topic-card">
         {/*Featured Activities */}
-        <h2 className="mt-5 topic-card-text">Featured Activities</h2>
-        <Slider {...sliderSettings}>
-          {featuredActivities.map((e, k) => {
-            return (
-              <div className="slider-item" key={k}>
-                <Activity activity={e} />
-              </div>
-            );
-          })}
-        </Slider>
+        {/*Featured Activities */}
+        <h2 ref={featuredTitleRef} className="mt-5 topic-card-text">
+          Featured Activities
+        </h2>
+        <div ref={featuredRef}>
+          <Slider {...sliderSettings}>
+            {featuredActivities.map((e, k) => {
+              return (
+                <div className="slider-item" key={k}>
+                  <Activity activity={e} />
+                </div>
+              );
+            })}
+          </Slider>
+        </div>
 
         {/*Latest Activities */}
-        <h2 className="mt-5 topic-card-text">Latest Activities</h2>
-        <Slider {...sliderSettings}>
-          {latestActivities.map((e, k) => {
-            return (
-              <div className="slider-item" key={k}>
-                <Activity activity={e} />
-              </div>
-            );
-          })}
-        </Slider>
+        <h2 ref={latestTitleRef} className="mt-5 topic-card-text">
+          Latest Activities
+        </h2>
+        <div ref={latestRef}>
+          <Slider {...sliderSettings}>
+            {latestActivities.map((e, k) => {
+              return (
+                <div className="slider-item" key={k}>
+                  <Activity activity={e} />
+                </div>
+              );
+            })}
+          </Slider>
+        </div>
       </Container>
     </>
   );

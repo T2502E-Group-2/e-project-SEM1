@@ -1,46 +1,45 @@
 import { Link } from "react-router-dom";
 
 const Activity = ({ activity }) => {
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("vi-VN");
-  };
+  const {
+    id,
+    price,
+    thumbnail_url,
+    title,
+    duration,
+    max_participants,
+    difficulty_level,
+    description,
+  } = activity;
+
   return (
-    <div className="card">
-      <img
-        src={activity.thumbnail_url}
-        className="card-img-top"
-        alt={activity.title}
-      />
-      <div className="card-body">
-        <h4
-          className="card-title"
-          style={{
-            fontWeight: "bold",
-            fontFamily: "Palatino Linotype, serif",
-            color: "darkorange",
-          }}>
-          {activity.title}
-        </h4>
-        <p className="card-text">
-          <strong>Start date:</strong> {formatDate(activity.start_date)}
-        </p>
-        <p className="card-text">
-          <strong>End date:</strong> {formatDate(activity.end_date)}
-        </p>
-        <p className="card-text">
-          <strong>Registration deadline:</strong>{" "}
-          {formatDate(activity.enrollment_deadline)}
-        </p>
-        <p className="card-text">
-          {" "}
-          <strong>Fee: </strong>${activity.price}
-        </p>
-        <Link
-          to={"/detail/" + activity.activity_id}
-          className="btn btn-primary mt-auto">
-          More Info
+    <div className="card animate-in">
+      <div className="showcase-trek">
+        <span className="read">from ${price}</span>
+        <img src={thumbnail_url} className="card-img-top" alt={title} />
+      </div>
+      <div className="content text-center">
+        <div className="row meta">
+          <div className="col-md-4">
+            <h5>{duration}</h5>
+            <h6> Days</h6>
+          </div>
+          <div className="col-md-4">
+            <h5>{max_participants}</h5>
+            <h6> Max Group Size</h6>
+          </div>
+          <div className="col-md-4">
+            <h5>{difficulty_level}</h5>
+            <h6> Difficulty</h6>
+          </div>
+        </div>
+        <div className="category">
+          <h4 className="card-title activity-title">{title}</h4>
+        </div>
+
+        <p className="card-text">{description}</p>
+        <Link to={`/activity/${id}`} className="btn btn-view-details">
+          View Details
         </Link>
       </div>
     </div>

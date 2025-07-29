@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Header from "./components/common/Header";
 import Home from "./components/pages/Home";
 import Category from "./components/pages/Category";
+import ActivityDetail from "./components/pages/ActivityDetail";
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -46,7 +47,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/category/:id" element={<Category />} />
-            {/* Add other routes here */}
+            <Route path="/activity/:id" element={<ActivityDetail />} />
           </Routes>
         </main>
       </div>
