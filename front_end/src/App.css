@@ -115,17 +115,14 @@ main {
   background-attachment: fixed;
   min-height: calc(100vh);
   position: relative;
-}
-.container-fluid {
-  padding-top: 20px; /* Ví dụ */
-  padding-bottom: 20px; /* Ví dụ */
+  z-index: 3;
 }
 
 /*Banner Style*/
 .banner-slider {
   position: relative;
   width: 100%;
-  height: 90vh;
+  height: 50vh;
   overflow: hidden;
   align-items: center;
   justify-content: center;
@@ -135,7 +132,7 @@ main {
   position: relative;
   background-size: cover;
   background-position: center;
-  height: 90vh;
+  height: 50vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,7 +145,12 @@ main {
   left: 0;
   width: 100%;
   height: 100%;
-
+  background: linear-gradient(
+    to bottom,
+    rgba(117, 189, 2, 0.39) 20%,
+    rgba(177, 94, 0, 0.363) 60%,
+    transparent 100%
+  );
   z-index: 1;
 }
 
@@ -165,7 +167,7 @@ main {
 }
 
 .banner-title {
-  font-size: 4rem;
+  font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1rem;
   white-space: pre-line;
@@ -211,7 +213,14 @@ main {
   display: flex;
   flex-direction: column;
 }
-
+.topic-card {
+  padding: 2rem 0;
+}
+.topic-card-text {
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
 .card-title {
   display: -webkit-box;
   -webkit-line-clamp: 2;

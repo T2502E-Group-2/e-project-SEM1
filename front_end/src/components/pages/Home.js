@@ -83,32 +83,34 @@ const Home = () => {
   };
   //*****/
   return (
-    <Container fluid>
+    <>
       <BannerSlider banners={banners} />
-      {/*Featured Activities */}
-      <h2 className="mt-5">Featured Activities</h2>
-      <Slider {...sliderSettings}>
-        {featuredActivities.map((e, k) => {
-          return (
-            <div className="slider-item" key={k}>
-              <Activity activity={e} />
-            </div>
-          );
-        })}
-      </Slider>
+      <Container fluid className="topic-card">
+        {/*Featured Activities */}
+        <h2 className="mt-5 topic-card-text">Featured Activities</h2>
+        <Slider {...sliderSettings}>
+          {featuredActivities.map((e, k) => {
+            return (
+              <div className="slider-item" key={k}>
+                <Activity activity={e} />
+              </div>
+            );
+          })}
+        </Slider>
 
-      {/*Latest Activities */}
-      <h2 className="mt-5">Latest Activities</h2>
-      <Slider {...sliderSettings}>
-        {latestActivities.map((e, k) => {
-          return (
-            <div className="slider-item" key={k}>
-              <Activity activity={e} />
-            </div>
-          );
-        })}
-      </Slider>
-    </Container>
+        {/*Latest Activities */}
+        <h2 className="mt-5 topic-card-text">Latest Activities</h2>
+        <Slider {...sliderSettings}>
+          {latestActivities.map((e, k) => {
+            return (
+              <div className="slider-item" key={k}>
+                <Activity activity={e} />
+              </div>
+            );
+          })}
+        </Slider>
+      </Container>
+    </>
   );
 };
 
