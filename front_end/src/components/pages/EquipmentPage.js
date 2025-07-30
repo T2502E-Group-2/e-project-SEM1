@@ -82,14 +82,34 @@ const Equipments = () => {
     );
   }
 
+  // Lọc ra các thiết bị không có ID hợp lệ để tránh lỗi "key" và giúp debug.
+  const validFeaturedEquipments = featuredEquipments.filter((equipment) => {
+    const isValid = equipment && equipment.id != null;
+    if (!isValid) {
+      console.warn(
+        "Dữ liệu thiết bị nổi bật không hợp lệ (thiếu ID):",
+        equipment
+      );
+    }
+    return isValid;
+  });
+
+  const validAllEquipments = allEquipments.filter((equipment) => {
+    const isValid = equipment && equipment.id != null;
+    if (!isValid) {
+      console.warn("Dữ liệu thiết bị không hợp lệ (thiếu ID):", equipment);
+    }
+    return isValid;
+  });
+
   return (
     <Container fluid className="py-5">
       {/* Featured Equipments Section */}
-      {featuredEquipments.length > 0 && (
+      {validFeaturedEquipments.length > 0 && (
         <Container className="mb-5">
           <h2 className="text-center mb-4">Featured Equipments</h2>
           <Slider {...sliderSettings}>
-            {featuredEquipments.map((equipment) => (
+            {validFeaturedEquipments.map((equipment) => (
               <div key={equipment.id} className="p-2">
                 <Equipment equipment={equipment} />
               </div>
@@ -102,9 +122,16 @@ const Equipments = () => {
       <Container>
         <h2 className="text-center mb-4">All Equipments</h2>
         <Row>
-          {allEquipments.length > 0 ? (
-            allEquipments.map((equipment) => (
-              <Col key={equipment.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
+          {validAllEquipments.length > 0 ? (
+            validAllEquipments.map((equipment) => (
+              <Col
+                key={equipment.id}
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                className="mb-4"
+              >
                 <Equipment equipment={equipment} />
               </Col>
             ))

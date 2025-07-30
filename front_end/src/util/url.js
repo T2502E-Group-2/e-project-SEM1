@@ -9,8 +9,8 @@ const URL = {
   FEATURED_COURSES: BASE + "/CoursesAndActivities/featured_courses.php",
   CATEGORY_LIST: BASE + "/CoursesAndActivities/categories.php",
   SEARCH: BASE + "/CoursesAndActivities/search_courses.php",
-  EQUIPMENTS: BASE + "/Equipments/equipment.php",
-
+  ALL_EQUIPMENTS: BASE + "/Equipments/equipments.php",
+  FEATURED_EQUIPMENTS: BASE + "/Equipments/featured_equipments.php",
 };
 
 export default URL;
