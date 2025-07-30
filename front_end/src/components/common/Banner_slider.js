@@ -97,7 +97,7 @@ const BannerSlider = () => {
               className="banner-slide"
               style={{ backgroundImage: `url(${slide.image})` }}>
               <div className="gradient dark"></div>
-              <div className="container text">
+              <div className="container text" style={{ paddingTop: "140px" }}>
                 <h1 className="white flex-animation">
                   {renderMultilineText(slide.title)}
                 </h1>

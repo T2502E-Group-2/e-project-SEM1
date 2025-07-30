@@ -15,7 +15,6 @@ import Category from "./components/pages/Category";
 import ActivityDetail from "./components/pages/ActivityDetail";
 import EquipmentPage from "./components/pages/EquipmentPage";
 
-
 function App() {
   const [scrolled, setScrolled] = useState(false);
 

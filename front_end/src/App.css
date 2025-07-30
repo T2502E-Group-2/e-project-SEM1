@@ -135,7 +135,7 @@ main {
 .banner-slider {
   position: relative;
   width: 100%;
-  height: 80svh; /* Use small viewport height */
+  height: 800px;
   overflow: hidden;
 }
 
@@ -145,7 +145,7 @@ main {
   background-position: center;
   background-repeat: no-repeat;
   width: 100%;
-  height: 80svh; /* Use small viewport height */
+  height: 900px;
   display: flex !important;
   align-items: center;
   justify-content: flex-start;
@@ -178,7 +178,7 @@ main {
 }
 
 .container.text h1.white {
-  font-size: 4.5rem;
+  font-size: 3rem;
   font-weight: 700;
   line-height: 1.1;
   margin-bottom: 1.5rem;
@@ -548,7 +548,7 @@ main {
 }
 
 .slick-dots li button:before {
-  font-size: 12px;
+  font-size: 18px;
   color: rgb(255, 255, 255);
   opacity: 0.5;
   transition: all 0.3s ease;
@@ -574,10 +574,8 @@ main {
   background-color: #414040;
   color: #fff;
   padding: 2px 0;
-  margin-top: 1rem;
   font-family: "palatino type";
-  z-index: 1;
-  position: sticky;
+  position: relative;
 }
 
 .footer-social-icons {

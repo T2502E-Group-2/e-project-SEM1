@@ -72,6 +72,7 @@ const Home = () => {
     className: "center-slider",
     centerMode: true,
     dots: true,
+    arrows: true,
     infinite: true,
     speed: 200,
     slidesToShow: 3,
@@ -101,15 +102,14 @@ const Home = () => {
       <BannerSlider />
       <Container fluid className="topic-card">
         {/*Featured Activities */}
-        {/*Featured Activities */}
-        <h2 ref={featuredTitleRef} className="mt-5 topic-card-text">
+        <h2 ref={featuredTitleRef} className="mt-4 topic-card-text">
           Featured Activities
         </h2>
         <div ref={featuredRef}>
           <Slider {...sliderSettings}>
             {featuredActivities.map((e, k) => {
               return (
-                <div className="slider-item" key={k}>
+                <div className="slider-item mt-2" key={k}>
                   <Activity activity={e} />
                 </div>
               );
@@ -118,14 +118,14 @@ const Home = () => {
         </div>
 
         {/*Latest Activities */}
-        <h2 ref={latestTitleRef} className="mt-5 topic-card-text">
+        <h2 ref={latestTitleRef} className="mt-4 topic-card-text">
           Latest Activities
         </h2>
         <div ref={latestRef}>
           <Slider {...sliderSettings}>
             {latestActivities.map((e, k) => {
               return (
-                <div className="slider-item" key={k}>
+                <div className="slider-item mb-3" key={k}>
                   <Activity activity={e} />
                 </div>
               );
