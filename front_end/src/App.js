@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import Header from "./components/common/Header";
+import Footer from "./components/common/Footer";
 import Home from "./components/pages/Home";
 import Category from "./components/pages/Category";
 import ActivityDetail from "./components/pages/ActivityDetail";
@@ -50,6 +51,7 @@ function App() {
             <Route path="/activity/:id" element={<ActivityDetail />} />
           </Routes>
         </main>
+        <Footer />
       </div>
     </UserProvider>
   );

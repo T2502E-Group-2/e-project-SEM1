@@ -6,33 +6,11 @@ import {
   Badge,
   Navbar,
   Nav,
-  NavDropdown,
   Container,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import UserContext from "../../context/context";
-import { useContext, useEffect, useState } from "react";
-import axios_instance from "../../util/axios_instance";
-import URL from "../../util/url";
 
 const Header = () => {
-  const { state } = useContext(UserContext);
-  const [categories, setCategories] = useState([]);
-
-  const get_menu_categories = async () => {
-    try {
-      const url = URL.CATEGORY_LIST;
-      const rs = await axios_instance.get(url);
-      setCategories(rs.data.data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
-  useEffect(() => {
-    get_menu_categories();
-  }, []);
-
   return (
     <>
       {/* =================== Header Logo + Cart + Login =================== */}
@@ -42,8 +20,8 @@ const Header = () => {
             <Image
               src="/logo.png"
               alt="Logo"
-              width={"150px"}
-              height={"150px"}
+              width={"120px"}
+              height={"120px"}
             />
           </Col>
           <Col
@@ -74,7 +52,7 @@ const Header = () => {
                 pill
                 bg="danger"
                 className="position-absolute top-0 start-100 translate-middle">
-                {state.cart.length}
+                {/* Placeholder for cart length, as context is removed */}0
                 <span className="visually-hidden">items in cart</span>
               </Badge>
             </Link>
@@ -116,44 +94,64 @@ const Header = () => {
               <Nav.Link as={Link} to="/about">
                 About Us
               </Nav.Link>
-              <NavDropdown
-                title="Courses & Activities"
-                id="activities-dropdown">
-                {categories.map((e, k) => {
-                  return (
-                    <NavDropdown.Item
-                      as={Link}
-                      to={`/category/${e.id}`}
-                      key={k}>
-                      {e.name}
-                    </NavDropdown.Item>
-                  );
-                })}
-              </NavDropdown>
+              <Nav.Item className="dropdown">
+                <Nav.Link
+                  as={Link}
+                  to="/activities"
+                  className="dropdown-toggle">
+                  Activities
+                </Nav.Link>
+                <div className="dropdown-menu">
+                  <Link
+                    to="/activities/mountaineering"
+                    className="dropdown-item">
+                    Mountaineering
+                  </Link>
+                  <Link to="/activities/climbing" className="dropdown-item">
+                    Climbing
+                  </Link>
+                  <Link to="/activities/trekking" className="dropdown-item">
+                    Trekking
+                  </Link>
+                </div>
+              </Nav.Item>
 
-              <NavDropdown title="Posts" id="post-dropdown">
-                <NavDropdown.Item as={Link} to="/blog">
-                  Blog
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/success">
-                  Success Stories
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/news">
-                  Records
-                </NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Item className="dropdown">
+                <Nav.Link as={Link} to="/posts" className="dropdown-toggle">
+                  Posts
+                </Nav.Link>
+                <div className="dropdown-menu">
+                  <Link to="/blog" className="dropdown-item">
+                    Blog
+                  </Link>
+                  <Link to="/success" className="dropdown-item">
+                    Success Stories
+                  </Link>
+                  <Link to="/news" className="dropdown-item">
+                    Records
+                  </Link>
+                </div>
+              </Nav.Item>
 
-              <NavDropdown title="Equipments" id="equipments-dropdown">
-                <NavDropdown.Item as={Link} to="/equipment/boots">
-                  Boots
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/equipment/ropes">
-                  Ropes
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/equipment/tents">
-                  Tents
-                </NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Item className="dropdown">
+                <Nav.Link
+                  as={Link}
+                  to="/equipments"
+                  className="dropdown-toggle">
+                  Equipments
+                </Nav.Link>
+                <div className="dropdown-menu">
+                  <Link to="/equipment/boots" className="dropdown-item">
+                    Boots
+                  </Link>
+                  <Link to="/equipment/ropes" className="dropdown-item">
+                    Ropes
+                  </Link>
+                  <Link to="/equipment/tents" className="dropdown-item">
+                    Tents
+                  </Link>
+                </div>
+              </Nav.Item>
               <Nav.Link as={Link} to="/contact">
                 Contact Us
               </Nav.Link>

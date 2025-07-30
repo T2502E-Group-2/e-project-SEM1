@@ -73,11 +73,11 @@ const Home = () => {
     centerMode: true,
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 200,
     slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 6000,
     responsive: [
       {
         breakpoint: 1400, // Tablets
@@ -88,13 +88,6 @@ const Home = () => {
       },
       {
         breakpoint: 992, // Mobile phones
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 768,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,

@@ -85,13 +85,13 @@ const BannerSlider = () => {
       : null;
 
   return (
-    <div className="dolomia-banner-slider">
+    <div className="banner-slider">
       {bannerData.length > 0 ? (
         <Slider {...settings}>
           {bannerData.map((slide, index) => (
             <div
               key={index}
-              className="dolomia-banner-slide"
+              className="banner-slide"
               style={{ backgroundImage: `url(${slide.image})` }}>
               <div className="gradient dark"></div>
               <div className="container text">
