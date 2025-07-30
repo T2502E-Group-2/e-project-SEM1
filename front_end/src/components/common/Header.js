@@ -134,12 +134,9 @@ const Header = () => {
               </Nav.Item>
 
               <Nav.Item className="dropdown">
-                <Nav.Link
-                  as={Link}
-                  to="/equipments"
-                  className="dropdown-toggle">
-                  Equipments
-                </Nav.Link>
+                <Nav.Link as={Link} to="/equipment">
+                Equipments
+              </Nav.Link>
                 <div className="dropdown-menu">
                   <Link to="/equipment/boots" className="dropdown-item">
                     Boots

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -60,6 +60,8 @@ const bannerData = [
 ];
 
 const BannerSlider = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const settings = {
     dots: false,
     arrows: false,
@@ -72,6 +74,7 @@ const BannerSlider = () => {
     pauseOnHover: false,
     fade: true,
     cssEase: "ease-in-out",
+    afterChange: (current) => setCurrentSlide(current),
   };
 
   const renderMultilineText = (text) =>
@@ -103,7 +106,8 @@ const BannerSlider = () => {
                 </h2>
                 <a
                   href={slide.buttonLink}
-                  className="shadow btn-alt small activetwo margin-bottom-null flex-animation">
+                  className="shadow btn-alt small activetwo margin-bottom-null flex-animation"
+                  tabIndex={currentSlide === index ? 0 : -1}>
                   {slide.buttonText}
                 </a>
               </div>

@@ -13,6 +13,8 @@ import Footer from "./components/common/Footer";
 import Home from "./components/pages/Home";
 import Category from "./components/pages/Category";
 import ActivityDetail from "./components/pages/ActivityDetail";
+import EquipmentPage from "./components/pages/EquipmentPage";
+
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -49,6 +51,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/category/:id" element={<Category />} />
             <Route path="/activity/:id" element={<ActivityDetail />} />
+            <Route path="/equipment" element={<EquipmentPage />} />
           </Routes>
         </main>
         <Footer />
