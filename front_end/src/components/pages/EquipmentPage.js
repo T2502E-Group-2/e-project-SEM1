@@ -4,6 +4,7 @@ import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
 import Equipment from "../shared/Equipment";
 import Slider from "react-slick";
+import FilterSidebar from "../common/Filter_Sidebar";
 
 // Import CSS cho slick-carousel
 import "slick-carousel/slick/slick.css";
@@ -106,9 +107,9 @@ const EquipmentPage = () => {
     className: "center-slider",
     centerMode: true,
     dots: true,
-    infinite: featuredEquipments.length > 3,
+    infinite: featuredEquipments.length > 2,
     speed: 200,
-    slidesToShow: 3,
+    slidesToShow: 2,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 6000,
@@ -116,7 +117,7 @@ const EquipmentPage = () => {
       {
         breakpoint: 1400,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 1,
         },
       },
@@ -165,53 +166,60 @@ const EquipmentPage = () => {
   });
 
   return (
-    <Container fluid className="topic-card" style={{ paddingTop: "140px" }}>
-      {/* Featured Equipments Section */}
+    <Container fluid className="topic-card" style={{ paddingTop: "182px" }}>
+      <Row>
+        {/* SIDEBAR */}
+        <Col lg={2} md={12} className="mb-4 sidebar-filter">
+          <FilterSidebar />
+        </Col>
 
-      {validFeaturedEquipments.length > 0 && (
-        <>
-          <h2 ref={featuredTitleRef} className="mt-5 topic-card-text">
-            Featured Equipments
+        {/* Product Area */}
+        <Col lg={10}>
+          {/* Featured Equipments */}
+          {validFeaturedEquipments.length > 0 && (
+            <>
+              <h2 ref={featuredTitleRef} className="mt-4 topic-card-text">
+                Featured Equipments
+              </h2>
+              <div ref={featuredRef}>
+                <Slider {...sliderSettings}>
+                  {validFeaturedEquipments.map((equipment) => (
+                    <div className="slider-item" key={equipment.id}>
+                      <Equipment equipment={equipment} />
+                    </div>
+                  ))}
+                </Slider>
+              </div>
+            </>
+          )}
+
+          {/* All Equipments */}
+          <h2 ref={allTitleRef} className="mt-5 topic-card-text">
+            All Equipments
           </h2>
-          <div ref={featuredRef}>
-            <Slider {...sliderSettings}>
-              {validFeaturedEquipments.map((equipment, index) => (
-                <div className="slider-item" key={equipment.id}>
-                  <Equipment equipment={equipment} />
-                </div>
-              ))}
-            </Slider>
-          </div>
-        </>
-      )}
-
-      {/* All Equipments Section */}
-      <h2 ref={allTitleRef} className="mt-5 topic-card-text">
-        All Equipments
-      </h2>
-      <div ref={allEquipmentsRef}>
-        <Container>
-          <Row>
-            {validAllEquipments.length > 0 ? (
-              validAllEquipments.map((equipment, index) => (
-                <Col
-                  key={equipment.id}
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  className="mb-4 slider-item">
-                  <Equipment equipment={equipment} />
+          <div ref={allEquipmentsRef}>
+            <Row>
+              {validAllEquipments.length > 0 ? (
+                validAllEquipments.map((equipment) => (
+                  <Col
+                    key={equipment.id}
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    className="mb-4 slider-item">
+                    <Equipment equipment={equipment} />
+                  </Col>
+                ))
+              ) : (
+                <Col>
+                  <Alert variant="info">No equipments found.</Alert>
                 </Col>
-              ))
-            ) : (
-              <Col>
-                <Alert variant="info">No equipments found.</Alert>
-              </Col>
-            )}
-          </Row>
-        </Container>
-      </div>
+              )}
+            </Row>
+          </div>
+        </Col>
+      </Row>
     </Container>
   );
 };

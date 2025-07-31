@@ -673,3 +673,22 @@ main {
 .header-and-menu-container:not(.scrolled) .custom-navbar .dropdown-item:hover {
   background-color: darkorange;
 }
+/*Equipment Page*/
+/*Sidebar-filter*/
+.sidebar-filter {
+  padding-top: 160px;
+  border-right: #fff 2px solid;
+  /* position: sticky;
+  top: 90px;
+  align-self: flex-start;
+  height: fit-content;
+  z-index: 1020; */
+}
+
+.product-card .card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  padding: 10px;
+  background-color: #ffffff;
+}

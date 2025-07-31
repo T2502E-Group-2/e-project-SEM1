@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const Equipment = ({ equipment }) => {
   // Add a guard clause to prevent crashes if the equipment prop is not provided.
@@ -6,10 +6,10 @@ const Equipment = ({ equipment }) => {
     return null;
   }
 
-  const { id, name, price, image_url, brand } = equipment;
+  const { name, price, image_url, brand } = equipment;
 
   return (
-    <div className="card animate-in py-3 bg-white shadow-sm">
+    <div className="card product-card animate-in py-3 bg-white shadow-sm">
       <div className="showcase-trek">
         <img src={image_url} className="card-img-top" alt={name} />
       </div>
@@ -21,9 +21,9 @@ const Equipment = ({ equipment }) => {
         <span className="card-text mt-0">
           <strong>${price || "N/A"}</strong>
         </span>
-        <Link to={`/equipment/${id}`} className="btn btn-view-details">
+        {/* <Link to={`/equipment/${id}`} className="btn btn-view-details">
           Details
-        </Link>
+        </Link> */}
       </div>
     </div>
   );
