@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios_instance from "../../util/axios_instance";
 import { Col, Container, Row } from "react-bootstrap";
-import Activity from "../shared/activity";
+import Activity from "./Activity";
 import URL from "../../util/url";
 
 const Category = () => {

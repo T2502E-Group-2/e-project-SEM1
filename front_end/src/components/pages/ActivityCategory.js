@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios"; // Hoặc axios_instance của bạn
+import axios_instance from "../../util/axios_instance";
 
 function ActivityCategory() {
   const { id } = useParams(); // Lấy ID từ URL, ví dụ: /category/5 -> id = 5
@@ -12,7 +12,7 @@ function ActivityCategory() {
       try {
         setLoading(true);
         // Gọi đến API PHP của bạn
-        const response = await axios.get(
+        const response = await axios_instance.get(
           `http://your-backend-domain.com/api/activities.php?category_id=${id}`
         );
         setActivities(response.data.data);

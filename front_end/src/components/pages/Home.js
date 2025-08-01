@@ -2,7 +2,7 @@ import { Container } from "react-bootstrap";
 import { useEffect, useState, useRef } from "react";
 import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
-import Activity from "../shared/activity";
+import Activity from "../shared/Activity";
 import Slider from "react-slick";
 import BannerSlider from "../common/Banner_slider";
 

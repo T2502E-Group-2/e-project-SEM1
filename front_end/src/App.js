@@ -11,7 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Home from "./components/pages/Home";
-import Category from "./components/pages/Category";
+import Category from "./components/shared/Category";
 import ActivityDetail from "./components/pages/ActivityDetail";
 import EquipmentPage from "./components/pages/EquipmentPage";
 
@@ -28,7 +28,7 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
+      const isScrolled = window.scrollY > 0;
       setScrolled(isScrolled);
     };
 
