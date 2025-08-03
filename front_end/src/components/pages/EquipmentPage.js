@@ -1,12 +1,17 @@
 import { useEffect, useState, useRef } from "react";
-import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Spinner,
+  Alert,
+  Pagination,
+} from "react-bootstrap";
 import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
 import Equipment from "../shared/Equipment";
 import Slider from "react-slick";
 import FilterSidebar from "../common/Filter_Sidebar";
-
-// Import CSS cho slick-carousel
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -15,27 +20,27 @@ const EquipmentPage = () => {
   const [allEquipments, setAllEquipments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Refs for animation
   const featuredRef = useRef(null);
   const allEquipmentsRef = useRef(null);
   const featuredTitleRef = useRef(null);
   const allTitleRef = useRef(null);
 
-  // Get featured equipments
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+
+  // Fetch featured equipments
   const getFeatured = async () => {
     try {
       const url = URL.FEATURED_EQUIPMENTS;
       const rs = await axios_instance.get(url);
-      const data = rs.data.data || [];
-      setFeaturedEquipments(data);
+      setFeaturedEquipments(rs.data.data || []);
     } catch (err) {
       console.error("Failed to fetch featured equipments:", err);
       throw err;
     }
   };
 
-  // Get all equipments
+  // Fetch all equipments
   const getAllEquipments = async () => {
     try {
       const url = URL.ALL_EQUIPMENTS;
@@ -48,20 +53,18 @@ const EquipmentPage = () => {
     }
   };
 
-  // Animation observer setup (similar to Home.js)
+  // Animation observer setup
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
       rootMargin: "0px 0px -50px 0px",
     };
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           if (entry.target.classList.contains("topic-card-text")) {
             entry.target.classList.add("animate-in");
           } else {
-            // Animate slider items with staggered delay
             const sliderItems = entry.target.querySelectorAll(".slider-item");
             sliderItems.forEach((item, index) => {
               setTimeout(() => {
@@ -73,7 +76,6 @@ const EquipmentPage = () => {
       });
     }, observerOptions);
 
-    // Observe elements
     if (featuredTitleRef.current) observer.observe(featuredTitleRef.current);
     if (allTitleRef.current) observer.observe(allTitleRef.current);
     if (featuredRef.current) observer.observe(featuredRef.current);
@@ -88,8 +90,6 @@ const EquipmentPage = () => {
       try {
         setLoading(true);
         setError(null);
-
-        // Fetch both featured and all equipments in parallel
         await Promise.all([getFeatured(), getAllEquipments()]);
       } catch (err) {
         console.error("Failed to fetch equipments:", err);
@@ -98,11 +98,25 @@ const EquipmentPage = () => {
         setLoading(false);
       }
     };
-
     fetchEquipments();
   }, []);
 
-  // Slider settings (similar to Home.js)
+  // Log the initial data after fetching to confirm it's stored
+  useEffect(() => {
+    console.log(
+      "Initial fetch complete. allEquipments.length:",
+      allEquipments.length
+    );
+  }, [allEquipments]);
+
+  // Scroll to the top of the equipment list when the page changes
+  useEffect(() => {
+    if (allEquipmentsRef.current) {
+      allEquipmentsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+    console.log(`Scrolled to top for page ${currentPage}`);
+  }, [currentPage]);
+
   const sliderSettings = {
     className: "center-slider",
     centerMode: true,
@@ -114,20 +128,8 @@ const EquipmentPage = () => {
     autoplay: true,
     autoplaySpeed: 6000,
     responsive: [
-      {
-        breakpoint: 1400,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 992,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
+      { breakpoint: 1400, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+      { breakpoint: 992, settings: { slidesToShow: 1, slidesToScroll: 1 } },
     ],
   };
 
@@ -148,34 +150,47 @@ const EquipmentPage = () => {
     );
   }
 
-  // Filter valid equipments (similar to original but cleaner)
-  const validFeaturedEquipments = featuredEquipments.filter((equipment) => {
-    const isValid = equipment && equipment.id != null;
-    if (!isValid) {
-      console.warn("Invalid featured equipment data (missing ID):", equipment);
-    }
-    return isValid;
-  });
+  const validFeaturedEquipments = featuredEquipments.filter(
+    (equipment) => equipment && equipment.id != null
+  );
+  const validAllEquipments = allEquipments.filter(
+    (equipment) => equipment && equipment.id != null
+  );
 
-  const validAllEquipments = allEquipments.filter((equipment) => {
-    const isValid = equipment && equipment.id != null;
-    if (!isValid) {
-      console.warn("Invalid equipment data (missing ID):", equipment);
+  const totalPages = Math.ceil(validAllEquipments.length / itemsPerPage);
+
+  // Pagination logic with a fail-safe check
+  let currentEquipments = [];
+  if (validAllEquipments.length > 0) {
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    currentEquipments = validAllEquipments.slice(
+      indexOfFirstItem,
+      indexOfLastItem
+    );
+  }
+
+  console.log(
+    `Render complete. currentPage: ${currentPage}, Items on page: ${currentEquipments.length}`
+  );
+
+  const handlePageChange = (pageNumber) => {
+    console.log(`Attempting to change to page: ${pageNumber}`);
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+      console.log(`Successfully changed to page: ${pageNumber}`);
+    } else {
+      console.warn(`Invalid page number: ${pageNumber}. Not updating.`);
     }
-    return isValid;
-  });
+  };
 
   return (
     <Container fluid className="topic-card" style={{ paddingTop: "182px" }}>
       <Row>
-        {/* SIDEBAR */}
         <Col lg={2} md={12} className="mb-4 sidebar-filter">
           <FilterSidebar />
         </Col>
-
-        {/* Product Area */}
         <Col lg={10}>
-          {/* Featured Equipments */}
           {validFeaturedEquipments.length > 0 && (
             <>
               <h2 ref={featuredTitleRef} className="mt-4 topic-card-text">
@@ -193,14 +208,13 @@ const EquipmentPage = () => {
             </>
           )}
 
-          {/* All Equipments */}
           <h2 ref={allTitleRef} className="mt-5 topic-card-text">
             All Equipments
           </h2>
           <div ref={allEquipmentsRef}>
             <Row>
-              {validAllEquipments.length > 0 ? (
-                validAllEquipments.map((equipment) => (
+              {currentEquipments.length > 0 ? (
+                currentEquipments.map((equipment) => (
                   <Col
                     key={equipment.id}
                     xs={12}
@@ -213,11 +227,36 @@ const EquipmentPage = () => {
                 ))
               ) : (
                 <Col>
-                  <Alert variant="info">No equipments found.</Alert>
+                  <Alert variant="info">
+                    No equipments found on this page.
+                  </Alert>
                 </Col>
               )}
             </Row>
           </div>
+
+          {totalPages > 1 && (
+            <div className="d-flex justify-content-center mt-4">
+              <Pagination>
+                <Pagination.Prev
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                />
+                {[...Array(totalPages)].map((_, index) => (
+                  <Pagination.Item
+                    key={index + 1}
+                    active={index + 1 === currentPage}
+                    onClick={() => handlePageChange(index + 1)}>
+                    {index + 1}
+                  </Pagination.Item>
+                ))}
+                <Pagination.Next
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                />
+              </Pagination>
+            </div>
+          )}
         </Col>
       </Row>
     </Container>
