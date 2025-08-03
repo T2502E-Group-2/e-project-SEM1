@@ -135,17 +135,17 @@ const Header = () => {
 
               <Nav.Item className="dropdown">
                 <Nav.Link as={Link} to="/equipment">
-                Equipments
-              </Nav.Link>
+                  Equipments
+                </Nav.Link>
                 <div className="dropdown-menu">
-                  <Link to="/equipment/boots" className="dropdown-item">
-                    Boots
+                  <Link to="/equipment/accessories" className="dropdown-item">
+                    Accessories
                   </Link>
-                  <Link to="/equipment/ropes" className="dropdown-item">
-                    Ropes
+                  <Link to="/equipment/equipments" className="dropdown-item">
+                    Equipments
                   </Link>
-                  <Link to="/equipment/tents" className="dropdown-item">
-                    Tents
+                  <Link to="/equipment/footwears" className="dropdown-item">
+                    Footwears
                   </Link>
                 </div>
               </Nav.Item>
