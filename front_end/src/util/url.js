@@ -7,6 +7,7 @@ const URL = {
   CATEGORY_LIST: BASE + "/Activities/categories.php",
   SEARCH: BASE + "/Activities/search_courses.php",
   ALL_EQUIPMENTS: BASE + "/Equipments/equipments.php",
+  EQUIPMENT_CATEGORIES: BASE + "/Equipments/equipment_categories.php",
   FEATURED_EQUIPMENTS: BASE + "/Equipments/featured_equipments.php",
 };
 

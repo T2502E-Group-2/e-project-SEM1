@@ -1,0 +1,77 @@
+<?php
+// CORS headers
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: *");
+header("Access-control-allow-headers: *");
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require_once("../../db/connect.php");
+
+$conn = connect();
+
+if ($conn->connect_error) {
+    http_response_code(500);
+    echo json_encode(["status" => false, "message" => "Kết nối thất bại: " . $conn->connect_error]);
+    exit();
+}
+
+try {
+    // 1. Lấy tất cả danh mục chính từ bảng categories
+    
+    $main_categories_sql = "SELECT category_id, category_name FROM categories WHERE type = 'Equipment' ORDER BY category_name ASC";
+    $main_categories_stmt = $conn->prepare($main_categories_sql);
+    $main_categories_stmt->execute();
+    $main_categories_result = $main_categories_stmt->get_result();
+
+    $categories_data = [];
+    while ($row = $main_categories_result->fetch_assoc()) {
+        $categories_data[$row['category_id']] = [
+            'category_id' => $row['category_id'],
+            'category_name' => $row['category_name'],
+            'equipment_count' => 0, // Khởi tạo số lượng
+            'children' => [] // Sẽ chứa các sub_category
+        ];
+    }
+    $main_categories_stmt->close();
+
+    // 2. Lấy và nhóm các sub_category từ bảng equipments
+    
+    $sub_categories_sql = "SELECT equipment_category_id as category_id, sub_category, COUNT(*) AS equipment_count FROM equipments WHERE sub_category IS NOT NULL AND sub_category != '' GROUP BY equipment_category_id, sub_category ORDER BY sub_category ASC";
+    $sub_categories_stmt = $conn->prepare($sub_categories_sql);
+    $sub_categories_stmt->execute();
+    $sub_categories_result = $sub_categories_stmt->get_result();
+
+    while ($row = $sub_categories_result->fetch_assoc()) {
+        if (isset($categories_data[$row['category_id']])) {
+            // Thêm sub_category vào danh mục chính tương ứng
+            $categories_data[$row['category_id']]['children'][] = [
+                'name' => $row['sub_category'],
+                'equipment_count' => (int)$row['equipment_count']
+            ];
+            // Cập nhật tổng số lượng cho danh mục chính
+            $categories_data[$row['category_id']]['equipment_count'] += (int)$row['equipment_count'];
+        }
+    }
+    $sub_categories_stmt->close();
+
+    // 3. Chuyển đổi dữ liệu thành mảng để trả về và loại bỏ các danh mục không có sản phẩm
+    $response_data = array_values(array_filter($categories_data, fn($category) => $category['equipment_count'] > 0));
+
+    http_response_code(200);
+    echo json_encode([
+        "status" => true,
+        "message" => "Lấy danh mục thành công",
+        "data" => $response_data
+    ]);
+
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(["status" => false, "message" => "Lỗi: " . $e->getMessage()]);
+}
+
+$conn->close();
+?>

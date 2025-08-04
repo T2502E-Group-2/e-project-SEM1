@@ -1,57 +1,32 @@
 import { useEffect, useState, useRef } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Spinner,
-  Alert,
-  Pagination,
-} from "react-bootstrap";
+import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
 import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
 import Equipment from "../shared/Equipment";
 import Slider from "react-slick";
+import PaginationComponent from "../common/Pagination";
 import FilterSidebar from "../common/Filter_Sidebar";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const EquipmentPage = () => {
   const [featuredEquipments, setFeaturedEquipments] = useState([]);
-  const [allEquipments, setAllEquipments] = useState([]);
+  const [equipments, setEquipments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const featuredRef = useRef(null);
   const allEquipmentsRef = useRef(null);
   const featuredTitleRef = useRef(null);
   const allTitleRef = useRef(null);
-
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [filters, setFilters] = useState({});
+  const [selectedFilters, setSelectedFilters] = useState({
+    category_id: [],
+    sub_category: [],
+  });
+
   const itemsPerPage = 12;
-
-  // Fetch featured equipments
-  const getFeatured = async () => {
-    try {
-      const url = URL.FEATURED_EQUIPMENTS;
-      const rs = await axios_instance.get(url);
-      setFeaturedEquipments(rs.data.data || []);
-    } catch (err) {
-      console.error("Failed to fetch featured equipments:", err);
-      throw err;
-    }
-  };
-
-  // Fetch all equipments
-  const getAllEquipments = async () => {
-    try {
-      const url = URL.ALL_EQUIPMENTS;
-      const rs = await axios_instance.get(url);
-      const data = rs.data.data || [];
-      setAllEquipments(data);
-    } catch (err) {
-      console.error("Failed to fetch all equipments:", err);
-      throw err;
-    }
-  };
 
   // Animation observer setup
   useEffect(() => {
@@ -82,15 +57,47 @@ const EquipmentPage = () => {
     if (allEquipmentsRef.current) observer.observe(allEquipmentsRef.current);
 
     return () => observer.disconnect();
-  }, [featuredEquipments, allEquipments]);
+  }, [featuredEquipments, equipments]);
 
-  // Fetch data on component mount
+  // Fetch featured equipments (Only run 1 time)
   useEffect(() => {
-    const fetchEquipments = async () => {
+    const getFeatured = async () => {
       try {
-        setLoading(true);
-        setError(null);
-        await Promise.all([getFeatured(), getAllEquipments()]);
+        const url = URL.FEATURED_EQUIPMENTS;
+        const rs = await axios_instance.get(url);
+        setFeaturedEquipments(rs.data.data || []);
+      } catch (err) {
+        console.error("Failed to fetch featured equipments:", err);
+      }
+    };
+    getFeatured();
+  }, []);
+
+  // Fetch paginated equipments (Run every time curlentpage changes)
+  useEffect(() => {
+    const fetchEquipmentsByPage = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Xây dựng params cho URL, bao gồm cả phân trang và bộ lọc
+        const params = new URLSearchParams({
+          page: currentPage,
+          limit: itemsPerPage,
+        });
+
+        // Thêm các bộ lọc đang active vào params
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value !== null && value !== "") {
+            params.append(key, value);
+          }
+        });
+
+        const url = `${URL.ALL_EQUIPMENTS}?${params.toString()}`;
+        const rs = await axios_instance.get(url);
+
+        // Update State from API data returned
+        setEquipments(rs.data.data || []);
+        setTotalPages(rs.data.totalPages || 0);
       } catch (err) {
         console.error("Failed to fetch equipments:", err);
         setError("Could not load equipments. Please try again later.");
@@ -98,23 +105,14 @@ const EquipmentPage = () => {
         setLoading(false);
       }
     };
-    fetchEquipments();
-  }, []);
-
-  // Log the initial data after fetching to confirm it's stored
-  useEffect(() => {
-    console.log(
-      "Initial fetch complete. allEquipments.length:",
-      allEquipments.length
-    );
-  }, [allEquipments]);
+    fetchEquipmentsByPage();
+  }, [currentPage, filters]); // Thêm `filters` vào dependency array
 
   // Scroll to the top of the equipment list when the page changes
   useEffect(() => {
     if (allEquipmentsRef.current) {
       allEquipmentsRef.current.scrollIntoView({ behavior: "smooth" });
     }
-    console.log(`Scrolled to top for page ${currentPage}`);
   }, [currentPage]);
 
   const sliderSettings = {
@@ -153,42 +151,34 @@ const EquipmentPage = () => {
   const validFeaturedEquipments = featuredEquipments.filter(
     (equipment) => equipment && equipment.id != null
   );
-  const validAllEquipments = allEquipments.filter(
+  const currentEquipments = equipments.filter(
     (equipment) => equipment && equipment.id != null
   );
 
-  const totalPages = Math.ceil(validAllEquipments.length / itemsPerPage);
-
-  // Pagination logic with a fail-safe check
-  let currentEquipments = [];
-  if (validAllEquipments.length > 0) {
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    currentEquipments = validAllEquipments.slice(
-      indexOfFirstItem,
-      indexOfLastItem
-    );
-  }
-
-  console.log(
-    `Render complete. currentPage: ${currentPage}, Items on page: ${currentEquipments.length}`
-  );
-
   const handlePageChange = (pageNumber) => {
-    console.log(`Attempting to change to page: ${pageNumber}`);
     if (pageNumber > 0 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
-      console.log(`Successfully changed to page: ${pageNumber}`);
     } else {
       console.warn(`Invalid page number: ${pageNumber}. Not updating.`);
     }
+  };
+
+  // Hàm xử lý khi bộ lọc thay đổi, được truyền xuống FilterSidebar
+  const handleFilterChange = (newFilters, rawState) => {
+    setCurrentPage(1);
+    setFilters(newFilters); // dùng để fetch dữ liệu
+    setSelectedFilters(rawState); // lưu trạng thái check để truyền xuống
   };
 
   return (
     <Container fluid className="topic-card" style={{ paddingTop: "182px" }}>
       <Row>
         <Col lg={2} md={12} className="mb-4 sidebar-filter">
-          <FilterSidebar />
+          <FilterSidebar
+            onFilterChange={handleFilterChange}
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+          />
         </Col>
         <Col lg={10}>
           {validFeaturedEquipments.length > 0 && (
@@ -211,8 +201,23 @@ const EquipmentPage = () => {
           <h2 ref={allTitleRef} className="mt-5 topic-card-text">
             All Equipments
           </h2>
-          <div ref={allEquipmentsRef}>
-            <Row>
+          <div ref={allEquipmentsRef} style={{ position: "relative" }}>
+            {loading && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  zIndex: 10,
+                }}>
+                <Spinner animation="border" size="sm" />
+              </div>
+            )}
+            <Row
+              style={{
+                opacity: loading ? 0.5 : 1,
+                transition: "opacity 0.3s ease",
+              }}>
               {currentEquipments.length > 0 ? (
                 currentEquipments.map((equipment) => (
                   <Col
@@ -235,28 +240,11 @@ const EquipmentPage = () => {
             </Row>
           </div>
 
-          {totalPages > 1 && (
-            <div className="d-flex justify-content-center mt-4">
-              <Pagination>
-                <Pagination.Prev
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                />
-                {[...Array(totalPages)].map((_, index) => (
-                  <Pagination.Item
-                    key={index + 1}
-                    active={index + 1 === currentPage}
-                    onClick={() => handlePageChange(index + 1)}>
-                    {index + 1}
-                  </Pagination.Item>
-                ))}
-                <Pagination.Next
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                />
-              </Pagination>
-            </div>
-          )}
+          <PaginationComponent
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </Col>
       </Row>
     </Container>

@@ -1,82 +1,136 @@
-import React, { useState } from "react";
-import { Collapse } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Spinner, Alert } from "react-bootstrap";
+import axios_instance from "../../util/axios_instance";
+import URL from "../../util/url"; // Giả định URL.EQUIPMENT_CATEGORIES trỏ đến equipment_categories.php
+import FilterItem from "./FilterItem"; // Import component con
 
-const FilterItem = ({ label, count, children }) => {
-  const [open, setOpen] = useState(false);
+const FilterSidebar = ({
+  onFilterChange,
+  selectedFilters,
+  setSelectedFilters,
+}) => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  return (
-    <div className="mb-2">
-      <div
-        className="d-flex justify-content-between align-items-center"
-        onClick={() => setOpen(!open)}
-        style={{ cursor: "pointer", fontWeight: "bold" }}>
-        <span>
-          <input type="checkbox" className="me-2" />
-          {label} ({count})
-        </span>
-        <span>{open ? "−" : "+"}</span>
-      </div>
-      <Collapse in={open}>
-        <div className="ms-4 mt-1">{children}</div>
-      </Collapse>
-    </div>
-  );
-};
+  // Removed duplicate state declaration for selectedFilters and setSelectedFilters
 
-const FilterSidebar = () => {
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios_instance.get(URL.EQUIPMENT_CATEGORIES);
+        if (response.data.status) {
+          setCategories(response.data.data);
+        } else {
+          setError("Không thể tải danh mục.");
+        }
+      } catch (err) {
+        setError("Không thể tải danh mục. Vui lòng thử lại sau.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Hàm xử lý khi một item được chọn
+  const handleItemCheck = (key, value, isChecked) => {
+    let newFilters = { ...selectedFilters };
+
+    if (key === "category_id") {
+      const category = categories.find((cat) => cat.category_id === value);
+      const subCategories = category
+        ? category.children.map((child) => child.name)
+        : [];
+      if (isChecked) {
+        // Add category_id
+        if (!newFilters.category_id.includes(value)) {
+          newFilters.category_id.push(value);
+        }
+        // Add all sub-categories
+        subCategories.forEach((sub) => {
+          if (!newFilters.sub_category.includes(sub)) {
+            newFilters.sub_category.push(sub);
+          }
+        });
+      } else {
+        // Remove category_id
+        newFilters.category_id = newFilters.category_id.filter(
+          (id) => id !== value
+        );
+        // Remove all sub-categories
+        newFilters.sub_category = newFilters.sub_category.filter(
+          (sub) => !subCategories.includes(sub)
+        );
+      }
+    } else if (key === "sub_category") {
+      if (isChecked) {
+        newFilters.sub_category.push(value);
+      } else {
+        newFilters.sub_category = newFilters.sub_category.filter(
+          (item) => item !== value
+        );
+      }
+    }
+    console.log(newFilters);
+
+    setSelectedFilters(newFilters);
+
+    // Gửi bộ lọc đã cập nhật lên component cha
+    const formattedFilters = {
+      category_id:
+        newFilters.category_id.length > 0
+          ? newFilters.category_id.join(",")
+          : null,
+      sub_category:
+        newFilters.sub_category.length > 0
+          ? newFilters.sub_category.join(",")
+          : null,
+    };
+    onFilterChange(formattedFilters, newFilters);
+  };
+
+  if (loading) {
+    return <Spinner animation="border" />;
+  }
+
+  if (error) {
+    return <Alert variant="danger">{error}</Alert>;
+  }
+
   return (
     <div>
-      <h5
-        className="mb-4"
-        style={{ fontWeight: "bold", color: "white", fontSize: "1.2rem" }}>
+      <h5 style={{ fontWeight: "bold", color: "white", fontSize: "1.2rem" }}>
         CATEGORIES
       </h5>
-
-      <FilterItem label="Accessories" count={79}>
-        <FilterItem label="Personal Care" count={26} />
-        <FilterItem label="Headwear" count={11} />
-        <FilterItem label="Eyewear" count={14} />
-        <FilterItem label="Handwear" count={13} />
-        <FilterItem label="Electronics" count={12} />
-        <FilterItem label="Maintenance & Repair" count={1} />
-      </FilterItem>
-
-      <FilterItem label="Equipment" count={100}>
-        <FilterItem label="Camp Kitchen" count={28} />
-        <FilterItem label="Packs & Bags" count={15} />
-        <FilterItem label="Climbing" count={37} />
-        <FilterItem label="Sleeping" count={21} />
-      </FilterItem>
-
-      <FilterItem label="Footwear" count={25}>
-        <FilterItem label="Boots" count={7} />
-        <FilterItem label="Booties" count={1} />
-        <FilterItem label="Overboots" count={1} />
-        <FilterItem label="Insoles" count={1} />
-        <FilterItem label="Socks" count={11} />
-        <FilterItem label="Gaiters" count={4} />
-      </FilterItem>
-
-      <FilterItem label="Gifts" count={13}>
-        <FilterItem label="Logo Items" count={11} />
-        <FilterItem label="Other Gift" count={2} />
-      </FilterItem>
-
-      <FilterItem label="Men" count={43}>
-        <FilterItem label="Men's Insulation" count={13} />
-        <FilterItem label="Men's Hardshells" count={8} />
-        <FilterItem label="Men's Baselayers" count={9} />
-        <FilterItem label="Men's Midlayers" count={4} />
-        <FilterItem label="Men's Softshells" count={8} />
-      </FilterItem>
-
-      <FilterItem label="Women" count={44}>
-        <FilterItem label="Women's Baselayer" count={12} />
-        <FilterItem label="Women's Insulation" count={13} />
-        <FilterItem label="Women's Softshells" count={7} />
-        <FilterItem label="Women's Midlayer" count={3} />
-        <FilterItem label="Women's Hardshells" count={8} />
-      </FilterItem>
+      {categories.map((category) => (
+        <FilterItem
+          key={category.category_id}
+          label={category.category_name}
+          count={category.equipment_count}
+          childrenData={category.children}
+          onCheck={(isChecked) =>
+            handleItemCheck("category_id", category.category_id, isChecked)
+          }
+          isChecked={selectedFilters.category_id.includes(category.category_id)}
+          shouldOpen={category.children.some((child) =>
+            selectedFilters.sub_category.includes(child.name)
+          )}
+          isParent={true}>
+          {category.children.map((children, index) => (
+            <FilterItem
+              key={`${category.category_id}-${index}`}
+              label={children.name}
+              count={children.equipment_count}
+              onCheck={(isChecked) =>
+                handleItemCheck("sub_category", children.name, isChecked)
+              }
+              isChecked={selectedFilters.sub_category.includes(children.name)}
+              isParent={false}
+            />
+          ))}
+        </FilterItem>
+      ))}
     </div>
   );
 };

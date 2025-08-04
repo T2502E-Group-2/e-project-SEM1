@@ -135,7 +135,7 @@ const Header = () => {
 
               <Nav.Item className="dropdown">
                 <Nav.Link as={Link} to="/equipment">
-                  Equipments
+                  Gears
                 </Nav.Link>
                 <div className="dropdown-menu">
                   <Link to="/equipment/accessories" className="dropdown-item">
