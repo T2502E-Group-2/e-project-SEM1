@@ -14,6 +14,7 @@ import Home from "./components/pages/Home";
 import Category from "./components/shared/Category";
 import ActivityDetail from "./components/pages/ActivityDetail";
 import EquipmentPage from "./components/pages/EquipmentPage";
+import EquipmentDetail from "./components/pages/EquipmentDetail";
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -51,6 +52,7 @@ function App() {
             <Route path="/category/:id" element={<Category />} />
             <Route path="/activity/:id" element={<ActivityDetail />} />
             <Route path="/equipment" element={<EquipmentPage />} />
+            <Route path="/equipment/:id" element={<EquipmentDetail />} />
           </Routes>
         </main>
         <Footer />

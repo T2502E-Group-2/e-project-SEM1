@@ -131,7 +131,7 @@ const EquipmentPage = () => {
     ],
   };
 
-  if (loading) {
+  if (loading && equipments.length === 0) {
     return (
       <Container className="text-center mt-5 vh-100">
         <Spinner animation="border" variant="primary" />

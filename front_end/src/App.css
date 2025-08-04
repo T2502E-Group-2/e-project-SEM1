@@ -692,3 +692,15 @@ main {
   padding: 10px;
   background-color: #ffffff;
 }
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+  display: block; /* Đảm bảo link chiếm toàn bộ không gian của card */
+}
+
+.product-link:hover .product-card {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}

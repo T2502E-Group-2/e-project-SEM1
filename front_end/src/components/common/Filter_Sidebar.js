@@ -4,11 +4,7 @@ import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url"; // Giả định URL.EQUIPMENT_CATEGORIES trỏ đến equipment_categories.php
 import FilterItem from "./FilterItem"; // Import component con
 
-const FilterSidebar = ({
-  onFilterChange,
-  selectedFilters,
-  setSelectedFilters,
-}) => {
+const FilterSidebar = ({ onFilterChange, selectedFilters }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -72,9 +68,6 @@ const FilterSidebar = ({
         );
       }
     }
-    console.log(newFilters);
-
-    setSelectedFilters(newFilters);
 
     // Gửi bộ lọc đã cập nhật lên component cha
     const formattedFilters = {
