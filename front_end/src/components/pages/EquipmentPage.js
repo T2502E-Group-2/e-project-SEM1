@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
 import Equipment from "../shared/Equipment";
@@ -20,11 +21,38 @@ const EquipmentPage = () => {
   const allTitleRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [filters, setFilters] = useState({});
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const categoryIdFromUrl = queryParams.get("category_id");
+  const [filters, setFilters] = useState(() => {
+    if (categoryIdFromUrl) {
+      return { category_id: categoryIdFromUrl.toString() };
+    }
+    return {};
+  });
   const [selectedFilters, setSelectedFilters] = useState({
     category_id: [],
     sub_category: [],
   });
+
+  useEffect(() => {
+    if (categoryIdFromUrl) {
+      const idAsString = categoryIdFromUrl.toString();
+
+      setFilters((prev) => ({
+        ...prev,
+        category_id: idAsString,
+      }));
+
+      setSelectedFilters((prev) => ({
+        ...prev,
+        category_id: [idAsString],
+      }));
+
+      setCurrentPage(1);
+    }
+  }, [categoryIdFromUrl]);
 
   const itemsPerPage = 12;
 
@@ -73,11 +101,31 @@ const EquipmentPage = () => {
     getFeatured();
   }, []);
 
+  useEffect(() => {
+    if (categoryIdFromUrl) {
+      const idAsString = categoryIdFromUrl.toString();
+
+      setFilters((prev) => ({
+        ...prev,
+        category_id: idAsString,
+      }));
+
+      setSelectedFilters((prev) => ({
+        ...prev,
+        category_id: [idAsString],
+      }));
+
+      setCurrentPage(1); // reset về trang đầu
+    }
+  }, [categoryIdFromUrl]);
+
   // Fetch paginated equipments (Run every time curlentpage changes)
   useEffect(() => {
     const fetchEquipmentsByPage = async () => {
       setLoading(true);
       setError(null);
+      console.log("filters:", filters);
+      console.log("Fetching URL:", URL.ALL_EQUIPMENTS);
       try {
         // Xây dựng params cho URL, bao gồm cả phân trang và bộ lọc
         const params = new URLSearchParams({
@@ -88,7 +136,13 @@ const EquipmentPage = () => {
         // Thêm các bộ lọc đang active vào params
         Object.entries(filters).forEach(([key, value]) => {
           if (value !== null && value !== "") {
-            params.append(key, value);
+            if (Array.isArray(value)) {
+              if (value.length > 0) {
+                params.append(key, value[0]);
+              }
+            } else {
+              params.append(key, value);
+            }
           }
         });
 
@@ -106,7 +160,8 @@ const EquipmentPage = () => {
       }
     };
     fetchEquipmentsByPage();
-  }, [currentPage, filters]); // Thêm `filters` vào dependency array
+  }, [currentPage, filters]);
+  console.log("Fetching URL:", URL.ALL_EQUIPMENTS);
 
   // Scroll to the top of the equipment list when the page changes
   useEffect(() => {
