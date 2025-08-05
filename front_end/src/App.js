@@ -16,6 +16,8 @@ import Category from "./components/shared/Category";
 import ActivityDetail from "./components/pages/Activities/ActivityDetail";
 import EquipmentPage from "./components/pages/Equipments/EquipmentPage";
 import EquipmentDetail from "./components/pages/Equipments/EquipmentDetail";
+import ActivityPage from "./components/pages/Activities/ActivityPage";
+
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -56,6 +58,7 @@ function App() {
             <Route path="/activity/:id" element={<ActivityDetail />} />
             <Route path="/equipment" element={<EquipmentPage />} />
             <Route path="/equipment/:id" element={<EquipmentDetail />} />
+             <Route path="/activities" element={<ActivityPage />} />
           </Routes>
         </main>
         <Footer />
