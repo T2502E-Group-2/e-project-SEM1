@@ -12,6 +12,8 @@ const URL = {
   EQUIPMENT_CATEGORIES: BASE + "/Equipments/equipment_categories.php",
   EQUIPMENT_DETAIL: BASE + "/Equipments/detail_equipments.php?id=",
   FEATURED_EQUIPMENTS: BASE + "/Equipments/featured_equipments.php",
+  ALL_POST: BASE + "/Posts/posts.php",
+  POST_DETAIL: BASE + "/Posts/post_detail.php?id=",
 };
 
 export default URL;
