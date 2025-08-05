@@ -13,7 +13,7 @@ import Footer from "./components/common/Footer";
 import Home from "./components/pages/Home";
 import AboutPage from "./components/pages/AboutPage";
 import Category from "./components/shared/Category";
-import ActivityDetail from "./components/pages/ActivityDetail";
+import ActivityDetail from "./components/pages/Activities/ActivityDetail";
 import EquipmentPage from "./components/pages/Equipments/EquipmentPage";
 import EquipmentDetail from "./components/pages/Equipments/EquipmentDetail";
 

@@ -10,8 +10,8 @@ import {
   ListGroup,
   Button,
 } from "react-bootstrap";
-import axios_instance from "../../util/axios_instance";
-import URL from "../../util/url";
+import axios_instance from "../../../util/axios_instance";
+import URL from "../../../util/url";
 
 const ActivityDetail = () => {
   const { id } = useParams();
@@ -69,7 +69,8 @@ const ActivityDetail = () => {
     <div className="activity-detail-page">
       <div
         className="detail-banner"
-        style={{ backgroundImage: `url(${activity.thumbnail_url})` }}>
+        style={{ backgroundImage: `url(${activity.thumbnail_url})` }}
+      >
         <div className="detail-banner-overlay">
           <h1>{activity.title}</h1>
         </div>

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios_instance from "../../util/axios_instance";
+import axios_instance from "../../../util/axios_instance";
 
 function ActivityCategory() {
   const { id } = useParams(); // Lấy ID từ URL, ví dụ: /category/5 -> id = 5
