@@ -704,3 +704,76 @@ main {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+/*About Page*/
+.about-hero-section {
+  padding: 1rem 0;
+  color: white;
+  position: relative;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.about-hero-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+.about-hero-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.section-title {
+  color: #f7f1f1;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  text-align: center;
+  margin-bottom: 3rem;
+  font-weight: bold;
+  position: relative;
+  display: inline-block;
+}
+
+.section-title span {
+  background-color: transparent;
+  border: 1px solid #ddd;
+  padding: 0 15px;
+  border-radius: 10px;
+
+  z-index: 2;
+  font-weight: 700;
+}
+
+.section-title::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -100px;
+  width: 100px;
+  height: 1px;
+  background-color: #ddd;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -100px;
+  width: 100px;
+  height: 1px;
+  background-color: #ddd;
+}
+
+.feature-card {
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12) !important;
+}
