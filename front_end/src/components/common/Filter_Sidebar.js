@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Spinner, Alert } from "react-bootstrap";
 import axios_instance from "../../util/axios_instance";
-import URL from "../../util/url"; // Giả định URL.EQUIPMENT_CATEGORIES trỏ đến equipment_categories.php
+import URL from "../../util/url";
 import FilterItem from "./FilterItem"; // Import component con
 
 const FilterSidebar = ({ onFilterChange, selectedFilters }) => {
@@ -29,6 +29,7 @@ const FilterSidebar = ({ onFilterChange, selectedFilters }) => {
     fetchCategories();
   }, []);
 
+  // Handling function when an item is selected
   // Hàm xử lý khi một item được chọn
   const handleItemCheck = (key, value, isChecked) => {
     let newFilters = { ...selectedFilters };
@@ -69,7 +70,7 @@ const FilterSidebar = ({ onFilterChange, selectedFilters }) => {
       }
     }
 
-    // Gửi bộ lọc đã cập nhật lên component cha
+    // Send the filter updated to the parent component
     const formattedFilters = {
       category_id:
         newFilters.category_id.length > 0

@@ -32,8 +32,8 @@ try {
         $categories_data[$row['category_id']] = [
             'category_id' => $row['category_id'],
             'category_name' => $row['category_name'],
-            'equipment_count' => 0, // Khởi tạo số lượng
-            'children' => [] // Sẽ chứa các sub_category
+            'equipment_count' => 0, 
+            'children' => [] 
         ];
     }
     $main_categories_stmt->close();
@@ -47,18 +47,18 @@ try {
 
     while ($row = $sub_categories_result->fetch_assoc()) {
         if (isset($categories_data[$row['category_id']])) {
-            // Thêm sub_category vào danh mục chính tương ứng
+            // Add sub_category to the corresponding main portfolio
             $categories_data[$row['category_id']]['children'][] = [
                 'name' => $row['sub_category'],
                 'equipment_count' => (int)$row['equipment_count']
             ];
-            // Cập nhật tổng số lượng cho danh mục chính
+            
             $categories_data[$row['category_id']]['equipment_count'] += (int)$row['equipment_count'];
         }
     }
     $sub_categories_stmt->close();
 
-    // 3. Chuyển đổi dữ liệu thành mảng để trả về và loại bỏ các danh mục không có sản phẩm
+    // 3. Convert data into arrays to return and eliminate categories without products
     $response_data = array_values(array_filter($categories_data, fn($category) => $category['equipment_count'] > 0));
 
     http_response_code(200);

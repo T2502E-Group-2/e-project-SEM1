@@ -6,18 +6,18 @@ import Activity from "./Activity";
 import URL from "../../util/url";
 
 const Category = () => {
-  const { id } = useParams();
+  const { name } = useParams();
   const [activities, setActivities] = useState([]);
   useEffect(() => {
     // get activities by category id
     const get_activities = async () => {
-      const url = URL.CATEGORY_ACTIVITIES + id;
+      const url = URL.CATEGORY_ACTIVITIES + "?category_name=" + name;
       const rs = await axios_instance.get(url);
       const data = rs.data.data;
       setActivities(data);
     };
     get_activities();
-  }, [id]);
+  }, [name]);
 
   return (
     <Container>

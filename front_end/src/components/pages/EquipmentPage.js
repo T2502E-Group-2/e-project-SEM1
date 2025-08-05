@@ -25,16 +25,25 @@ const EquipmentPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const categoryIdFromUrl = queryParams.get("category_id");
-  const [filters, setFilters] = useState(() => {
-    if (categoryIdFromUrl) {
-      return { category_id: categoryIdFromUrl.toString() };
-    }
-    return {};
-  });
+  const [filters, setFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({
     category_id: [],
     sub_category: [],
   });
+  useEffect(() => {
+    if (categoryIdFromUrl) {
+      const idAsString = categoryIdFromUrl.toString();
+      setFilters((prev) => ({
+        ...prev,
+        category_id: idAsString,
+      }));
+      setSelectedFilters((prev) => ({
+        ...prev,
+        category_id: [idAsString],
+      }));
+      setCurrentPage(1);
+    }
+  }, [categoryIdFromUrl]);
 
   useEffect(() => {
     if (categoryIdFromUrl) {
@@ -100,24 +109,6 @@ const EquipmentPage = () => {
     };
     getFeatured();
   }, []);
-
-  useEffect(() => {
-    if (categoryIdFromUrl) {
-      const idAsString = categoryIdFromUrl.toString();
-
-      setFilters((prev) => ({
-        ...prev,
-        category_id: idAsString,
-      }));
-
-      setSelectedFilters((prev) => ({
-        ...prev,
-        category_id: [idAsString],
-      }));
-
-      setCurrentPage(1); // reset về trang đầu
-    }
-  }, [categoryIdFromUrl]);
 
   // Fetch paginated equipments (Run every time curlentpage changes)
   useEffect(() => {

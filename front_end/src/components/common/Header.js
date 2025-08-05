@@ -9,8 +9,28 @@ import {
   Container,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios_instance from "../../util/axios_instance";
+import URL from "../../util/url";
 
 const Header = () => {
+  const [gearCategories, setGearCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const url = URL.EQUIPMENT_CATEGORIES;
+        const rs = await axios_instance.get(url);
+        if (rs.data.status && rs.data.data) {
+          setGearCategories(rs.data.data);
+        }
+      } catch (error) {
+        console.error("Failed to load gear categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <>
       {/* =================== Header Logo + Cart + Login =================== */}
@@ -134,19 +154,21 @@ const Header = () => {
               </Nav.Item>
 
               <Nav.Item className="dropdown">
-                <Nav.Link as={Link} to="/equipment" className="dropdown-toggle">
+                <Nav.Link
+                  onClick={() => (window.location.href = "/equipment")}
+                  className="dropdown-toggle">
                   Gears
                 </Nav.Link>
+
                 <div className="dropdown-menu">
-                  <Link to="/equipment?category_id=1" className="dropdown-item">
-                    Accessories
-                  </Link>
-                  <Link to="/equipment?category_id=2" className="dropdown-item">
-                    Equipments
-                  </Link>
-                  <Link to="/equipment?category_id=3" className="dropdown-item">
-                    Footwears
-                  </Link>
+                  {gearCategories.map((category) => (
+                    <Link
+                      key={category.category_id}
+                      to={`/equipment?category_id=${category.category_id}`}
+                      className="dropdown-item">
+                      {category.category_name}
+                    </Link>
+                  ))}
                 </div>
               </Nav.Item>
               <Nav.Link as={Link} to="/contact">
