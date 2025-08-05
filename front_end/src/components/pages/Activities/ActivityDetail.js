@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import URL from "../../../util/url";
 import {
   Container,
   Row,
@@ -11,7 +12,6 @@ import {
   Button,
 } from "react-bootstrap";
 import axios_instance from "../../../util/axios_instance";
-import URL from "../../../util/url";
 
 const ActivityDetail = () => {
   const { id } = useParams();
@@ -25,7 +25,7 @@ const ActivityDetail = () => {
         // Giả định rằng API của bạn có một endpoint để lấy chi tiết
         // một hoạt động, ví dụ: /api/activities/:id
         // và URL.ACTIVITIES trong file util/url.js trỏ đến '/api/activities'
-        const response = await axios_instance.get(`${URL.ACTIVITIES}/${id}`);
+        const response = await axios_instance.get(URL.ACTIVITY_DETAIL + id);
         setActivity(response.data.data);
         setError(null);
       } catch (err) {
@@ -100,7 +100,11 @@ const ActivityDetail = () => {
                 </ListGroup.Item>
               </ListGroup>
               <Card.Body>
-                <Button variant="warning" className="w-100 book-now-btn">
+                <h5 className="card-title mt-3">More Details</h5>
+                <div
+                  dangerouslySetInnerHTML={{ __html: activity.detail_content }}
+                />
+                <Button variant="warning" className="w-100 book-now-btn mt-4">
                   Book Now
                 </Button>
               </Card.Body>
