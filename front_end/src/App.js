@@ -14,8 +14,8 @@ import Home from "./components/pages/Home";
 import AboutPage from "./components/pages/AboutPage";
 import Category from "./components/shared/Category";
 import ActivityDetail from "./components/pages/ActivityDetail";
-import EquipmentPage from "./components/pages/EquipmentPage";
-import EquipmentDetail from "./components/pages/EquipmentDetail";
+import EquipmentPage from "./components/pages/Equipments/EquipmentPage";
+import EquipmentDetail from "./components/pages/Equipments/EquipmentDetail";
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -44,7 +44,8 @@ function App() {
     <UserProvider value={{ state, dispatch }}>
       <div className="App">
         <div
-          className={`header-and-menu-container ${scrolled ? "scrolled" : ""}`}>
+          className={`header-and-menu-container ${scrolled ? "scrolled" : ""}`}
+        >
           <Header />
         </div>
         <main>

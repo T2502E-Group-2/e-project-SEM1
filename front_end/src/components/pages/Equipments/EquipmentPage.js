@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import axios_instance from "../../util/axios_instance";
-import URL from "../../util/url";
-import Equipment from "../shared/Equipment";
+import axios_instance from "../../../util/axios_instance";
+import URL from "../../../util/url";
+import Equipment from "../../shared/Equipment";
 import Slider from "react-slick";
-import PaginationComponent from "../common/Pagination";
-import FilterSidebar from "../common/Filter_Sidebar";
+import PaginationComponent from "../../common/Pagination";
+import FilterSidebar from "../../common/Filter_Sidebar";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -255,7 +255,8 @@ const EquipmentPage = () => {
                   top: "10px",
                   right: "10px",
                   zIndex: 10,
-                }}>
+                }}
+              >
                 <Spinner animation="border" size="sm" />
               </div>
             )}
@@ -263,7 +264,8 @@ const EquipmentPage = () => {
               style={{
                 opacity: loading ? 0.5 : 1,
                 transition: "opacity 0.3s ease",
-              }}>
+              }}
+            >
               {currentEquipments.length > 0 ? (
                 currentEquipments.map((equipment) => (
                   <Col
@@ -272,7 +274,8 @@ const EquipmentPage = () => {
                     sm={6}
                     md={4}
                     lg={3}
-                    className="mb-4 slider-item">
+                    className="mb-4 slider-item"
+                  >
                     <Equipment equipment={equipment} />
                   </Col>
                 ))
