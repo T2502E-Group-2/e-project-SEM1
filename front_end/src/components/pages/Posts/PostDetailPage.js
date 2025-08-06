@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios_instance from "../../../util/axios_instance";
 import { Container, Spinner, Alert, Card } from "react-bootstrap";
 import URL from "../../../util/url";
 
 const PostDetailPage = () => {
-  const { id } = useParams();
+  const { id, slug } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -18,6 +19,11 @@ const PostDetailPage = () => {
           setPost(response.data.data);
         } else {
           setError("Post not found.");
+        }
+        if (response.data.data.slug !== slug) {
+          navigate(`/posts/${id}/${response.data.data.slug}`, {
+            replace: true,
+          });
         }
       } catch (err) {
         setError("Server error.");

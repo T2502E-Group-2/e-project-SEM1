@@ -36,7 +36,9 @@ if ($conn->connect_error) {
 // Use prepared statements to prevent SQL injection
 $sql = "SELECT 
             p.post_id, 
-            p.title, 
+            p.title,
+            p.slug,
+            p.status,
             p.content,
             p.thumbnail_url,
             p.created_at,

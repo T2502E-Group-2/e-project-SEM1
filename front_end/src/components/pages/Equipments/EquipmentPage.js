@@ -255,8 +255,7 @@ const EquipmentPage = () => {
                   top: "10px",
                   right: "10px",
                   zIndex: 10,
-                }}
-              >
+                }}>
                 <Spinner animation="border" size="sm" />
               </div>
             )}
@@ -264,8 +263,7 @@ const EquipmentPage = () => {
               style={{
                 opacity: loading ? 0.5 : 1,
                 transition: "opacity 0.3s ease",
-              }}
-            >
+              }}>
               {currentEquipments.length > 0 ? (
                 currentEquipments.map((equipment) => (
                   <Col
@@ -274,8 +272,7 @@ const EquipmentPage = () => {
                     sm={6}
                     md={4}
                     lg={3}
-                    className="mb-4 slider-item"
-                  >
+                    className="mb-4 slider-item">
                     <Equipment equipment={equipment} />
                   </Col>
                 ))

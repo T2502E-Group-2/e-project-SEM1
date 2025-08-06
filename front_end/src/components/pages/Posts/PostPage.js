@@ -72,37 +72,51 @@ const PostPage = () => {
 
   return (
     <div className="post-page-wrapper">
-      <Container style={{ paddingTop: "100px" }}>
-        <Row>
+      <Container fluid>
+        <Row className="g-4">
           {posts.map((post) => (
-            <Col key={post.post_id} md={6} lg={4} className="mb-4">
-              <Card className="post-card h-100 border-0">
-                <Link to={`/posts/${post.post_id}`} className="post-link">
-                  <Card.Img
-                    variant="top"
-                    src={post.thumbnail_url}
-                    alt={post.title}
-                    onError={(e) => (e.target.src = "/default-thumbnail.jpg")}
-                  />
-                  <Card.Body>
-                    <Card.Title>{post.title}</Card.Title>
-                    <Card.Text className="text-muted small">
-                      By {post.author_name || "Unknown"} on{" "}
-                      {formatDate(post.created_at)}
-                    </Card.Text>
-                    {typeof post.excerpt === "string" ? (
-                      <div
-                        className="excerpt-text small card-text"
-                        dangerouslySetInnerHTML={{ __html: post.excerpt }}
-                      />
-                    ) : (
-                      <p className="excerpt-text small card-text">
-                        No excerpt available.
-                      </p>
-                    )}
-                  </Card.Body>
-                </Link>
-              </Card>
+            <Col
+              key={post.post_id}
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              className="mb-4">
+              <div className="w-100">
+                <Card
+                  className="post-card border-0  h-100 container-fluid flex-column"
+                  title={post.title}>
+                  <Link
+                    to={`/posts/${post.post_id}/${post.slug}`}
+                    className="post-link">
+                    <Card.Img
+                      variant="top"
+                      src={post.thumbnail_url}
+                      alt={post.title}
+                      onError={(e) => (e.target.src = "/default-thumbnail.jpg")}
+                    />
+                    <Card.Body>
+                      <Card.Title className="card-title">
+                        {post.title}
+                      </Card.Title>
+                      <Card.Text className="text-muted small">
+                        By {post.author_name || "Unknown"} on{" "}
+                        {formatDate(post.created_at)}
+                      </Card.Text>
+                      {typeof post.excerpt === "string" ? (
+                        <div
+                          className="excerpt-text small card-text"
+                          dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                        />
+                      ) : (
+                        <p className="excerpt-text small card-text">
+                          No excerpt available.
+                        </p>
+                      )}
+                    </Card.Body>
+                  </Link>
+                </Card>
+              </div>
             </Col>
           ))}
         </Row>

@@ -60,7 +60,7 @@ function App() {
             <Route path="/equipment/:id" element={<EquipmentDetail />} />
             <Route path="/activities" element={<ActivityPage />} />
             <Route path="/posts" element={<PostPage />} />
-            <Route path="/posts/:id" element={<PostDetailPage />} />
+            <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
           </Routes>
         </main>
         <Footer />

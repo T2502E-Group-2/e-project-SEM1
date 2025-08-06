@@ -10,7 +10,9 @@ const Equipment = ({ equipment }) => {
 
   return (
     <Link to={`/equipment/${id}`} className="product-link">
-      <div className="card product-card animate-in pt-3 bg-white shadow-lg h-100">
+      <div
+        className="card product-card animate-in pt-3 bg-white shadow-lg h-100"
+        title={name}>
         <div className="showcase-trek">
           <img src={image_url} className="card-img-top" alt={name} />
         </div>
