@@ -17,7 +17,8 @@ import ActivityDetail from "./components/pages/Activities/ActivityDetail";
 import EquipmentPage from "./components/pages/Equipments/EquipmentPage";
 import EquipmentDetail from "./components/pages/Equipments/EquipmentDetail";
 import ActivityPage from "./components/pages/Activities/ActivityPage";
-
+import PostPage from "./components/pages/Posts/PostPage";
+import PostDetailPage from "./components/pages/Posts/PostDetailPage";
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -46,8 +47,7 @@ function App() {
     <UserProvider value={{ state, dispatch }}>
       <div className="App">
         <div
-          className={`header-and-menu-container ${scrolled ? "scrolled" : ""}`}
-        >
+          className={`header-and-menu-container ${scrolled ? "scrolled" : ""}`}>
           <Header />
         </div>
         <main>
@@ -58,7 +58,9 @@ function App() {
             <Route path="/activity/:id" element={<ActivityDetail />} />
             <Route path="/equipment" element={<EquipmentPage />} />
             <Route path="/equipment/:id" element={<EquipmentDetail />} />
-             <Route path="/activities" element={<ActivityPage />} />
+            <Route path="/activities" element={<ActivityPage />} />
+            <Route path="/posts" element={<PostPage />} />
+            <Route path="/posts/:id" element={<PostDetailPage />} />
           </Routes>
         </main>
         <Footer />
