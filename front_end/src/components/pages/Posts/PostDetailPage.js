@@ -52,7 +52,7 @@ const PostDetailPage = () => {
 
   return (
     <div>
-      <div style={{ fontSize: "20px", paddingTop: "200px" }}></div>
+      <div style={{ paddingTop: "200px" }}></div>
       <Card className="post-detail-page-wrapper ">
         <Card.Body>
           <h2>{post.title}</h2>

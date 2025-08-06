@@ -24,11 +24,13 @@ const ActivityPage = () => {
     fetchActivities();
   }, []);
 
-  if (loading) return <div className="text-center mt-5">Loading activities...</div>;
+  if (loading)
+    return <div className="text-center mt-5">Loading activities...</div>;
   if (error) return <div className="text-center text-danger mt-5">{error}</div>;
 
   return (
     <div className="container">
+      <div style={{ paddingTop: "140px" }}></div>
       <h1 className="text-center mt-5 mb-4">Our Adventures</h1>
       <div className="row g-4">
         {activities.map((activity) => (
