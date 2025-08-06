@@ -40,7 +40,7 @@ $sql = "SELECT
             p.content,
             p.thumbnail_url,
             p.created_at,
-            u.last_name AS author_name
+            CONCAT(u.first_name, ' ', u.last_name) AS author_name
         FROM 
             posts p
         LEFT JOIN 

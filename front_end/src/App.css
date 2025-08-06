@@ -860,14 +860,15 @@ main {
 /*Post detail page styles*/
 .post-detail-page-wrapper {
   position: relative;
-  margin-top: 250px;
+  /* margin-top: 250px; */
   padding-bottom: 4rem;
+  padding: 20px;
   color: #070707;
   /* background-color: #fff; */
 }
 
 .post-content {
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1.8;
   color: #000000;
 }
@@ -877,7 +878,7 @@ main {
 }
 
 .post-content img {
-  max-width: 100%;
+  max-width: 80%;
   height: auto;
   border-radius: 0.25rem;
   margin-top: 1rem;

@@ -30,14 +30,14 @@ const PostDetailPage = () => {
 
   if (loading)
     return (
-      <div className="post-detail-page-wrapper d-flex justify-content-center align-items-center">
-        <Spinner animation="border" />
+      <div className="">
+        <Spinner animation=" post-detail-page-wrapper border d-flex justify-content-center align-items-center" />
       </div>
     );
   if (error)
     return (
-      <div className="post-detail-page-wrapper">
-        <Container className="pt-5">
+      <div className="">
+        <Container className="post-detail-page-wrapper pt-5">
           <Alert variant="danger">{error}</Alert>
         </Container>
       </div>
@@ -46,15 +46,18 @@ const PostDetailPage = () => {
 
   return (
     <div>
+      <div style={{ fontSize: "20px", paddingTop: "200px" }}></div>
       <Card className="post-detail-page-wrapper ">
-        <h2>{post.title}</h2>
-        <p className="text-muted">
-          By {post.author_name} - {post.created_at}
-        </p>
-        <div
-          className="post-content"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        <Card.Body>
+          <h2>{post.title}</h2>
+          <p className="text-muted">
+            By {post.author_name} - {post.created_at}
+          </p>
+          <div
+            className="post-content"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+        </Card.Body>
       </Card>
     </div>
   );
