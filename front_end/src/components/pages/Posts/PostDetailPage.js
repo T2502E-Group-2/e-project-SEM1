@@ -32,7 +32,7 @@ const PostDetailPage = () => {
       }
     };
     fetchPost();
-  }, [id]);
+  }, [id, slug, navigate]);
 
   if (loading)
     return (
