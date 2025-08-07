@@ -47,8 +47,7 @@ const EquipmentDetail = () => {
     return (
       <Container
         className="text-center mt-5 vh-100"
-        style={{ paddingTop: "140px" }}
-      >
+        style={{ paddingTop: "140px" }}>
         <Spinner animation="border" variant="primary" />
         <p>Loading Equipment Details...</p>
       </Container>
@@ -107,8 +106,7 @@ const EquipmentDetail = () => {
             href={equipment.purchase_link}
             target="_blank"
             rel="noopener noreferrer"
-            size="lg"
-          >
+            size="lg">
             Purchase Link
           </Button>
         )}
@@ -117,8 +115,7 @@ const EquipmentDetail = () => {
         show={showModal}
         onHide={() => setShowModal(false)}
         centered
-        size="lg"
-      >
+        size="lg">
         <Modal.Body className="p-0">
           <img
             src={equipment.image_url}

@@ -13,16 +13,15 @@ require_once("../../db/connect.php");
 
 $response = array();
 
-// Check if ID is provided
 if (!isset($_GET["id"]) || empty($_GET["id"])) {
-    http_response_code(400); // Bad Request
+    http_response_code(400);
     $response['status'] = false;
     $response['message'] = "Post ID is required.";
     echo json_encode($response);
     exit();
 }
 
-$id = $_GET["id"];
+$id = (int) $_GET["id"];
 $conn = connect();
 
 if ($conn->connect_error) {
@@ -33,7 +32,6 @@ if ($conn->connect_error) {
     exit();
 }
 
-// Use prepared statements to prevent SQL injection
 $sql = "SELECT 
             p.post_id, 
             p.title,
@@ -49,22 +47,55 @@ $sql = "SELECT
             users u ON p.author_id = u.user_id
         WHERE p.post_id = ?";
 $stmt = $conn->prepare($sql);
-
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result->num_rows > 0) {
-    $response['status'] = true;
-    $response['message'] = "Post fetched successfully.";
-    $response['data'] = $result->fetch_assoc();
-} else {
-    http_response_code(404); // Not Found
+if ($result->num_rows === 0) {
+    http_response_code(404);
     $response['status'] = false;
     $response['message'] = "Post not found with ID: " . $id;
+    echo json_encode($response);
+    exit();
 }
 
+$post = $result->fetch_assoc();
+
+// Truy vấn bài viết trước
+$sqlPrev = "SELECT post_id, slug, title 
+            FROM posts 
+            WHERE post_id < ? AND status = 'posted'
+            ORDER BY post_id DESC 
+            LIMIT 1";
+$stmtPrev = $conn->prepare($sqlPrev);
+$stmtPrev->bind_param("i", $id);
+$stmtPrev->execute();
+$prevResult = $stmtPrev->get_result();
+$prevPost = $prevResult->fetch_assoc();
+
+// Truy vấn bài viết sau
+$sqlNext = "SELECT post_id, slug, title 
+            FROM posts 
+            WHERE post_id > ? AND status = 'posted'
+            ORDER BY post_id ASC 
+            LIMIT 1";
+$stmtNext = $conn->prepare($sqlNext);
+$stmtNext->bind_param("i", $id);
+$stmtNext->execute();
+$nextResult = $stmtNext->get_result();
+$nextPost = $nextResult->fetch_assoc();
+
+// Gắn vào dữ liệu trả về
+$post['prev_post'] = $prevPost ?: null;
+$post['next_post'] = $nextPost ?: null;
+
+$response['status'] = true;
+$response['message'] = "Post fetched successfully.";
+$response['data'] = $post;
+
 $stmt->close();
+$stmtPrev->close();
+$stmtNext->close();
 $conn->close();
 
 echo json_encode($response);

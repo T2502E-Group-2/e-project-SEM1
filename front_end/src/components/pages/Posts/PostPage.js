@@ -84,7 +84,7 @@ const PostPage = () => {
               className="mb-4">
               <div className="w-100">
                 <Card
-                  className="post-card border-0  h-100 container-fluid flex-column"
+                  className="post-card border-0 h-100 container-fluid flex-column"
                   title={post.title}>
                   <Link
                     to={`/posts/${post.post_id}/${post.slug}`}
@@ -103,16 +103,6 @@ const PostPage = () => {
                         By {post.author_name || "Unknown"} on{" "}
                         {formatDate(post.created_at)}
                       </Card.Text>
-                      {typeof post.excerpt === "string" ? (
-                        <div
-                          className="excerpt-text small card-text"
-                          dangerouslySetInnerHTML={{ __html: post.excerpt }}
-                        />
-                      ) : (
-                        <p className="excerpt-text small card-text">
-                          No excerpt available.
-                        </p>
-                      )}
                     </Card.Body>
                   </Link>
                 </Card>
