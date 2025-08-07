@@ -82,7 +82,7 @@ const PostDetailPage = () => {
 
   return (
     <Container
-      className="post-detail-page-wrapper"
+      className="container-fluid post-detail-page-wrapper"
       style={{ paddingTop: "200px" }}>
       <Row className="justify-content-center">
         {/* Main content */}
@@ -119,9 +119,17 @@ const PostDetailPage = () => {
             ))}
           </ListGroup>
         </Col>
-        <div className="d-flex justify-content-between mt-4">
+        <Col
+          md={8}
+          className="container-fluid d-flex mt-4"
+          style={{
+            color: "#ffff",
+            fontSize: "1.2rem",
+            textShadow: "1px 1px 2px #000",
+          }}>
           {post.prev_post ? (
-            <div
+            <Col
+              md={6}
               className="text-start"
               style={{ cursor: "pointer" }}
               onClick={() =>
@@ -129,15 +137,16 @@ const PostDetailPage = () => {
                   `/posts/${post.prev_post.post_id}/${post.prev_post.slug}`
                 )
               }>
-              <span className="text-primary">
+              <span className="text">
                 <i className="bi bi-chevron-left"></i> {post.prev_post.title}
               </span>
-            </div>
+            </Col>
           ) : (
             <div></div>
           )}
           {post.next_post ? (
-            <div
+            <Col
+              md={6}
               className="text-end"
               style={{ cursor: "pointer" }}
               onClick={() =>
@@ -145,14 +154,16 @@ const PostDetailPage = () => {
                   `/posts/${post.next_post.post_id}/${post.next_post.slug}`
                 )
               }>
-              <span className="text-primary">
+              <span className="text">
+                {" "}
                 {post.next_post.title} <i className="bi bi-chevron-right"></i>
               </span>
-            </div>
+            </Col>
           ) : (
             <div></div>
           )}
-        </div>
+        </Col>
+        <Col md={4}></Col>
       </Row>
     </Container>
   );

@@ -1,19 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import "bootstrap-icons/font/bootstrap-icons.css";
+
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import "./index.css"; // Hoặc đường dẫn đến file CSS gốc của bạn
+
+// Lấy Client ID từ PayPal Developer Dashboard của bạn
+const initialOptions = {
+  clientId:
+    "AT4E9IB2vgxdsijJPafKedX-ouYG_io2swXTVM-ssc5Cm4X7YKgN9pkpbRUlznDaG6kNg6BFpstxdXyO",
+  currency: "USD",
+  intent: "capture",
+};
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <PayPalScriptProvider options={initialOptions}>
+        <App />
+      </PayPalScriptProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

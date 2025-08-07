@@ -58,9 +58,8 @@ if ($result->num_rows > 0) {
         "brand" => $equipment["brand"],
         "description" => $equipment["description"],
         "price" => $equipment["price"],
+        "stock" => $equipment["stock"],
         "image_url" => $equipment["image_url"],
-        "purchase_link" => $equipment["purchase_link"]        
-
     ]
     ]);
 } else {

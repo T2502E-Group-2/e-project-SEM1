@@ -2,6 +2,7 @@ import "./App.css";
 import { useState, useEffect, useReducer } from "react";
 import STATE from "./context/initState";
 import reducer from "./context/reducer";
+import { CartProvider } from "./context/CartContext";
 import { UserProvider } from "./context/context";
 import { Route, Routes } from "react-router-dom";
 
@@ -12,6 +13,7 @@ import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Home from "./components/pages/Home";
 import AboutPage from "./components/pages/AboutPage";
+import Cart from "./components/common/Cart";
 import Category from "./components/shared/Category";
 import ActivityDetail from "./components/pages/Activities/ActivityDetail";
 import EquipmentPage from "./components/pages/Equipments/EquipmentPage";
@@ -44,28 +46,33 @@ function App() {
   }, []);
 
   return (
-    <UserProvider value={{ state, dispatch }}>
-      <div className="App">
-        <div
-          className={`header-and-menu-container ${scrolled ? "scrolled" : ""}`}>
-          <Header />
+    <CartProvider>
+      <UserProvider value={{ state, dispatch }}>
+        <div className="App">
+          <div
+            className={`header-and-menu-container ${
+              scrolled ? "scrolled" : ""
+            }`}>
+            <Header />
+          </div>
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/category/:id" element={<Category />} />
+              <Route path="/activity/:id" element={<ActivityDetail />} />
+              <Route path="/equipment" element={<EquipmentPage />} />
+              <Route path="/equipment/:id" element={<EquipmentDetail />} />
+              <Route path="/activities" element={<ActivityPage />} />
+              <Route path="/posts" element={<PostPage />} />
+              <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
+            </Routes>
+          </main>
+          <Footer />
         </div>
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/category/:id" element={<Category />} />
-            <Route path="/activity/:id" element={<ActivityDetail />} />
-            <Route path="/equipment" element={<EquipmentPage />} />
-            <Route path="/equipment/:id" element={<EquipmentDetail />} />
-            <Route path="/activities" element={<ActivityPage />} />
-            <Route path="/posts" element={<PostPage />} />
-            <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </UserProvider>
+      </UserProvider>
+    </CartProvider>
   );
 }
 

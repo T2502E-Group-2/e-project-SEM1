@@ -9,12 +9,14 @@ import {
   Container,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
+import CartContext from "../../context/CartContext";
 
 const Header = () => {
   const [gearCategories, setGearCategories] = useState([]);
+  const { cartItemCount } = useContext(CartContext);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -57,25 +59,27 @@ const Header = () => {
                 />
               </Form.Group>
             </Form>
-            <Link
-              className="nav-link position-relative"
-              to={"/cart"}
-              style={{ paddingLeft: "30px", marginRight: "1rem" }}>
-              <Image
-                className="cart-icon"
-                src="../cart-icon.png"
-                alt="Cart"
-                width={"30px"}
-                height={"30px"}
-              />
-              <Badge
-                pill
-                bg="danger"
-                className="position-absolute top-0 start-100 translate-middle">
-                {/* Placeholder for cart length, as context is removed */}0
-                <span className="visually-hidden">items in cart</span>
-              </Badge>
-            </Link>
+            <Navbar expand="lg" variant="light" className="navbar">
+              <Link
+                className="nav-link position-relative"
+                to={"/cart"}
+                style={{ paddingLeft: "30px", marginRight: "1rem" }}>
+                <Image
+                  className="cart-icon"
+                  src="../cart-icon.png"
+                  alt="Cart"
+                  width={"30px"}
+                  height={"30px"}
+                />
+                <Badge
+                  pill
+                  bg="danger"
+                  className="position-absolute top-0 start-100 translate-middle">
+                  {cartItemCount}
+                  <span className="visually-hidden">items in cart</span>
+                </Badge>
+              </Link>
+            </Navbar>
           </Col>
           <Col
             xs={3}

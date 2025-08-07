@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios_instance from "../../../util/axios_instance";
 import URL from "../../../util/url";
 
@@ -7,18 +7,35 @@ import {
   Col,
   Container,
   Row,
-  Button,
   Spinner,
   Alert,
   Modal,
+  Button,
+  Form,
 } from "react-bootstrap";
+
+import { PayPalButtons } from "@paypal/react-paypal-js";
 
 const EquipmentDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [equipment, setEquipment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [userInfo, setUserInfo] = useState({
+    fullName: "",
+    address: "",
+    email: "",
+    phone: "",
+    note: "",
+  });
+
+  const [validationError, setValidationError] = useState("");
+  // Thêm một state để lưu các lỗi của từng trường
+  const [formErrors, setFormErrors] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const get_detail = async () => {
@@ -30,6 +47,16 @@ const EquipmentDetail = () => {
         if (rs.data && rs.data.data) {
           setEquipment(rs.data.data);
           console.log(rs.data.data);
+
+          // Lấy thông tin người dùng từ localStorage để kiểm tra đăng nhập
+          const loggedInUser = JSON.parse(localStorage.getItem("user"));
+          if (loggedInUser) {
+            setIsLoggedIn(true);
+            setUserInfo(loggedInUser);
+          } else {
+            setIsLoggedIn(false);
+          }
+          console.log(loggedInUser);
         } else {
           setError("Equipment not found.");
         }
@@ -42,6 +69,121 @@ const EquipmentDetail = () => {
     };
     get_detail();
   }, [id]);
+
+  const handleAddToCart = () => {
+    const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingItem = currentCart.find((item) => item.id === equipment.id);
+
+    if (existingItem) {
+      existingItem.quantity += quantity;
+    } else {
+      currentCart.push({ ...equipment, quantity: quantity });
+    }
+
+    // Save updated shopping cart into localstorage
+    localStorage.setItem("cart", JSON.stringify(currentCart));
+    alert(`${equipment.name} Already added to the cart!`);
+    navigate("/cart");
+  };
+
+  const handleBuyNow = () => {
+    // Reset lỗi validation khi mở modal
+    setValidationError("");
+    setFormErrors({});
+    setShowModal(true);
+  };
+
+  const handleValidation = () => {
+    if (isLoggedIn) {
+      setValidationError("");
+      setFormErrors({});
+      return true;
+    }
+
+    const errors = {};
+    let formIsValid = true;
+
+    if (!userInfo.fullName) {
+      formIsValid = false;
+      errors.fullName = "Full name is not allowed to leave blank";
+    }
+    if (!userInfo.address) {
+      formIsValid = false;
+      errors.address = "The address is not allowed to leave blank";
+    }
+    if (!userInfo.phone) {
+      formIsValid = false;
+      errors.phone = "The phone number is not allowed to leave blank";
+    }
+
+    setFormErrors(errors);
+
+    if (!formIsValid) {
+      setValidationError("Vui lòng điền đầy đủ thông tin bắt buộc.");
+    } else {
+      setValidationError("");
+    }
+    return formIsValid;
+  };
+
+  // Logic to create orders on Paypal
+  const createOrder = (data, actions) => {
+    // Kiểm tra validation ngay trong hàm createOrder
+    if (!handleValidation()) {
+      // Nếu validation thất bại, hiển thị thông báo lỗi và ngăn PayPal tiếp tục
+      return actions.reject("Thông tin người dùng chưa được điền đầy đủ.");
+    }
+
+    // Nếu validation thành công, tạo đơn hàng
+    return actions.order.create({
+      purchase_units: [
+        {
+          description: equipment.name,
+          amount: {
+            value: (equipment.price * quantity).toFixed(2),
+            currency_code: "USD",
+          },
+        },
+      ],
+    });
+  };
+
+  // Logic after successful payment
+  const onApprove = (data, actions) => {
+    // Kiểm tra lại validation trước khi gọi capture
+    if (!handleValidation()) {
+      return;
+    }
+
+    return actions.order.capture().then((details) => {
+      // Send successful payment data to your backend
+      const orderData = {
+        userId: isLoggedIn ? userInfo.id : null,
+        itemId: equipment.id,
+        order_id: details.id,
+        quantity: quantity,
+        amount: equipment.price * quantity,
+        userInfo: userInfo,
+        paypalOrderId: details.id,
+      };
+
+      axios_instance
+        .post(URL.PAYMENT, orderData)
+        .then((res) => {
+          if (res.data.success) {
+            alert(`Thanh toán thành công! Mã đơn hàng: ${res.data.order_id}`);
+          } else {
+            alert(`Thanh toán thất bại: ${res.data.message}`);
+          }
+        })
+        .catch((err) => {
+          console.error("Lỗi khi ghi nhận đơn hàng vào database:", err);
+          alert(
+            "Đã thanh toán thành công nhưng có lỗi khi lưu đơn hàng. Vui lòng liên hệ hỗ trợ."
+          );
+        });
+    });
+  };
 
   if (loading) {
     return (
@@ -63,7 +205,7 @@ const EquipmentDetail = () => {
   }
 
   if (!equipment) {
-    return null; // or a "not found" message
+    return null;
   }
 
   return (
@@ -90,6 +232,30 @@ const EquipmentDetail = () => {
                 <strong>${equipment.price}</strong>
               </h3>
             </div>
+            <div className="d-flex align-items-center my-3">
+              {" "}
+              <Button
+                variant="outline-secondary"
+                onClick={() =>
+                  setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
+                }>
+                -
+              </Button>
+              <span className="mx-2 fs-5">{quantity}</span>
+              <Button
+                variant="outline-secondary"
+                onClick={() => setQuantity((prev) => prev + 1)}>
+                +
+              </Button>
+            </div>
+            <div className="d-flex mt-3">
+              <Button variant="primary" className="me-2" onClick={handleBuyNow}>
+                Buy now
+              </Button>
+              <Button variant="outline-primary" onClick={handleAddToCart}>
+                Add to cart
+              </Button>
+            </div>
           </Col>
         </Row>
         <div className="lead mt-3">
@@ -99,35 +265,121 @@ const EquipmentDetail = () => {
             dangerouslySetInnerHTML={{ __html: equipment.description }}
           />
         </div>
-        {equipment.purchase_link && (
-          <Button
-            className="mt-3"
-            variant="btn btn-outline-primary btn-sm"
-            href={equipment.purchase_link}
-            target="_blank"
-            rel="noopener noreferrer"
-            size="lg">
-            Purchase Link
-          </Button>
-        )}
       </Row>
+      {/*Purchase Now Modal */}
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}
         centered
         size="lg">
-        <Modal.Body className="p-0">
-          <img
-            src={equipment.image_url}
-            alt={equipment.name}
-            style={{
-              width: "100%",
-              height: "auto",
-              objectFit: "contain",
-              borderRadius: "10px",
-            }}
-          />
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm order</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col md={4}>
+              <img
+                className="img-thumbnail mx-3 my-3 border-0"
+                style={{ width: "200px", cursor: "pointer" }}
+                src={equipment.image_url}
+                alt={equipment.name}></img>
+            </Col>
+            <Col
+              md={8}
+              style={{
+                fontSize: "lg",
+                alignContent: "center",
+              }}>
+              <h4 style={{ fontWeight: "bold", paddingBottom: "10px" }}>
+                You're Purchasing for:
+              </h4>
+              <h5 style={{ fontWeight: "bold", paddingBottom: "10px" }}>
+                {equipment.name}
+              </h5>
+              <p>
+                <strong>Quantity: </strong>
+                {quantity}
+              </p>
+              <p>
+                <strong>Total amount: </strong>$
+                {(equipment.price * quantity).toFixed(2)}
+              </p>
+            </Col>
+          </Row>
+          <hr />
+          <h4 style={{ fontWeight: "bold", paddingBottom: "15px" }}>
+            Personal Information
+          </h4>
+          {validationError && <Alert variant="danger">{validationError}</Alert>}
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                Full name <span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={userInfo.fullName}
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, fullName: e.target.value })
+                }
+                isInvalid={!!formErrors.fullName}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formErrors.fullName}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                Address <span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={userInfo.address}
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, address: e.target.value })
+                }
+                isInvalid={!!formErrors.address}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formErrors.address}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                Phone number<span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={userInfo.phone}
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, phone: e.target.value })
+                }
+                isInvalid={!!formErrors.phone}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formErrors.phone}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Notes for the seller</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={userInfo.note}
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, note: e.target.value })
+                }
+              />
+            </Form.Group>
+          </Form>
         </Modal.Body>
+        <Modal.Footer>
+          <PayPalButtons
+            style={{ layout: "vertical" }}
+            createOrder={createOrder}
+            onApprove={onApprove}
+          />
+        </Modal.Footer>
       </Modal>
     </Container>
   );

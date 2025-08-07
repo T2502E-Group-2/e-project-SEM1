@@ -6,7 +6,7 @@ const Equipment = ({ equipment }) => {
     return null;
   }
 
-  const { id, name, price, image_url, brand, category_name } = equipment;
+  const { id, name, price, stock, image_url, brand, category_name } = equipment;
 
   return (
     <Link to={`/equipment/${id}`} className="product-link">
@@ -18,12 +18,17 @@ const Equipment = ({ equipment }) => {
         </div>
         <div className="content text-center">
           <div className="category">
-            <h4 className="card-title activity-title mb-0">{name}</h4>
+            <h4
+              className="card-title activity-title mb-0"
+              style={{ fontSize: "1.5rem" }}>
+              {name}
+            </h4>
           </div>
+          <p className="card-text mb-1">Stock: {stock}</p>
           <p className="text-muted small mb-1">
             {category_name && `Category: ${category_name}`}
           </p>
-          <p className="card-text mb-3">{brand}</p>
+          <p className="card-text mb-1">{brand}</p>
           <span className="card-text mt-0 mb-0">
             <strong>${price || "N/A"}</strong>
           </span>
