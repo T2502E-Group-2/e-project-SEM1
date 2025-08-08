@@ -907,3 +907,10 @@ main {
 .post-detail-page-wrapper .breadcrumb-item.active {
   color: #6c757d;
 }
+
+/*CART STYLES*/
+
+.order-summary-card {
+  transform: none;
+  box-shadow: none;
+}

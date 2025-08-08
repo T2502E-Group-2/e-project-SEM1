@@ -77,7 +77,11 @@ const EquipmentDetail = () => {
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
-      currentCart.push({ ...equipment, quantity: quantity });
+      currentCart.push({
+        ...equipment,
+        quantity: quantity,
+        product_type: "equipment",
+      });
     }
 
     // Save updated shopping cart into localstorage
@@ -160,6 +164,7 @@ const EquipmentDetail = () => {
       const orderData = {
         userId: isLoggedIn ? userInfo.id : null,
         itemId: equipment.id,
+        product_type: "equipment",
         order_id: details.id,
         quantity: quantity,
         amount: equipment.price * quantity,
