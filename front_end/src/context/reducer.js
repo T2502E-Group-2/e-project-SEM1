@@ -1,14 +1,31 @@
-const update_storage = (state) => {
-  localStorage.setItem("state", JSON.stringify(state));
-  return state;
-};
+import { LOGIN_SUCCESS, LOGOUT, UPDATE_USER_SUCCESS } from "./action";
+
 const reducer = (state, action) => {
   switch (action.type) {
-    case "UPDATE_CART":
-      return update_storage({
+    case LOGIN_SUCCESS:
+      // Save user to localStorage
+      localStorage.setItem("user", JSON.stringify(action.payload));
+      return {
         ...state,
-        cart: action.payload,
-      });
+        user: action.payload,
+      };
+
+    case LOGOUT:
+      // Remove user from localStorage
+      localStorage.removeItem("user");
+      return {
+        ...state,
+        user: null,
+      };
+
+    case UPDATE_USER_SUCCESS:
+      // Update user in localStorage and state
+      localStorage.setItem("user", JSON.stringify(action.payload));
+      return {
+        ...state,
+        user: action.payload,
+      };
+
     default:
       return state;
   }

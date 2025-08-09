@@ -14,25 +14,29 @@ import axios_instance from "../../util/axios_instance";
 import AuthModal from "./AuthModal";
 import URL from "../../util/url";
 import CartContext from "../../context/CartContext";
+import UserContext from "../../context/context";
+import { LOGOUT } from "../../context/action";
 
 const Header = () => {
+  const { state, dispatch } = useContext(UserContext);
   const [gearCategories, setGearCategories] = useState([]);
   const { cartItemCount } = useContext(CartContext);
   const [showModal, setShowModal] = useState(false);
   const [authMode, setAuthMode] = useState("login");
 
-  const handleOpenLogin = () => {
-    setAuthMode("login");
-    setShowModal(true);
-  };
-
-  const handleOpenRegister = () => {
-    setAuthMode("register");
+  const handleOpenAuthModal = (mode) => {
+    setAuthMode(mode);
     setShowModal(true);
   };
 
   const handleCloseModal = () => setShowModal(false);
 
+  const handleLogout = () => {
+    // Dispatch the logout action to update context and clear localStorage
+    dispatch({ type: LOGOUT });
+  };
+
+  // Tải danh mục thiết bị
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -99,22 +103,42 @@ const Header = () => {
           <Col
             xs={3}
             className="container-fluid d-flex justify-content-center align-items-center">
-            <button className="user-link" onClick={handleOpenLogin}>
-              Login
-            </button>
-            <button
-              className="user-link"
-              onClick={handleOpenRegister}
-              style={{ marginLeft: "10px", marginRight: "10px" }}>
-              Register
-            </button>
-            <AuthModal
-              show={showModal}
-              onClose={handleCloseModal}
-              mode={authMode}
-            />
-
-            <AuthModal show={showModal} onClose={handleCloseModal} />
+            {state.user ? (
+              // Hiển thị khi người dùng đã đăng nhập
+              <div className="d-flex align-items-center">
+                <Image
+                  src={
+                    state.user.avatar_url ||
+                    "https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png"
+                  }
+                  alt="Avatar"
+                  width="40px"
+                  height="40px"
+                  roundedCircle
+                  className="me-2"
+                />
+                <span className="navbar-text me-2" style={{ color: "white" }}>
+                  Hello, {state.user.first_name} {state.user.last_name}
+                </span>
+                <button className="btn btn-outline" onClick={handleLogout}>
+                  Đăng xuất
+                </button>
+              </div>
+            ) : (
+              // Hiển thị khi người dùng chưa đăng nhập
+              <div className="d-flex">
+                <button
+                  className="btn btn-primary me-2"
+                  onClick={() => handleOpenAuthModal("login")}>
+                  Đăng nhập
+                </button>
+                <button
+                  className="btn btn-success"
+                  onClick={() => handleOpenAuthModal("register")}>
+                  Đăng ký
+                </button>
+              </div>
+            )}
           </Col>
         </Row>
       </header>
@@ -201,6 +225,13 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
+      <AuthModal
+        show={showModal}
+        onClose={handleCloseModal}
+        mode={authMode}
+        setAuthMode={setAuthMode}
+      />
     </>
   );
 };

@@ -12,6 +12,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Home from "./components/pages/Home";
+import Profile from "./components/pages/Profile";
 import AboutPage from "./components/pages/AboutPage";
 import Cart from "./components/common/Cart";
 import Category from "./components/shared/Category";
@@ -25,13 +26,13 @@ import PostDetailPage from "./components/pages/Posts/PostDetailPage";
 function App() {
   const [scrolled, setScrolled] = useState(false);
 
-  let storage = localStorage.getItem("state");
-  if (storage != null) {
-    storage = JSON.parse(storage);
-  } else {
-    storage = STATE;
-  }
-  const [state, dispatch] = useReducer(reducer, storage);
+  // Initialize state for UserContext
+  const initialUser = JSON.parse(localStorage.getItem("user")) || null;
+  const initialState = {
+    ...STATE, // Includes cart: [] from initState
+    user: initialUser,
+  };
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,6 +61,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/category/:id" element={<Category />} />
               <Route path="/activity/:id" element={<ActivityDetail />} />
               <Route path="/equipment" element={<EquipmentPage />} />
