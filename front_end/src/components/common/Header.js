@@ -11,12 +11,27 @@ import {
 import { Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import axios_instance from "../../util/axios_instance";
+import AuthModal from "./AuthModal";
 import URL from "../../util/url";
 import CartContext from "../../context/CartContext";
 
 const Header = () => {
   const [gearCategories, setGearCategories] = useState([]);
   const { cartItemCount } = useContext(CartContext);
+  const [showModal, setShowModal] = useState(false);
+  const [authMode, setAuthMode] = useState("login");
+
+  const handleOpenLogin = () => {
+    setAuthMode("login");
+    setShowModal(true);
+  };
+
+  const handleOpenRegister = () => {
+    setAuthMode("register");
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => setShowModal(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -84,18 +99,22 @@ const Header = () => {
           <Col
             xs={3}
             className="container-fluid d-flex justify-content-center align-items-center">
-            <Link className="user-link" to="/login">
+            <button className="user-link" onClick={handleOpenLogin}>
               Login
-            </Link>
-            <Link
+            </button>
+            <button
               className="user-link"
-              to="/register"
-              style={{
-                marginLeft: "10px",
-                marginRight: "10px",
-              }}>
+              onClick={handleOpenRegister}
+              style={{ marginLeft: "10px", marginRight: "10px" }}>
               Register
-            </Link>
+            </button>
+            <AuthModal
+              show={showModal}
+              onClose={handleCloseModal}
+              mode={authMode}
+            />
+
+            <AuthModal show={showModal} onClose={handleCloseModal} />
           </Col>
         </Row>
       </header>

@@ -914,3 +914,53 @@ main {
   transform: none;
   box-shadow: none;
 }
+
+/*AUTH MODAL STYLES*/
+/* modal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 350px;
+  max-width: 90%;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.modal-box input {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 8px;
+}
+
+.modal-box button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+}
+
+.link {
+  color: blue;
+  cursor: pointer;
+}

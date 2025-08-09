@@ -1,6 +1,14 @@
 const BASE = "http://localhost:8888/API";
 
 const URL = {
+  //AUTH
+  LOGIN: BASE + "/Auth/login.php",
+  REGISTER: BASE + "/Auth/register.php",
+  FORGOT_PASSWORD: BASE + "/Auth/forgot_password.php",
+  RESET_PASSWORD: BASE + "/Auth/reset_password.php",
+  //USERS
+  USERS: BASE + "/Users/users.php",
+  USER_DETAIL: BASE + "/Users/user_details.php?id=",
   //ACTIVITIES
   CATEGORY_ACTIVITIES: BASE + "/Activities/category_activities.php",
   ACTIVITIES_BY_CATEGORY: BASE + "/Activities/activities.php?category_id=",

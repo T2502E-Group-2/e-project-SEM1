@@ -103,6 +103,43 @@ try {
         $price_at_time_of_purchase = $result_price->fetch_assoc()[$price_column];
         $stmt_price->close();
 
+        // Decrement stock for equipments after validating availability
+        if ($productType === 'equipment') {
+            // Lock the equipment row to avoid race conditions
+            $stmt_stock = $conn->prepare("SELECT stock FROM equipments WHERE equipment_id = ? FOR UPDATE");
+            if (!$stmt_stock) {
+                throw new Exception("Failed to prepare stock select statement: " . $conn->error);
+            }
+            $stmt_stock->bind_param("i", $productId);
+            $stmt_stock->execute();
+            $result_stock = $stmt_stock->get_result();
+
+            if ($result_stock->num_rows === 0) {
+                $stmt_stock->close();
+                throw new Exception("Equipment not found with ID: " . $productId);
+            }
+
+            $current_stock = (int)$result_stock->fetch_assoc()['stock'];
+            $stmt_stock->close();
+
+            if ($current_stock < $quantity) {
+                throw new Exception("Insufficient stock for equipment ID: " . $productId);
+            }
+
+            // Update stock
+            $stmt_update = $conn->prepare("UPDATE equipments SET stock = stock - ? WHERE equipment_id = ?");
+            if (!$stmt_update) {
+                throw new Exception("Failed to prepare stock update statement: " . $conn->error);
+            }
+            $stmt_update->bind_param("ii", $quantity, $productId);
+            $stmt_update->execute();
+            if ($stmt_update->affected_rows === 0) {
+                $stmt_update->close();
+                throw new Exception("Failed to update stock for equipment ID: " . $productId);
+            }
+            $stmt_update->close();
+        }
+
         // Corrected bind_param types: order_id (i), product_id (i), product_type (s), quantity (i), price (d)
         $stmt_item->bind_param("iisid", $order_id, $productId, $productType, $quantity, $price_at_time_of_purchase);
         $stmt_item->execute();
