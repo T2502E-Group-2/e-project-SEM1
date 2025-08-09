@@ -163,13 +163,17 @@ const EquipmentDetail = () => {
       // Send successful payment data to your backend
       const orderData = {
         userId: isLoggedIn ? userInfo.id : null,
-        itemId: equipment.id,
-        product_type: "equipment",
-        order_id: details.id,
-        quantity: quantity,
-        amount: equipment.price * quantity,
-        userInfo: userInfo,
         paypalOrderId: details.id,
+        totalAmount: (equipment.price * quantity).toFixed(2),
+        cartItems: [
+          {
+            id: equipment.id,
+            product_type: "equipment",
+            quantity: quantity,
+            price: equipment.price,
+          },
+        ],
+        userInfo: userInfo,
       };
 
       axios_instance
