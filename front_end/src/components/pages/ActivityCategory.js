@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios"; // Hoặc axios_instance của bạn
+import axios_instance from "../../util/axios_instance";
+import URL from "../../util/url";
 
 function ActivityCategory() {
-  const { id } = useParams(); // Lấy ID từ URL, ví dụ: /category/5 -> id = 5
+  const { id } = useParams();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -11,20 +12,20 @@ function ActivityCategory() {
     const fetchActivities = async () => {
       try {
         setLoading(true);
-        // Gọi đến API PHP của bạn
-        const response = await axios.get(
-          `http://your-backend-domain.com/api/activities.php?category_id=${id}`
-        );
-        setActivities(response.data.data);
+        const response = await axios_instance.get(URL.CATEGORY_ACTIVITIES, {
+          params: { category_id: id },
+        });
+        setActivities(response.data.data || []);
       } catch (error) {
         console.error("Error fetching activities:", error);
+        setActivities([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchActivities();
-  }, [id]); // Chạy lại mỗi khi ID trên URL thay đổi
+  }, [id]);
 
   if (loading) {
     return <div>Loading activities...</div>;
@@ -33,7 +34,7 @@ function ActivityCategory() {
   return (
     <div>
       <h1>Activities in this Category</h1>
-      {/* Hiển thị danh sách activities ở đây */}
+      {/* Render activities when integrated with UI components */}
     </div>
   );
 }
