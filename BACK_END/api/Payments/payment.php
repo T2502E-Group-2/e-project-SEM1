@@ -2,8 +2,14 @@
 // CORS headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+// Handle CORS preflight
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+  http_response_code(200);
+  exit();
+}
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
@@ -97,7 +103,8 @@ try {
         $price_at_time_of_purchase = $result_price->fetch_assoc()[$price_column];
         $stmt_price->close();
 
-        $stmt_item->bind_param("isdid", $order_id, $productId, $productType, $quantity, $price_at_time_of_purchase);
+        // Corrected bind_param types: order_id (i), product_id (i), product_type (s), quantity (i), price (d)
+        $stmt_item->bind_param("iisid", $order_id, $productId, $productType, $quantity, $price_at_time_of_purchase);
         $stmt_item->execute();
     }
 
