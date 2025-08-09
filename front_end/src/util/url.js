@@ -17,7 +17,7 @@ const URL = {
   ALL_POST: BASE + "/Posts/posts.php",
   POST_DETAIL: BASE + "/Posts/post_details.php?id=",
   //PAYMENT
-  PAYMENT: BASE + "/Payment/payment.php",
+  PAYMENT: BASE + "/Payments/payment.php",
 };
 
 export default URL;

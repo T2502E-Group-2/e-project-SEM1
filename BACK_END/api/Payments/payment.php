@@ -61,10 +61,20 @@ try {
         throw new Exception("Failed to prepare order_item statement: " . $conn->error);
     }
 
+    // Prepare stock statements for equipments
+    $stmt_stock_select = $conn->prepare("SELECT stock FROM equipments WHERE equipment_id = ? FOR UPDATE");
+    if (!$stmt_stock_select) {
+        throw new Exception("Failed to prepare stock select statement: " . $conn->error);
+    }
+    $stmt_stock_update = $conn->prepare("UPDATE equipments SET stock = stock - ? WHERE equipment_id = ?");
+    if (!$stmt_stock_update) {
+        throw new Exception("Failed to prepare stock update statement: " . $conn->error);
+    }
+
     foreach ($data['cartItems'] as $item) {
         $productId = $item['id'];
         $productType = $item['product_type'] ?? 'equipment';
-        $quantity = $item['quantity'];
+        $quantity = (int)$item['quantity'];
 
         $price_at_time_of_purchase = 0;
         $table_name = "";
@@ -84,6 +94,22 @@ try {
                 throw new Exception("Invalid product type: " . $productType);
         }
 
+        // For equipments: validate and decrement stock atomically
+        if ($productType === 'equipment') {
+            $stmt_stock_select->bind_param("i", $productId);
+            $stmt_stock_select->execute();
+            $result_stock = $stmt_stock_select->get_result();
+            if ($result_stock->num_rows === 0) {
+                throw new Exception("Equipment not found with ID: " . $productId);
+            }
+            $current_stock = (int)$result_stock->fetch_assoc()['stock'];
+            if ($current_stock < $quantity) {
+                throw new Exception("Insufficient stock for equipment ID: " . $productId);
+            }
+            $stmt_stock_update->bind_param("ii", $quantity, $productId);
+            $stmt_stock_update->execute();
+        }
+
         $sql_price = "SELECT {$price_column} FROM {$table_name} WHERE {$id_column} = ?";
         $stmt_price = $conn->prepare($sql_price);
         $stmt_price->bind_param("i", $productId);
@@ -97,11 +123,14 @@ try {
         $price_at_time_of_purchase = $result_price->fetch_assoc()[$price_column];
         $stmt_price->close();
 
-        $stmt_item->bind_param("isdid", $order_id, $productId, $productType, $quantity, $price_at_time_of_purchase);
+        // Corrected bind types: i (order_id), i (product_id), s (product_type), i (quantity), d (price)
+        $stmt_item->bind_param("iisid", $order_id, $productId, $productType, $quantity, $price_at_time_of_purchase);
         $stmt_item->execute();
     }
 
     $stmt_item->close();
+    $stmt_stock_select->close();
+    $stmt_stock_update->close();
     $conn->commit();
 
     http_response_code(200);
