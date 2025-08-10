@@ -1,12 +1,21 @@
 {
-    "name": "xavie/back_end",
-    "description": "e-project-1",
-    "autoload": {
-        "psr-4": {
-            "Xavie\\BackEnd\\": "src/"
-        }
-    },
-    "require": {
-        "guzzlehttp/guzzle": "^7.9"
+  "name": "xavie/back_end",
+  "description": "e-project-1",
+  "autoload": {
+    "psr-4": {
+      "Xavie\\BackEnd\\": "src/"
     }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^7.9",
+    "imagekit-developer/imagekit-php": "dev-master"
+  },
+  "repositories": {
+    "imagekit": {
+      "type": "vcs",
+      "url": "https://github.com/imagekit-developer/imagekit-php.git"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

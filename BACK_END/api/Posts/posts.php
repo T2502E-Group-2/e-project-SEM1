@@ -4,10 +4,14 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Cài đặt header để cho phép truy cập từ mọi domain và trả về JSON
-header("Access-Control-Allow-Origin: *");
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+}
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: *");
 header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Credentials: true");
+
 
 // Sửa đường dẫn file kết nối
 require_once("../../db/connect.php");

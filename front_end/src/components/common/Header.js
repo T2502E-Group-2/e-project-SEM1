@@ -8,7 +8,7 @@ import {
   Nav,
   Container,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import axios_instance from "../../util/axios_instance";
 import AuthModal from "./AuthModal";
@@ -19,10 +19,13 @@ import { LOGOUT } from "../../context/action";
 
 const Header = () => {
   const { state, dispatch } = useContext(UserContext);
-  const [gearCategories, setGearCategories] = useState([]);
   const { cartItemCount } = useContext(CartContext);
+  const [gearCategories, setGearCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [authMode, setAuthMode] = useState("login");
+  const [scrolled, setScrolled] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleOpenAuthModal = (mode) => {
     setAuthMode(mode);
@@ -32,9 +35,17 @@ const Header = () => {
   const handleCloseModal = () => setShowModal(false);
 
   const handleLogout = () => {
-    // Dispatch the logout action to update context and clear localStorage
     dispatch({ type: LOGOUT });
   };
+
+  // Theo dõi scroll để đổi màu chữ
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Tải danh mục thiết bị
   useEffect(() => {
@@ -55,7 +66,7 @@ const Header = () => {
   return (
     <>
       {/* =================== Header Logo + Cart + Login =================== */}
-      <header className="header">
+      <header className={`header ${scrolled ? "scrolled" : ""}`}>
         <Row className="align-items-center">
           <Col className="logo-image" xs={3}>
             <Image
@@ -63,8 +74,11 @@ const Header = () => {
               alt="Logo"
               width={"120px"}
               height={"120px"}
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/")}
             />
           </Col>
+
           <Col
             xs={6}
             className="container-fluid d-flex justify-content-between align-items-center"
@@ -100,11 +114,11 @@ const Header = () => {
               </Link>
             </Navbar>
           </Col>
+
           <Col
             xs={3}
             className="container-fluid d-flex justify-content-center align-items-center">
             {state.user ? (
-              // Hiển thị khi người dùng đã đăng nhập
               <div className="d-flex align-items-center">
                 <Image
                   src={
@@ -116,16 +130,22 @@ const Header = () => {
                   height="40px"
                   roundedCircle
                   className="me-2"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate("/profile")}
                 />
-                <span className="navbar-text me-2" style={{ color: "white" }}>
-                  Hello, {state.user.first_name} {state.user.last_name}
+                <span
+                  className={`navbar-text me-2 ${
+                    scrolled ? "text-dark" : "text-white"
+                  }`}
+                  style={{ cursor: "pointer", transition: "color 0.3s ease" }}
+                  onClick={() => navigate("/profile")}>
+                  {state.user.first_name} {state.user.last_name}
                 </span>
                 <button className="btn btn-outline" onClick={handleLogout}>
-                  Đăng xuất
+                  Logout
                 </button>
               </div>
             ) : (
-              // Hiển thị khi người dùng chưa đăng nhập
               <div className="d-flex">
                 <button
                   className="btn btn-primary me-2"
@@ -206,7 +226,6 @@ const Header = () => {
                   className="dropdown-toggle">
                   Gears
                 </Nav.Link>
-
                 <div className="dropdown-menu">
                   {gearCategories.map((category) => (
                     <Link

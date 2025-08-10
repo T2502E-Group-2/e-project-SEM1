@@ -6,6 +6,7 @@ h5 {
   font-family: "Montserrat", sans-serif;
   letter-spacing: 0.5px;
   font-size: 20px;
+  font-weight: bold;
   line-height: 24px;
   color: darkorange;
   text-transform: capitalize;
@@ -864,7 +865,7 @@ main {
 }
 
 /*Post detail page styles*/
-.post-detail-page-wrapper {
+.post-detail-page-wrapper .user-details-page-wrapper {
   position: relative;
   /* margin-top: 250px; */
   padding-bottom: 4rem;
@@ -963,4 +964,11 @@ main {
 .link {
   color: blue;
   cursor: pointer;
+}
+/*FORM STYLES*/
+.label-title {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #6e6b66;
 }

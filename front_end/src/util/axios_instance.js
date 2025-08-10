@@ -1,8 +1,8 @@
 import axios from "axios";
-import URL from "./url";
 
-const BASE_URL = URL.BASE;
-export default axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true, // This is the crucial line
+const axios_instance = axios.create({
+  baseURL: process.env.REACT_APP_API_BASE_URL,
+  withCredentials: true,
 });
+
+export default axios_instance;

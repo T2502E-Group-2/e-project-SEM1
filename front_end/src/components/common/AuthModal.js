@@ -41,32 +41,24 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
     e.preventDefault();
     setLoginMessage("");
     setError("");
+
     try {
-      const response = await axios_instance.post(URL.LOGIN, loginData);
+      const response = await axios_instance.post("/auth/login.php", loginData);
+
       if (response.data.success) {
         setLoginMessage(response.data.message);
-        // Dispatch action to save user to context and localStorage
         dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });
+        localStorage.setItem("user", JSON.stringify(response.data.user));
 
         setTimeout(() => {
-          onClose(); // Tự động đóng modal sau 1.5 giây
-          return;
+          onClose();
         }, 1500);
       } else {
-        // This part is unlikely to be reached if the server uses proper HTTP status codes
-        setError(response.data.message || "Đăng nhập thất bại.");
+        setError(response.data.message || "Đăng nhập thất bại");
       }
-    } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        setError(error.response.data.message);
-      } else {
-        setError("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại.");
-      }
-      console.error(error);
+    } catch (err) {
+      setError("Lỗi khi đăng nhập");
+      console.error(err);
     }
   };
 

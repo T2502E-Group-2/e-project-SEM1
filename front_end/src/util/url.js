@@ -1,14 +1,14 @@
-const BASE = "http://localhost:8888/API";
-
+const BASE = process.env.REACT_APP_API_BASE_URL;
 const URL = {
   //AUTH
   LOGIN: BASE + "/auth/login.php",
   REGISTER: BASE + "/auth/register.php",
   FORGOT_PASSWORD: BASE + "/auth/forgot_password.php",
   RESET_PASSWORD: BASE + "/auth/reset_password.php",
+  UPDATE_PROFILE: BASE + "/Users/update_profile.php",
   //USERS
   GET_USER_DETAILS: BASE + "/Users/get_user_details.php",
-  UPDATE_PROFILE: BASE + "/Users/update_profile.php",
+  UPDATE_AVATAR: BASE + "/Users/update_avatar.php",
   //ACTIVITIES
   CATEGORY_ACTIVITIES: BASE + "/Activities/category_activities.php",
   ACTIVITIES_BY_CATEGORY: BASE + "/Activities/activities.php?category_id=",

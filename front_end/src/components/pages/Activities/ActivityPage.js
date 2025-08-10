@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios_instance from "../../../util/axios_instance";
 import URL from "../../../util/url";
 import Activity from "../../shared/Activity"; // Đã có sẵn file này
-import "./ActivitiesPage.css"; // Đường dẫn tùy theo cấu trúc dự án
 
 const ActivityPage = () => {
   const [activities, setActivities] = useState([]);

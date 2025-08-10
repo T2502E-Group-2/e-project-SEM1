@@ -30,28 +30,23 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-      if (user) {
-        try {
-          setLoading(true);
-          setError("");
-          const response = await axios_instance.get(URL.GET_USER_DETAILS);
-          if (response.data.success) {
-            setFormData(response.data.user);
-          } else {
-            setError(response.data.message);
-          }
-        } catch (err) {
-          setError("Đã xảy ra lỗi khi tải thông tin người dùng.");
-          console.error(err);
-        } finally {
-          setLoading(false);
+      try {
+        const response = await axios_instance.get(
+          "/Users/get_user_details.php"
+        );
+        if (response.data.success) {
+          setFormData(response.data.user);
+        } else {
+          setError(response.data.message);
         }
-      } else {
+      } catch (err) {
+        setError("Không thể tải thông tin người dùng");
+      } finally {
         setLoading(false);
       }
     };
     fetchUserDetails();
-  }, [user]);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -89,8 +84,12 @@ const Profile = () => {
   if (!user) {
     return (
       <Container
-        className="my-5 text-center"
-        style={{ paddingTop: "150px", minHeight: "60vh" }}>
+        className="text-center user-details-page-wrapper"
+        style={{
+          paddingTop: "250px",
+          color: "white",
+          textShadow: "2px 2px 8px rgba(0, 0, 0, 0.7)",
+        }}>
         <h2>Bạn chưa đăng nhập</h2>
         <p>Vui lòng đăng nhập để xem thông tin tài khoản.</p>
         <Button onClick={() => navigate("/")}>Về trang chủ</Button>
@@ -120,21 +119,27 @@ const Profile = () => {
   }
 
   return (
-    <Container className="my-5" style={{ paddingTop: "150px" }}>
+    <Container
+      className="container-fluid user-details-page-wrapper"
+      style={{ paddingTop: "200px" }}>
       <Row className="justify-content-center">
-        <Col md={10} lg={8}>
-          <h1 className="mb-4 text-center">Thông tin tài khoản</h1>
+        <Col md={12} lg={10}>
+          <h1 className="mb-4 topic-card-text animate-in">
+            Account information
+          </h1>
           {successMessage && <Alert variant="success">{successMessage}</Alert>}
           {error && <Alert variant="danger">{error}</Alert>}
           <Card>
             <Card.Body>
               <Form onSubmit={handleFormSubmit}>
                 {/* Basic Info */}
-                <h5 className="mb-3">Thông tin cơ bản</h5>
+                <h5 className="mb-3">General information</h5>
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3" controlId="firstName">
-                      <Form.Label>Họ</Form.Label>
+                      <Form.Label className="label-title">
+                        First name
+                      </Form.Label>
                       <Form.Control
                         type="text"
                         name="first_name"
@@ -146,7 +151,7 @@ const Profile = () => {
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3" controlId="lastName">
-                      <Form.Label>Tên</Form.Label>
+                      <Form.Label className="label-title">Last name</Form.Label>
                       <Form.Control
                         type="text"
                         name="last_name"
@@ -158,7 +163,7 @@ const Profile = () => {
                   </Col>
                 </Row>
                 <Form.Group className="mb-3" controlId="email">
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label className="label-title">Email</Form.Label>
                   <Form.Control
                     type="email"
                     name="email"
@@ -168,7 +173,7 @@ const Profile = () => {
                   />
                 </Form.Group>
                 <Form.Group className="mb-4" controlId="phoneNumber">
-                  <Form.Label>Số điện thoại</Form.Label>
+                  <Form.Label className="label-title">Phone number</Form.Label>
                   <Form.Control
                     type="tel"
                     name="phone_number"
@@ -181,9 +186,11 @@ const Profile = () => {
                 <hr />
 
                 {/* Address Info */}
-                <h5 className="mb-3">Thông tin địa chỉ</h5>
+                <h5 className="mb-3">Address information</h5>
                 <Form.Group className="mb-3" controlId="address1">
-                  <Form.Label>Địa chỉ 1</Form.Label>
+                  <Form.Label className="label-title">
+                    Address line 1
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     name="address_line1"
@@ -193,7 +200,9 @@ const Profile = () => {
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="address2">
-                  <Form.Label>Địa chỉ 2</Form.Label>
+                  <Form.Label className="label-title">
+                    Address line 2
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     name="address_line2"
@@ -205,7 +214,9 @@ const Profile = () => {
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3" controlId="city">
-                      <Form.Label>Thành phố</Form.Label>
+                      <Form.Label className="label-title">
+                        City/District
+                      </Form.Label>
                       <Form.Control
                         type="text"
                         name="city"
@@ -217,7 +228,9 @@ const Profile = () => {
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3" controlId="state">
-                      <Form.Label>Tỉnh/Bang</Form.Label>
+                      <Form.Label className="label-title">
+                        Province/State
+                      </Form.Label>
                       <Form.Control
                         type="text"
                         name="state_province"
@@ -231,7 +244,7 @@ const Profile = () => {
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3" controlId="zip">
-                      <Form.Label>Mã ZIP</Form.Label>
+                      <Form.Label className="label-title">ZIP code</Form.Label>
                       <Form.Control
                         type="text"
                         name="zip_code"
@@ -243,7 +256,7 @@ const Profile = () => {
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3" controlId="country">
-                      <Form.Label>Quốc gia</Form.Label>
+                      <Form.Label className="label-title">Country</Form.Label>
                       <Form.Control
                         type="text"
                         name="country"
@@ -264,7 +277,7 @@ const Profile = () => {
                         onClick={handleCancel}
                         className="me-2"
                         disabled={submitting}>
-                        Hủy
+                        Cancel
                       </Button>
                       <Button
                         variant="primary"
@@ -279,7 +292,7 @@ const Profile = () => {
                             aria-hidden="true"
                           />
                         ) : (
-                          "Lưu thay đổi"
+                          "Save changes"
                         )}
                       </Button>
                     </>
@@ -287,7 +300,7 @@ const Profile = () => {
                     <Button
                       variant="outline-primary"
                       onClick={() => setIsEditMode(true)}>
-                      Chỉnh sửa thông tin
+                      Edit information
                     </Button>
                   )}
                 </div>
