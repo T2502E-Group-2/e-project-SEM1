@@ -20,7 +20,7 @@ const Activity = ({ activity }) => {
       </div>
       <div className="content text-center">
         <div className="row meta">
-          <div className="col-md-4">
+          <div className="col-md-3">
             <h5>{duration}</h5>
             <h6> Days</h6>
           </div>
@@ -28,7 +28,7 @@ const Activity = ({ activity }) => {
             <h5>{max_participants}</h5>
             <h6> Max Group Size</h6>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-5  ">
             <h5>{difficulty_level}</h5>
             <h6> Difficulty</h6>
           </div>
@@ -38,7 +38,9 @@ const Activity = ({ activity }) => {
         </div>
 
         <p className="card-text">{description}</p>
-        <Link to={`/activity/${id}`} className="btn btn-view-details">
+        <Link
+          to={`/activities/${activity.activity_id}`}
+          className="btn btn-view-details">
           View Details
         </Link>
       </div>

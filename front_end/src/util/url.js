@@ -14,7 +14,7 @@ const URL = {
   ACTIVITIES_BY_CATEGORY: BASE + "/Activities/activities.php?category_id=",
   LATEST_ACTIVITIES: BASE + "/Activities/latest_activities.php",
   FEATURED_ACTIVITIES: BASE + "/Activities/featured_activities.php",
-  ACTIVITY_DETAIL: BASE + "/Activities/detail_activities.php?id=",
+  ACTIVITY_DETAIL: BASE + "/Activities/activity_details.php?id=",
   ALL_ACTIVITIES: BASE + "/Activities/all_activities.php",
   CATEGORY_LIST: BASE + "/Activities/categories.php",
   //GEARS

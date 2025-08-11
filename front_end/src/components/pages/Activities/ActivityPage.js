@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { Row, Col } from "react-bootstrap";
 import axios_instance from "../../../util/axios_instance";
 import URL from "../../../util/url";
-import Activity from "../../shared/Activity"; // Đã có sẵn file này
+import Activity from "../../shared/Activity";
+import ReusableSlider from "../../shared/ReusableSlider";
 
 const ActivityPage = () => {
   const [allActivities, setAllActivities] = useState([]);
@@ -9,6 +11,43 @@ const ActivityPage = () => {
   const [latestActivities, setLatestActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const allActivitiesRef = useRef(null);
+  const allActivitiesTitleRef = useRef(null);
+
+  const useAnimateOnScroll = (refs) => {
+    useEffect(() => {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target.classList.contains("topic-card-text")) {
+              entry.target.classList.add("animate-in");
+            } else {
+              const sliderItems = entry.target.querySelectorAll(".slider-item");
+              sliderItems.forEach((item, index) => {
+                setTimeout(() => {
+                  item.classList.add("animate-in");
+                }, index * 100);
+              });
+            }
+          }
+        });
+      }, observerOptions);
+
+      refs.forEach((ref) => {
+        if (ref.current) observer.observe(ref.current);
+      });
+
+      return () => observer.disconnect();
+    }, [refs]);
+  };
+
+  useAnimateOnScroll([allActivitiesRef, allActivitiesTitleRef]);
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -37,47 +76,12 @@ const ActivityPage = () => {
     return <div className="text-center mt-5">Loading activities...</div>;
   if (error) return <div className="text-center text-danger mt-5">{error}</div>;
 
-  const renderTable = (activities) => (
-    <div className="table-responsive">
-      <table className="table table-striped">
-        <thead className="text-center align-content-center justify-content-center">
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Max Participants</th>
-            <th>Price</th>
-            <th>
-              Duration <br /> (days)
-            </th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {activities.map((activity) => (
-            <tr key={activity.activity_id}>
-              <td>{activity.title}</td>
-              <td>{activity.description}</td>
-              <td>{activity.max_participant}</td>
-              <td>{activity.price}</td>
-              <td>{activity.duration}</td>
-              <td>{activity.start_date}</td>
-              <td>{activity.end_date}</td>
-              <td>{activity.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-
   return (
     <div className="container-fluid" style={{ paddingTop: "200px" }}>
       <h1 className="text-center mb-4">Our Adventures</h1>
-      <div className="row">
+      <Row>
         {/* Main Content: All Activities */}
-        <div className="col-lg-12">
+        <Col lg={12}>
           <div className="text-center mb-4" style={{ color: "#fff" }}>
             <h2 style={{ fontSize: "2.5rem" }}>Explore The Great Outdoors</h2>
             <p className="lead" style={{ fontSize: "1.5rem" }}>
@@ -85,27 +89,29 @@ const ActivityPage = () => {
               activities for every level of experience.
             </p>
           </div>
-          <div className="row row-cols-1 row-cols-md-3 g-4 mb-5">
+          <div className="row row-cols-1 row-cols-md-5 g-4 mb-2">
             {allActivities.map((activity) => (
               <div key={activity.activity_id} className="col">
                 <Activity activity={activity} />
               </div>
             ))}
           </div>
-        </div>
+        </Col>
 
-        {/* Sidebar: Featured and Latest Activities */}
-        <div className="col-lg-12">
-          <div className="bg-light p-3 rounded shadow-sm mb-5">
-            <h4 className="mb-3">Featured Activities</h4>
-            {renderTable(featuredActivities)}
-          </div>
-          <div className="bg-light p-3 rounded shadow-sm mt-4">
-            <h4 className="mb-3">Latest Activities</h4>
-            {renderTable(latestActivities)}
-          </div>
-        </div>
-      </div>
+        {/* Use ReusableSlider for Featured and Latest Activities */}
+        <Col lg={12}>
+          <ReusableSlider
+            title="Featured Activities"
+            data={featuredActivities}
+            renderItem={(activity) => <Activity activity={activity} />}
+          />
+          <ReusableSlider
+            title="Latest Activities"
+            data={latestActivities}
+            renderItem={(activity) => <Activity activity={activity} />}
+          />
+        </Col>
+      </Row>
     </div>
   );
 };
