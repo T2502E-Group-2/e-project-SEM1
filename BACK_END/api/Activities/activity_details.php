@@ -13,18 +13,6 @@ require_once(__DIR__ ."/../../db/connect.php");
 // Get the activity ID from the request
 $activity_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// --- Thêm kiểm tra lỗi: Đảm bảo kết nối cơ sở dữ liệu thành công ---
-if (!isset($conn) || $conn->connect_error) {
-    http_response_code(500); // Internal Server Error
-    echo json_encode([
-        "status" => false,
-        "message" => "Database connection failed.",
-        "data" => null
-    ]);
-    exit;
-}
-// --- Kết thúc thêm kiểm tra lỗi ---
-
 if ($activity_id <= 0) {
     http_response_code(400); // Bad Request
     echo json_encode([
@@ -42,19 +30,6 @@ $sql = "SELECT c.*, g.url AS thumbnail_url
         WHERE c.activity_id = ?";
 
 $stmt = mysqli_prepare($conn, $sql);
-
-// --- Thêm kiểm tra lỗi: Đảm bảo câu lệnh chuẩn bị thành công ---
-if (!$stmt) {
-    http_response_code(500); // Internal Server Error
-    echo json_encode([
-        "status" => false,
-        "message" => "Failed to prepare SQL statement: " . mysqli_error($conn),
-        "data" => null
-    ]);
-    exit;
-}
-// --- Kết thúc thêm kiểm tra lỗi ---
-
 mysqli_stmt_bind_param($stmt, "i", $activity_id);
 mysqli_stmt_execute($stmt);
 $rs = mysqli_stmt_get_result($stmt);
@@ -87,7 +62,4 @@ if ($activity) {
 }
 
 echo json_encode($data);
-// --- Kiểm tra trước khi đóng kết nối ---
-if (isset($conn) && $conn) {
-    mysqli_close($conn);
-}
+mysqli_close($conn);
