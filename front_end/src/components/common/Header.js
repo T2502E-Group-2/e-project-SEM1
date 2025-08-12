@@ -24,12 +24,25 @@ const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [scrolled, setScrolled] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const navigate = useNavigate();
 
   const handleOpenAuthModal = (mode) => {
     setAuthMode(mode);
     setShowModal(true);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm(""); // Xóa nội dung trong ô tìm kiếm sau khi tìm
+    }
   };
 
   const handleCloseModal = () => setShowModal(false);
@@ -84,12 +97,14 @@ const Header = () => {
             className="container-fluid d-flex justify-content-between align-items-center"
             style={{ gap: "10px" }}
           >
-            <Form className="flex-grow-1">
+            <Form className="flex-grow-1" onSubmit={handleSearchSubmit}>
               <Form.Group controlId="search">
                 <Form.Control
                   type="text"
                   placeholder="Type what you are looking for..."
                   className="search-input"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
                 />
               </Form.Group>
             </Form>

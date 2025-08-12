@@ -10,6 +10,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import Header from "./components/common/Header";
+import SearchResultsPage from "./components/common/SearchResultsPage";
 import Footer from "./components/common/Footer";
 import Home from "./components/pages/Home";
 import Profile from "./components/pages/Profile";
@@ -58,7 +59,8 @@ function App() {
           <div
             className={`header-and-menu-container ${
               scrolled ? "scrolled" : ""
-            }`}>
+            }`}
+          >
             <Header />
           </div>
           <main>
@@ -69,6 +71,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/category/:id" element={<Category />} />
               <Route path="/admin/order" element={<AdminOrder />} />
+              <Route path="/search" element={<SearchResultsPage />} />
 
               <Route path="/activities" element={<ActivityPage />} />
               <Route path="/activities/:id" element={<ActivityDetail />} />

@@ -19,6 +19,7 @@ const URL = {
   ACTIVITY_DETAIL: BASE + "/Activities/activity_details.php?id=",
   ALL_ACTIVITIES: BASE + "/Activities/all_activities.php",
   CATEGORY_LIST: BASE + "/Activities/categories.php",
+  SEARCH_ACTIVITIES: BASE + "/Activities/search_activities.php",
   //GEARS
   ALL_EQUIPMENTS: BASE + "/Equipments/equipments.php",
   EQUIPMENT_CATEGORIES: BASE + "/Equipments/equipment_categories.php",
