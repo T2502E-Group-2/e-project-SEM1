@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import UserContext from "../../context/context";
 import URL from "../../util/url";
+import { Container, Row } from "react-bootstrap";
 
 function AdminOrder() {
   const { state } = useContext(UserContext);
@@ -32,8 +33,7 @@ function AdminOrder() {
       });
   }, []);
 
-  // Kiểm tra quyền admin ngay frontend, UX cho nhanh
-  if (!state.users || state.users.role !== "admin") {
+  if (!state.user || state.user.role !== "admin") {
     return <div>Bạn không có quyền truy cập trang này.</div>;
   }
 
@@ -41,49 +41,106 @@ function AdminOrder() {
   if (error) return <div>Lỗi: {error}</div>;
   if (!orders.length) return <div>Không có đơn hàng nào.</div>;
 
+  // --- START: STYLES FOR TABLE ---
+  const tableContainerStyle = {
+    maxHeight: "70vh", // Đặt chiều cao tối đa cho vùng cuộn
+    overflowY: "auto", // Bật thanh cuộn dọc
+    borderRadius: "8px",
+    border: "1px solid #ddd",
+    backgroundColor: "#ffff",
+  };
+
+  const tableStyle = {
+    width: "100%",
+    borderCollapse: "collapse",
+  };
+
+  const theadStyle = {
+    position: "sticky",
+    top: 0,
+    zIndex: 1,
+    backgroundColor: "#f2f2f2",
+  };
+
+  const thStyle = {
+    borderBottom: "2px solid #ddd",
+    padding: "12px",
+    textAlign: "left",
+    color: "#333",
+    fontWeight: "bold",
+  };
+
+  const tdStyle = {
+    borderBottom: "1px solid #ddd",
+    padding: "12px",
+    maxHeight: "80px",
+    overflow: "hidden",
+  };
+  // --- END: STYLES FOR TABLE ---
+
   return (
-    <div>
-      <h1>Quản lý đơn hàng (Admin)</h1>
-      <table
-        style={{ width: "100%", borderCollapse: "collapse" }}
-        border="1"
-        cellPadding="8">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>PayPal Order ID</th>
-            <th>Khách hàng</th>
-            <th>Điện thoại</th>
-            <th>Địa chỉ</th>
-            <th>Ghi chú</th>
-            <th>Product ID</th>
-            <th>Loại sản phẩm</th>
-            <th>Số lượng</th>
-            <th>Giá mua</th>
-            <th>Tổng tiền</th>
-            <th>Ngày đặt</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((row, index) => (
-            <tr key={index}>
-              <td>{row.order_id}</td>
-              <td>{row.paypal_order_id}</td>
-              <td>{row.full_name}</td>
-              <td>{row.phone}</td>
-              <td>{row.address}</td>
-              <td>{row.note}</td>
-              <td>{row.product_id}</td>
-              <td>{row.product_type}</td>
-              <td>{row.quantity}</td>
-              <td>${parseFloat(row.price_at_time_of_purchase).toFixed(2)}</td>
-              <td>${parseFloat(row.total_amount).toFixed(2)}</td>
-              <td>{row.created_at}</td>
+    <Container
+      className="container-fluid post-detail-page-wrapper"
+      style={{ paddingTop: "200px" }}
+    >
+      <h1
+        className="text-center mb-4"
+        style={{
+          color: "#ffff",
+          fontWeight: "bold",
+          textShadow: "1px 1px 2px #000",
+        }}
+      >
+        Orders management (Admin)
+      </h1>
+      <Row style={tableContainerStyle} className="">
+        <table style={tableStyle}>
+          <thead style={theadStyle}>
+            <tr style={{ maxHeight: "80%" }}>
+              <th style={thStyle}>Order ID</th>
+              <th style={thStyle}>PayPal Order ID</th>
+              <th style={thStyle}>Customer Name</th>
+              <th style={thStyle}>Phone No.</th>
+              <th style={thStyle}>Add.</th>
+              <th style={thStyle}>Notes</th>
+              <th style={thStyle}>Product ID</th>
+              <th style={thStyle}>Product Type</th>
+              <th style={thStyle}>Quantity</th>
+              <th style={thStyle}>Order Price</th>
+              <th style={thStyle}>Total Amount</th>
+              <th style={thStyle}>Order Date</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {orders.map((row, index) => (
+              <tr
+                key={index}
+                style={{
+                  backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9",
+                }}
+              >
+                <td style={tdStyle}>{row.order_id}</td>
+                <td style={tdStyle}>{row.paypal_order_id}</td>
+                <td style={tdStyle}>{row.full_name}</td>
+                <td style={tdStyle}>{row.phone}</td>
+                <td style={tdStyle}>{row.address}</td>
+                <td style={tdStyle}>{row.note}</td>
+                <td style={tdStyle}>{row.product_id}</td>
+                <td style={tdStyle}>{row.product_type}</td>
+                <td style={tdStyle}>{row.quantity}</td>
+                <td style={tdStyle}>
+                  ${parseFloat(row.price_at_time_of_purchase).toFixed(2)}
+                </td>
+                <td style={tdStyle}>
+                  ${parseFloat(row.total_amount).toFixed(2)}
+                </td>
+                <td style={tdStyle}>{row.created_at}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Row>
+    </Container>
   );
 }
 

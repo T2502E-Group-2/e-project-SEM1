@@ -82,7 +82,8 @@ const Header = () => {
           <Col
             xs={6}
             className="container-fluid d-flex justify-content-between align-items-center"
-            style={{ gap: "10px" }}>
+            style={{ gap: "10px" }}
+          >
             <Form className="flex-grow-1">
               <Form.Group controlId="search">
                 <Form.Control
@@ -96,7 +97,8 @@ const Header = () => {
               <Link
                 className="nav-link position-relative"
                 to={"/cart"}
-                style={{ paddingLeft: "30px", marginRight: "1rem" }}>
+                style={{ paddingLeft: "30px", marginRight: "1rem" }}
+              >
                 <Image
                   className="cart-icon"
                   src="../cart-icon.png"
@@ -107,7 +109,8 @@ const Header = () => {
                 <Badge
                   pill
                   bg="danger"
-                  className="position-absolute top-0 start-100 translate-middle">
+                  className="position-absolute top-0 start-100 translate-middle"
+                >
                   {cartItemCount}
                   <span className="visually-hidden">items in cart</span>
                 </Badge>
@@ -117,7 +120,8 @@ const Header = () => {
 
           <Col
             xs={3}
-            className="container-fluid d-flex justify-content-center align-items-center">
+            className="container-fluid d-flex justify-content-center align-items-center"
+          >
             {state.user ? (
               <div className="d-flex align-items-center">
                 <Image
@@ -138,7 +142,8 @@ const Header = () => {
                     scrolled ? "text-dark" : "text-white"
                   }`}
                   style={{ cursor: "pointer", transition: "color 0.3s ease" }}
-                  onClick={() => navigate("/profile")}>
+                  onClick={() => navigate("/profile")}
+                >
                   {state.user.first_name} {state.user.last_name}
                 </span>
                 <button className="btn btn-outline" onClick={handleLogout}>
@@ -156,7 +161,8 @@ const Header = () => {
                     borderColor: "darkorange",
                     transition: "background-color 0.3s ease",
                   }}
-                  onClick={() => handleOpenAuthModal("login")}>
+                  onClick={() => handleOpenAuthModal("login")}
+                >
                   Login
                 </button>
                 <button
@@ -168,7 +174,8 @@ const Header = () => {
                     borderColor: "darkorange",
                     transition: "background-color 0.3s ease",
                   }}
-                  onClick={() => handleOpenAuthModal("register")}>
+                  onClick={() => handleOpenAuthModal("register")}
+                >
                   Register
                 </button>
               </div>
@@ -184,7 +191,8 @@ const Header = () => {
           fontSize: "18px",
           fontFamily: "sans-serif",
           padding: "2px",
-        }}>
+        }}
+      >
         <Container fluid>
           <Navbar.Toggle aria-controls="main-navbar" />
           <Navbar.Collapse id="main-navbar">
@@ -199,13 +207,15 @@ const Header = () => {
                 <Nav.Link
                   as={Link}
                   to="/activities"
-                  className="dropdown-toggle">
+                  className="dropdown-toggle"
+                >
                   Activities
                 </Nav.Link>
                 <div className="dropdown-menu">
                   <Link
                     to="/activities/mountaineering"
-                    className="dropdown-item">
+                    className="dropdown-item"
+                  >
                     Mountaineering
                   </Link>
                   <Link to="/activities/climbing" className="dropdown-item">
@@ -237,7 +247,8 @@ const Header = () => {
               <Nav.Item className="dropdown">
                 <Nav.Link
                   onClick={() => (window.location.href = "/equipment")}
-                  className="dropdown-toggle">
+                  className="dropdown-toggle"
+                >
                   Gears
                 </Nav.Link>
                 <div className="dropdown-menu">
@@ -245,14 +256,15 @@ const Header = () => {
                     <Link
                       key={category.category_id}
                       to={`/equipment?category_id=${category.category_id}`}
-                      className="dropdown-item">
+                      className="dropdown-item"
+                    >
                       {category.category_name}
                     </Link>
                   ))}
                 </div>
               </Nav.Item>
-              <Nav.Link as={Link} to="/contact">
-                Contact Us
+              <Nav.Link as={Link} to="/admin/order">
+                Admin Functions
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
