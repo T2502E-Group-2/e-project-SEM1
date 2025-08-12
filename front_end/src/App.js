@@ -16,6 +16,7 @@ import Profile from "./components/pages/Profile";
 import AboutPage from "./components/pages/AboutPage";
 import Cart from "./components/common/Cart";
 import Category from "./components/shared/Category";
+import AdminOrder from "./components/Admin/AdminOrder";
 
 import ActivityPage from "./components/pages/Activities/ActivityPage";
 import ActivityDetail from "./components/pages/Activities/ActivityDetail";
@@ -67,6 +68,7 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/category/:id" element={<Category />} />
+              <Route path="/admin/order" element={<AdminOrder />} />
 
               <Route path="/activities" element={<ActivityPage />} />
               <Route path="/activities/:id" element={<ActivityDetail />} />

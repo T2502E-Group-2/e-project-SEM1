@@ -1,5 +1,7 @@
 const BASE = process.env.REACT_APP_API_BASE_URL;
 const URL = {
+  //ADMIN
+  ADMIN_ORDER: BASE + "/Admin/admin_orders.php",
   //AUTH
   LOGIN: BASE + "/auth/login.php",
   REGISTER: BASE + "/auth/register.php",
