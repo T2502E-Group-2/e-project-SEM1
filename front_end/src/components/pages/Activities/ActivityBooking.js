@@ -8,7 +8,9 @@ import {
   Form,
   Button,
   InputGroup,
+  Alert,
 } from "react-bootstrap";
+import { PayPalButtons } from "@paypal/react-paypal-js";
 import axios_instance from "../../../util/axios_instance";
 import URL from "../../../util/url";
 
@@ -21,7 +23,13 @@ const ActivityBooking = () => {
     email: "",
     participants: 1,
   });
+  const [formErrors, setFormErrors] = useState({});
   const [totalCost, setTotalCost] = useState(0);
+  const [validationError, setValidationError] = useState("");
+
+  // Retrieve user info and login status from localStorage or context as needed
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
+  const isLoggedIn = !!userInfo;
 
   useEffect(() => {
     const fetchActivity = async () => {
@@ -51,12 +59,30 @@ const ActivityBooking = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Chuyển sang trang thanh toán (đặt cọc 30%)
-    const deposit = totalCost * 0.3;
-    console.log("Booking info:", { ...form, totalCost, deposit });
-    // navigate("/payment", { state: { ...form, activity, totalCost, deposit } });
+  const handleValidation = () => {
+    const errors = {};
+    let valid = true;
+
+    if (!form.fullName.trim()) {
+      errors.fullName = "Full name is required";
+      valid = false;
+    }
+    if (!form.phone.trim()) {
+      errors.phone = "Phone number is required";
+      valid = false;
+    }
+    if (!form.email.trim()) {
+      errors.email = "Email is required";
+      valid = false;
+    }
+
+    setFormErrors(errors);
+    if (!valid) {
+      setValidationError("Please fill in all required fields before booking.");
+    } else {
+      setValidationError("");
+    }
+    return valid;
   };
 
   if (!activity) return <p>Loading...</p>;
@@ -66,10 +92,16 @@ const ActivityBooking = () => {
       className="container-fluid post-detail-page-wrapper"
       style={{ paddingTop: "200px" }}>
       <Row>
-        <Col md={8}>
+        <Col md={12}>
           <Card className="p-4">
             <h2>Register for {activity.title}</h2>
-            <Form onSubmit={handleSubmit}>
+
+            {validationError && (
+              <Alert variant="danger">{validationError}</Alert>
+            )}
+
+            <Form>
+              {/* Full Name */}
               <Form.Group className="mb-3">
                 <Form.Label>Full Name</Form.Label>
                 <Form.Control
@@ -77,21 +109,29 @@ const ActivityBooking = () => {
                   name="fullName"
                   value={form.fullName}
                   onChange={handleChange}
-                  required
+                  isInvalid={!!formErrors.fullName}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {formErrors.fullName}
+                </Form.Control.Feedback>
               </Form.Group>
 
+              {/* Phone */}
               <Form.Group className="mb-3">
-                <Form.Label>Phone</Form.Label>
+                <Form.Label>Phone number</Form.Label>
                 <Form.Control
                   type="tel"
                   name="phone"
                   value={form.phone}
                   onChange={handleChange}
-                  required
+                  isInvalid={!!formErrors.phone}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {formErrors.phone}
+                </Form.Control.Feedback>
               </Form.Group>
 
+              {/* Email */}
               <Form.Group className="mb-3">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
@@ -99,13 +139,17 @@ const ActivityBooking = () => {
                   name="email"
                   value={form.email}
                   onChange={handleChange}
-                  required
+                  isInvalid={!!formErrors.email}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {formErrors.email}
+                </Form.Control.Feedback>
               </Form.Group>
 
+              {/* Participants */}
               <Form.Group className="mb-3">
                 <Form.Label>Number of Participants</Form.Label>
-                <InputGroup>
+                <InputGroup style={{ width: "150px" }}>
                   <Button
                     variant="outline-secondary"
                     onClick={() => changeParticipants(-1)}>
@@ -113,6 +157,7 @@ const ActivityBooking = () => {
                   </Button>
                   <Form.Control
                     type="number"
+                    className="text-center "
                     name="participants"
                     value={form.participants}
                     min="1"
@@ -137,11 +182,74 @@ const ActivityBooking = () => {
               </Form.Group>
 
               <h5>Total Estimated Cost: ${totalCost}</h5>
-              <h6>Deposit (30%): ${Math.round(totalCost * 0.3)}</h6>
+              <h6
+                className="mt-3"
+                style={{ fontSize: "18px", fontWeight: "bold" }}>
+                Pay in Deposit (30%): ${Math.round(totalCost * 0.3)}
+              </h6>
 
-              <Button type="submit" variant="warning" className="mt-3 w-100">
-                Proceed to Payment
-              </Button>
+              {/* PayPal Buttons */}
+              <div className="d-flex justify-content-between mt-4">
+                <PayPalButtons
+                  style={{ layout: "vertical" }}
+                  createOrder={(data, actions) => {
+                    if (!handleValidation()) {
+                      return actions.reject();
+                    }
+                    return actions.order.create({
+                      purchase_units: [
+                        {
+                          description: activity.title,
+                          amount: {
+                            value: (totalCost * 0.3).toFixed(2),
+                            currency_code: "USD",
+                          },
+                        },
+                      ],
+                    });
+                  }}
+                  onApprove={(data, actions) => {
+                    return actions.order.capture().then(async (details) => {
+                      try {
+                        const res = await axios_instance.post(URL.PAYMENT, {
+                          type: "activity",
+                          userId: isLoggedIn ? userInfo.id : null,
+                          paypalOrderId: details.id,
+                          totalAmount: (totalCost * 0.3).toFixed(2),
+                          cartItems: [
+                            {
+                              id: activity.activity_id,
+                              product_type: "activity",
+                              quantity: form.participants,
+                              price: activity.price,
+                            },
+                          ],
+                          userInfo: {
+                            fullName: form.fullName,
+                            phone: form.phone,
+                            email: form.email,
+                            address: form.address || "",
+                            note: form.note || "",
+                          },
+                        });
+
+                        if (res.data.success) {
+                          alert("Payment successful! Booking saved.");
+                        } else {
+                          alert(
+                            "Payment succeeded but failed to save booking!"
+                          );
+                        }
+                      } catch (err) {
+                        console.error(err);
+                        alert(
+                          "Payment succeeded but error occurred while saving booking!"
+                        );
+                      }
+                    });
+                  }}
+                />
+              </div>
             </Form>
           </Card>
         </Col>

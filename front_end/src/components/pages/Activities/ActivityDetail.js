@@ -125,7 +125,7 @@ const ActivityDetail = () => {
                       fontWeight: "bold",
                       fontSize: "1.2rem",
                     }}
-                    onClick={() => navigate(`/activity/${id}/book`)}>
+                    onClick={() => navigate(`/activity/${id}/booking`)}>
                     Book Now
                   </Button>
                 </Card.Body>

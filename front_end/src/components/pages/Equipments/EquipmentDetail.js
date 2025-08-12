@@ -123,7 +123,7 @@ const EquipmentDetail = () => {
     setFormErrors(errors);
 
     if (!formIsValid) {
-      setValidationError("Vui lòng điền đầy đủ thông tin bắt buộc.");
+      setValidationError("Please fill in mandatory information.");
     } else {
       setValidationError("");
     }
@@ -132,10 +132,8 @@ const EquipmentDetail = () => {
 
   // Logic to create orders on Paypal
   const createOrder = (data, actions) => {
-    // Kiểm tra validation ngay trong hàm createOrder
     if (!handleValidation()) {
-      // Nếu validation thất bại, hiển thị thông báo lỗi và ngăn PayPal tiếp tục
-      return actions.reject("Thông tin người dùng chưa được điền đầy đủ.");
+      return actions.reject("User information has not been completed.");
     }
 
     // Nếu validation thành công, tạo đơn hàng
@@ -154,14 +152,13 @@ const EquipmentDetail = () => {
 
   // Logic after successful payment
   const onApprove = (data, actions) => {
-    // Kiểm tra lại validation trước khi gọi capture
     if (!handleValidation()) {
       return;
     }
 
     return actions.order.capture().then((details) => {
-      // Send successful payment data to your backend
       const orderData = {
+        type: "equipment", //
         userId: isLoggedIn ? userInfo.id : null,
         paypalOrderId: details.id,
         totalAmount: (equipment.price * quantity).toFixed(2),
@@ -180,15 +177,15 @@ const EquipmentDetail = () => {
         .post(URL.PAYMENT, orderData)
         .then((res) => {
           if (res.data.success) {
-            alert(`Thanh toán thành công! Mã đơn hàng: ${res.data.order_id}`);
+            alert(`Successful payment! Order code: ${res.data.order_id}`);
           } else {
             alert(`Thanh toán thất bại: ${res.data.message}`);
           }
         })
         .catch((err) => {
-          console.error("Lỗi khi ghi nhận đơn hàng vào database:", err);
+          console.error("Error when recording orders into database:", err);
           alert(
-            "Đã thanh toán thành công nhưng có lỗi khi lưu đơn hàng. Vui lòng liên hệ hỗ trợ."
+            "Successfully paid but errors when saving orders. Please contact support."
           );
         });
     });
@@ -237,9 +234,9 @@ const EquipmentDetail = () => {
                 <strong>{equipment.name}</strong>
               </h1>
               <h5 className="text-secondary">{equipment.brand}</h5>
-              <h3 className="text-primary">
+              <h5 className="mt-3" style={{ fontSize: "26px" }}>
                 <strong>${equipment.price}</strong>
-              </h3>
+              </h5>
             </div>
             <div className="d-flex align-items-center my-3">
               {" "}
@@ -258,10 +255,23 @@ const EquipmentDetail = () => {
               </Button>
             </div>
             <div className="d-flex mt-3">
-              <Button variant="primary" className="me-2" onClick={handleBuyNow}>
+              <Button
+                variant="primary"
+                className="me-2"
+                style={{
+                  backgroundColor: "darkorange",
+                  borderColor: "darkorange",
+                }}
+                onClick={handleBuyNow}>
                 Buy now
               </Button>
-              <Button variant="outline-primary" onClick={handleAddToCart}>
+              <Button
+                variant="outline-primary"
+                style={{
+                  borderColor: "darkorange",
+                  color: "black",
+                }}
+                onClick={handleAddToCart}>
                 Add to cart
               </Button>
             </div>

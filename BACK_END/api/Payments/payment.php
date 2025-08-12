@@ -10,8 +10,8 @@ header("Access-Control-Allow-Credentials: true");
 
 // Handle CORS preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-  http_response_code(200);
-  exit();
+    http_response_code(200);
+    exit();
 }
 
 // Enable error reporting for debugging
@@ -24,15 +24,14 @@ require_once("../../db/connect.php");
 $input_data = file_get_contents("php://input");
 $data = json_decode($input_data, true);
 
-// Check if data is valid
+// Validate data
 if (!$data || empty($data['paypalOrderId']) || empty($data['totalAmount']) || empty($data['cartItems']) || empty($data['userInfo'])) {
-    http_response_code(400); // Bad Request
+    http_response_code(400);
     echo json_encode(["success" => false, "message" => "Invalid or incomplete data provided."]);
     exit();
 }
 
 $conn = connect();
-
 if ($conn->connect_error) {
     http_response_code(500);
     echo json_encode(["success" => false, "message" => "Database connection failed: " . $conn->connect_error]);
@@ -40,10 +39,9 @@ if ($conn->connect_error) {
 }
 
 try {
-    // Start a transaction
     $conn->begin_transaction();
 
-    // 1. Insert into 'orders' table
+    // 1. Insert into 'orders'
     $userId = $data['userId'] ?? NULL;
     $paypalOrderId = $data['paypalOrderId'];
     $totalAmount = $data['totalAmount'];
@@ -59,11 +57,10 @@ try {
     }
     $stmt_order->bind_param("isdssss", $userId, $paypalOrderId, $totalAmount, $fullName, $address, $phone, $note);
     $stmt_order->execute();
-
     $order_id = $conn->insert_id;
     $stmt_order->close();
 
-    // 2. Insert into 'order_items' table for each item in the cart
+    // 2. Insert into 'order_items'
     $sql_item = "INSERT INTO order_items (order_id, product_id, product_type, quantity, price_at_time_of_purchase) VALUES (?, ?, ?, ?, ?)";
     $stmt_item = $conn->prepare($sql_item);
     if (!$stmt_item) {
@@ -75,11 +72,7 @@ try {
         $productType = $item['product_type'] ?? 'equipment';
         $quantity = $item['quantity'];
 
-        $price_at_time_of_purchase = 0;
-        $table_name = "";
-        $id_column = "";
-        $price_column = "price";
-        
+        // Lấy giá hiện tại
         switch ($productType) {
             case 'equipment':
                 $table_name = "equipments";
@@ -93,57 +86,38 @@ try {
                 throw new Exception("Invalid product type: " . $productType);
         }
 
-        $sql_price = "SELECT {$price_column} FROM {$table_name} WHERE {$id_column} = ?";
-        $stmt_price = $conn->prepare($sql_price);
+        $stmt_price = $conn->prepare("SELECT price FROM {$table_name} WHERE {$id_column} = ?");
         $stmt_price->bind_param("i", $productId);
         $stmt_price->execute();
         $result_price = $stmt_price->get_result();
-
         if ($result_price->num_rows === 0) {
-            throw new Exception("Product not found with ID: " . $productId . " in table " . $table_name);
+            throw new Exception("Product not found with ID: {$productId}");
         }
-        
-        $price_at_time_of_purchase = $result_price->fetch_assoc()[$price_column];
+        $price_at_time_of_purchase = $result_price->fetch_assoc()['price'];
         $stmt_price->close();
 
-        // Decrement stock for equipments after validating availability
+        // Trừ stock nếu là equipment
         if ($productType === 'equipment') {
-            // Lock the equipment row to avoid race conditions
             $stmt_stock = $conn->prepare("SELECT stock FROM equipments WHERE equipment_id = ? FOR UPDATE");
-            if (!$stmt_stock) {
-                throw new Exception("Failed to prepare stock select statement: " . $conn->error);
-            }
             $stmt_stock->bind_param("i", $productId);
             $stmt_stock->execute();
             $result_stock = $stmt_stock->get_result();
-
             if ($result_stock->num_rows === 0) {
-                $stmt_stock->close();
-                throw new Exception("Equipment not found with ID: " . $productId);
+                throw new Exception("Equipment not found with ID: {$productId}");
             }
-
             $current_stock = (int)$result_stock->fetch_assoc()['stock'];
             $stmt_stock->close();
 
             if ($current_stock < $quantity) {
-                throw new Exception("Insufficient stock for equipment ID: " . $productId);
+                throw new Exception("Insufficient stock for equipment ID: {$productId}");
             }
 
-            // Update stock
             $stmt_update = $conn->prepare("UPDATE equipments SET stock = stock - ? WHERE equipment_id = ?");
-            if (!$stmt_update) {
-                throw new Exception("Failed to prepare stock update statement: " . $conn->error);
-            }
             $stmt_update->bind_param("ii", $quantity, $productId);
             $stmt_update->execute();
-            if ($stmt_update->affected_rows === 0) {
-                $stmt_update->close();
-                throw new Exception("Failed to update stock for equipment ID: " . $productId);
-            }
             $stmt_update->close();
         }
 
-        // Corrected bind_param types: order_id (i), product_id (i), product_type (s), quantity (i), price (d)
         $stmt_item->bind_param("iisid", $order_id, $productId, $productType, $quantity, $price_at_time_of_purchase);
         $stmt_item->execute();
     }
@@ -157,9 +131,7 @@ try {
 } catch (Exception $e) {
     $conn->rollback();
     http_response_code(500);
-    error_log("Payment processing error: " . $e->getMessage());
-    echo json_encode(["success" => false, "message" => "An error occurred: " . $e->getMessage()]);
-
+    echo json_encode(["success" => false, "message" => $e->getMessage()]);
 } finally {
     $conn->close();
 }

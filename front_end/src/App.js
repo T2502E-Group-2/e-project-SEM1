@@ -70,7 +70,10 @@ function App() {
 
               <Route path="/activities" element={<ActivityPage />} />
               <Route path="/activities/:id" element={<ActivityDetail />} />
-              <Route path="/activity/:id/book" element={<ActivityBooking />} />
+              <Route
+                path="/activity/:id/booking"
+                element={<ActivityBooking />}
+              />
 
               <Route path="/equipment" element={<EquipmentPage />} />
               <Route path="/equipment/:id" element={<EquipmentDetail />} />

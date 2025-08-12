@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 
 const Activity = ({ activity }) => {
   const {
-    id,
     price,
     thumbnail_url,
     title,
