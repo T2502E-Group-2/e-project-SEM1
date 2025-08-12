@@ -99,7 +99,7 @@ const ActivityDetail = () => {
                     <strong>End date: </strong> {activity.end_date}
                   </ListGroup.Item>
                   <ListGroup.Item>
-                    <strong>Group Size:</strong> Up to{" "}
+                    <strong>Available:</strong> Up to{" "}
                     {activity.max_participants}{" "}
                     {Number(activity.max_participants) === 1
                       ? "person"

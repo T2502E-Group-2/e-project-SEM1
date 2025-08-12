@@ -96,7 +96,7 @@ try {
         $price_at_time_of_purchase = $result_price->fetch_assoc()['price'];
         $stmt_price->close();
 
-        // Trừ stock nếu là equipment
+        // Deduct stock if it's Equipment
         if ($productType === 'equipment') {
             $stmt_stock = $conn->prepare("SELECT stock FROM equipments WHERE equipment_id = ? FOR UPDATE");
             $stmt_stock->bind_param("i", $productId);
@@ -113,6 +113,27 @@ try {
             }
 
             $stmt_update = $conn->prepare("UPDATE equipments SET stock = stock - ? WHERE equipment_id = ?");
+            $stmt_update->bind_param("ii", $quantity, $productId);
+            $stmt_update->execute();
+            $stmt_update->close();
+        }
+        // Deduct max_participants if it is Activity
+        if ($productType === 'activity') {           
+            $stmt_max = $conn->prepare("SELECT max_participants FROM activities WHERE activity_id = ? FOR UPDATE");
+            $stmt_max->bind_param("i", $productId);
+            $stmt_max->execute();
+            $result_max = $stmt_max->get_result();
+            if ($result_max->num_rows === 0) {
+                throw new Exception("Activity not found with ID: {$productId}");
+            }
+            $current_max = (int)$result_max->fetch_assoc()['max_participants'];
+            $stmt_max->close();
+        
+            if ($current_max < $quantity) {
+                throw new Exception("Not enough spots available for activity ID: {$productId}");
+            }
+        
+            $stmt_update = $conn->prepare("UPDATE activities SET max_participants = max_participants - ? WHERE activity_id = ?");
             $stmt_update->bind_param("ii", $quantity, $productId);
             $stmt_update->execute();
             $stmt_update->close();
