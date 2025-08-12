@@ -33,8 +33,16 @@ const Cart = () => {
   const [total, setTotal] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const { state } = useContext(UserContext);
-  const { isLoggedIn, userInfo } = state;
+  const userInfo = state.user;
+  const isLoggedIn = !!userInfo;
   const navigate = useNavigate();
+
+  // Create a ref to hold the latest user info to avoid stale closures in callbacks.
+  const userInfoRef = useRef(userInfo);
+  useEffect(() => {
+    // Always keep the ref updated with the latest userInfo.
+    userInfoRef.current = userInfo;
+  }, [userInfo]);
 
   const [checkoutInfo, setCheckoutInfo] = useState({
     fullName:
@@ -150,13 +158,17 @@ const Cart = () => {
         selectedItems.includes(item.id)
       );
 
+      // Read the latest user info from the ref to ensure it's not stale.
+      const currentUserInfo = userInfoRef.current;
+
       const orderData = {
-        userId: isLoggedIn ? userInfo.id : null,
+        user_id: currentUserInfo ? currentUserInfo.user_id : null,
         paypalOrderId: details.id,
         totalAmount: total,
         cartItems: selectedCartItems.map((item) => ({
           id: item.id,
-          product_type: item.product_type,
+          activity_id: null,
+          equipment_id: item.id,
           quantity: item.quantity,
           price: item.price,
         })),
@@ -173,7 +185,7 @@ const Cart = () => {
           localStorage.setItem("cart", JSON.stringify(remainingCart));
           setCart(remainingCart);
           setSelectedItems([]);
-          navigate("/");
+          navigate("/equipment");
         } else {
           setPaymentError(response.data.message);
         }
@@ -215,8 +227,7 @@ const Cart = () => {
     <Container style={{ paddingTop: "200px", paddingBottom: "50px" }}>
       <h2
         className="mb-4"
-        style={{ color: "white", textShadow: "1px 1px 2px #000" }}
-      >
+        style={{ color: "white", textShadow: "1px 1px 2px #000" }}>
         Your Shopping Cart
       </h2>
       {cart.length === 0 ? (
@@ -233,14 +244,12 @@ const Cart = () => {
                   overflowY: "auto",
                   overflowX: "auto",
                   borderRadius: "10px",
-                }}
-              >
+                }}>
                 <Table
                   bordered
                   hover
                   className="bg-white"
-                  style={{ marginBottom: 0 }}
-                >
+                  style={{ marginBottom: 0 }}>
                   <thead
                     style={{
                       position: "sticky",
@@ -248,8 +257,7 @@ const Cart = () => {
                       zIndex: 1,
                       backgroundColor: "white",
                       borderBottom: "1px solid lightgray",
-                    }}
-                  >
+                    }}>
                     <tr className="text-center align-middle">
                       <th className="text-center">
                         Check
@@ -305,8 +313,7 @@ const Cart = () => {
                               size="sm"
                               onClick={() =>
                                 handleUpdateQuantity(item.id, item.quantity - 1)
-                              }
-                            >
+                              }>
                               -
                             </Button>
                             <span className="mx-2">{item.quantity}</span>
@@ -315,8 +322,7 @@ const Cart = () => {
                               size="sm"
                               onClick={() =>
                                 handleUpdateQuantity(item.id, item.quantity + 1)
-                              }
-                            >
+                              }>
                               +
                             </Button>
                           </div>
@@ -326,8 +332,7 @@ const Cart = () => {
                           <Button
                             variant="danger"
                             size="sm"
-                            onClick={() => handleRemoveFromCart(item.id)}
-                          >
+                            onClick={() => handleRemoveFromCart(item.id)}>
                             Remove
                           </Button>
                         </td>
@@ -340,8 +345,7 @@ const Cart = () => {
             <Col md={4}>
               <Card
                 className="order-summary-card"
-                style={{ position: "sticky", top: "200px" }}
-              >
+                style={{ position: "sticky", top: "200px" }}>
                 <Card.Body>
                   <Card.Title className="text-center fw-bolder">
                     ORDER SUMMARY
@@ -356,8 +360,7 @@ const Cart = () => {
                     variant="primary"
                     className="w-100"
                     onClick={handleCheckout}
-                    disabled={selectedItems.length === 0}
-                  >
+                    disabled={selectedItems.length === 0}>
                     Buy now
                   </Button>
                 </Card.Body>

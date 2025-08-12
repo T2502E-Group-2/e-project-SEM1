@@ -80,7 +80,6 @@ const EquipmentDetail = () => {
       currentCart.push({
         ...equipment,
         quantity: quantity,
-        product_type: "equipment",
       });
     }
 
@@ -158,19 +157,23 @@ const EquipmentDetail = () => {
 
     return actions.order.capture().then((details) => {
       const orderData = {
-        type: "equipment", //
-        userId: isLoggedIn ? userInfo.id : null,
+        type: "equipment",
+        userId: isLoggedIn ? userInfo.user_id : null,
         paypalOrderId: details.id,
         totalAmount: (equipment.price * quantity).toFixed(2),
         cartItems: [
           {
-            id: equipment.id,
-            product_type: "equipment",
+            activity_id: null,
+            equipment_id: equipment.id,
             quantity: quantity,
-            price: equipment.price,
           },
         ],
-        userInfo: userInfo,
+        userInfo: {
+          fullName: userInfo.fullName,
+          address: userInfo.address,
+          phone: userInfo.phone,
+          note: userInfo.note,
+        },
       };
 
       axios_instance
@@ -337,7 +340,7 @@ const EquipmentDetail = () => {
               </Form.Label>
               <Form.Control
                 type="text"
-                value={userInfo.fullName}
+                value={userInfo.fullName || ""}
                 onChange={(e) =>
                   setUserInfo({ ...userInfo, fullName: e.target.value })
                 }
@@ -353,7 +356,7 @@ const EquipmentDetail = () => {
               </Form.Label>
               <Form.Control
                 type="text"
-                value={userInfo.address}
+                value={userInfo.address || ""}
                 onChange={(e) =>
                   setUserInfo({ ...userInfo, address: e.target.value })
                 }
@@ -369,7 +372,7 @@ const EquipmentDetail = () => {
               </Form.Label>
               <Form.Control
                 type="text"
-                value={userInfo.phone}
+                value={userInfo.phone || ""}
                 onChange={(e) =>
                   setUserInfo({ ...userInfo, phone: e.target.value })
                 }
@@ -384,7 +387,7 @@ const EquipmentDetail = () => {
               <Form.Control
                 as="textarea"
                 rows={3}
-                value={userInfo.note}
+                value={userInfo.note || ""}
                 onChange={(e) =>
                   setUserInfo({ ...userInfo, note: e.target.value })
                 }
