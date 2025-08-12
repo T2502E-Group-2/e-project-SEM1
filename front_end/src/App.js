@@ -16,10 +16,14 @@ import Profile from "./components/pages/Profile";
 import AboutPage from "./components/pages/AboutPage";
 import Cart from "./components/common/Cart";
 import Category from "./components/shared/Category";
+
+import ActivityPage from "./components/pages/Activities/ActivityPage";
 import ActivityDetail from "./components/pages/Activities/ActivityDetail";
+import ActivityBooking from "./components/pages/Activities/ActivityBooking";
+
 import EquipmentPage from "./components/pages/Equipments/EquipmentPage";
 import EquipmentDetail from "./components/pages/Equipments/EquipmentDetail";
-import ActivityPage from "./components/pages/Activities/ActivityPage";
+
 import PostPage from "./components/pages/Posts/PostPage";
 import PostDetailPage from "./components/pages/Posts/PostDetailPage";
 
@@ -63,10 +67,14 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/category/:id" element={<Category />} />
+
+              <Route path="/activities" element={<ActivityPage />} />
               <Route path="/activities/:id" element={<ActivityDetail />} />
+              <Route path="/activity/:id/book" element={<ActivityBooking />} />
+
               <Route path="/equipment" element={<EquipmentPage />} />
               <Route path="/equipment/:id" element={<EquipmentDetail />} />
-              <Route path="/activities" element={<ActivityPage />} />
+
               <Route path="/posts" element={<PostPage />} />
               <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
             </Routes>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import URL from "../../../util/url";
 import {
   Container,
@@ -18,6 +18,7 @@ const ActivityDetail = () => {
   const [activity, setActivity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchActivity = async () => {
@@ -123,7 +124,8 @@ const ActivityDetail = () => {
                       color: "#fff",
                       fontWeight: "bold",
                       fontSize: "1.2rem",
-                    }}>
+                    }}
+                    onClick={() => navigate(`/activity/${id}/book`)}>
                     Book Now
                   </Button>
                 </Card.Body>

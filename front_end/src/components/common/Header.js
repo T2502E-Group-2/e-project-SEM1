@@ -149,11 +149,25 @@ const Header = () => {
               <div className="d-flex">
                 <button
                   className="btn btn-primary me-2"
+                  style={{
+                    backgroundColor: "darkorange",
+                    color: "white",
+                    fontSize: "1.2rem",
+                    borderColor: "darkorange",
+                    transition: "background-color 0.3s ease",
+                  }}
                   onClick={() => handleOpenAuthModal("login")}>
                   Login
                 </button>
                 <button
                   className="btn btn-success"
+                  style={{
+                    backgroundColor: "darkorange",
+                    color: "white",
+                    fontSize: "1.2rem",
+                    borderColor: "darkorange",
+                    transition: "background-color 0.3s ease",
+                  }}
                   onClick={() => handleOpenAuthModal("register")}>
                   Register
                 </button>
