@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import {
   Container,
   Row,
@@ -16,9 +16,20 @@ import axios_instance from "../../util/axios_instance";
 import URL from "../../util/url";
 import UserContext from "../../context/context";
 
+// Component checkbox hỗ trợ indeterminate
+const IndeterminateCheckbox = ({ indeterminate, ...rest }) => {
+  const ref = useRef();
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.indeterminate = indeterminate;
+    }
+  }, [indeterminate]);
+  return <Form.Check ref={ref} {...rest} />;
+};
+
 const Cart = () => {
   const [cart, setCart] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]); // State mới để lưu các item được chọn
+  const [selectedItems, setSelectedItems] = useState([]);
   const [total, setTotal] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const { state } = useContext(UserContext);
@@ -38,7 +49,6 @@ const Cart = () => {
   const [formErrors, setFormErrors] = useState({});
   const [paymentError, setPaymentError] = useState(null);
 
-  // Helper function to calculate total based on selected items
   const calculateTotal = (cartData, selectedIds) => {
     return cartData.reduce((sum, item) => {
       if (selectedIds.includes(item.id)) {
@@ -68,7 +78,6 @@ const Cart = () => {
     }
   }, [isLoggedIn, userInfo]);
 
-  // Handle item selection/deselection
   const handleSelect = (itemId) => {
     const isSelected = selectedItems.includes(itemId);
     let newSelectedItems;
@@ -95,7 +104,6 @@ const Cart = () => {
     }
   };
 
-  // Validation function for the form
   const validateForm = () => {
     const errors = {};
     if (!checkoutInfo.fullName) errors.fullName = "Full name is required.";
@@ -106,15 +114,14 @@ const Cart = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Handle checkout, only open modal
   const handleCheckout = () => {
     if (selectedItems.length === 0) {
       alert("Please select at least one item to purchase.");
       return;
     }
     setShowModal(true);
-    setFormErrors({}); // Reset validation errors
-    setPaymentError(null); // Reset payment errors
+    setFormErrors({});
+    setPaymentError(null);
   };
 
   const createOrder = (data, actions) => {
@@ -160,7 +167,6 @@ const Cart = () => {
         const response = await axios_instance.post(URL.PAYMENT, orderData);
         if (response.data.success) {
           alert("Payment successful! Thank you for your purchase.");
-          // Remove only the selected items from the cart
           const remainingCart = cart.filter(
             (item) => !selectedItems.includes(item.id)
           );
@@ -185,7 +191,6 @@ const Cart = () => {
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-    // Update selectedItems state as well
     const updatedSelected = selectedItems.filter((id) => id !== itemId);
     setSelectedItems(updatedSelected);
 
@@ -207,11 +212,7 @@ const Cart = () => {
   };
 
   return (
-    <Container
-      style={{
-        paddingTop: "200px",
-        paddingBottom: "50px",
-      }}>
+    <Container style={{ paddingTop: "200px", paddingBottom: "50px" }}>
       <h2
         className="mb-4"
         style={{ color: "white", textShadow: "1px 1px 2px #000" }}>
@@ -236,9 +237,7 @@ const Cart = () => {
                   bordered
                   hover
                   className="bg-white"
-                  style={{
-                    marginBottom: 0,
-                  }}>
+                  style={{ marginBottom: 0 }}>
                   <thead
                     style={{
                       position: "sticky",
@@ -250,7 +249,7 @@ const Cart = () => {
                     <tr className="text-center align-middle">
                       <th className="text-center">
                         Check
-                        <Form.Check
+                        <IndeterminateCheckbox
                           type="checkbox"
                           checked={
                             selectedItems.length > 0 &&
@@ -285,9 +284,7 @@ const Cart = () => {
                             <img
                               src={item.image_url}
                               alt={item.name}
-                              style={{
-                                maxWidth: "80px",
-                              }}
+                              style={{ maxWidth: "80px" }}
                             />
                             <div>
                               <p style={{ fontWeight: "bold", margin: 0 }}>
@@ -341,12 +338,12 @@ const Cart = () => {
                   <Card.Title className="text-center fw-bolder">
                     ORDER SUMMARY
                   </Card.Title>
-                  <Card.Text className="text-center">
+                  <div className="text-center">
                     <h5 className="mb-3">
                       Total Items: {selectedItems.length}
                     </h5>
                     <h5 className="mb-3">Total Price: ${total.toFixed(2)}</h5>
-                  </Card.Text>
+                  </div>
                   <Button
                     variant="primary"
                     className="w-100"
@@ -358,7 +355,8 @@ const Cart = () => {
               </Card>
             </Col>
           </Row>
-          {/* Purchase Now Modal */}
+
+          {/* Modal Payment */}
           <Modal show={showModal} onHide={() => setShowModal(false)} centered>
             <Modal.Header closeButton>
               <Modal.Title>Payment Information</Modal.Title>

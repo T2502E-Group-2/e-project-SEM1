@@ -78,13 +78,23 @@ const ActivityPage = () => {
 
   return (
     <div className="container-fluid" style={{ paddingTop: "200px" }}>
-      <h1 className="text-center mb-4">Our Adventures</h1>
       <Row>
         {/* Main Content: All Activities */}
         <Col lg={12}>
-          <div className="text-center mb-4" style={{ color: "#fff" }}>
+          <div
+            className="text-center mb-4"
+            style={{
+              color: "#fff",
+              textShadow: "2px 2px 8px rgba(0, 0, 0, 1)",
+            }}>
             <h2 style={{ fontSize: "2.5rem" }}>Explore The Great Outdoors</h2>
-            <p className="lead" style={{ fontSize: "1.5rem" }}>
+            <p
+              className="text-center"
+              style={{
+                color: "#fff",
+                fontSize: "1.5rem",
+                textShadow: "2px 2px 8px rgba(0, 0, 0, 1)",
+              }}>
               Join us on an unforgettable adventure. We offer a wide range of
               activities for every level of experience.
             </p>

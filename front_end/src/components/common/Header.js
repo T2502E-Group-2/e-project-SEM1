@@ -150,12 +150,12 @@ const Header = () => {
                 <button
                   className="btn btn-primary me-2"
                   onClick={() => handleOpenAuthModal("login")}>
-                  Đăng nhập
+                  Login
                 </button>
                 <button
                   className="btn btn-success"
                   onClick={() => handleOpenAuthModal("register")}>
-                  Đăng ký
+                  Register
                 </button>
               </div>
             )}

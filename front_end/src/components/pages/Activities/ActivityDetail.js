@@ -22,9 +22,6 @@ const ActivityDetail = () => {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        // Giả định rằng API của bạn có một endpoint để lấy chi tiết
-        // một hoạt động, ví dụ: /api/activities/:id
-        // và URL.ACTIVITIES trong file util/url.js trỏ đến '/api/activities'
         const response = await axios_instance.get(URL.ACTIVITY_DETAIL + id);
         setActivity(response.data.data);
         setError(null);
@@ -69,46 +66,69 @@ const ActivityDetail = () => {
     <div className="activity-detail-page">
       <div
         className="detail-banner"
-        style={{ backgroundImage: `url(${activity.thumbnail_url})` }}
-      >
+        style={{ backgroundImage: `url(${activity.thumbnail_url})` }}>
         <div className="detail-banner-overlay">
           <h1>{activity.title}</h1>
         </div>
       </div>
-      <Container className="mt-5">
+      <Container className="container-fluid d-flex mt-5">
         <Row>
-          <Col md={8}>
-            <h2 className="detail-section-title">Description</h2>
-            <p className="lead">{activity.description}</p>
+          <Col md={8} className="mb-4">
+            <Card
+              className="post-content"
+              dangerouslySetInnerHTML={{ __html: activity.detail }}
+            />
           </Col>
-          <Col md={4}>
-            <Card className="detail-info-box">
-              <Card.Header as="h5">Activity Info</Card.Header>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <strong>Price:</strong> ${activity.price} / person
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>Duration:</strong> {activity.duration} Days
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>Group Size:</strong> Up to {activity.max_participants}{" "}
-                  people
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong>Difficulty:</strong> {activity.difficulty_level}
-                </ListGroup.Item>
-              </ListGroup>
-              <Card.Body>
-                <h5 className="card-title mt-3">More Details</h5>
-                <div
-                  dangerouslySetInnerHTML={{ __html: activity.detail_content }}
-                />
-                <Button variant="warning" className="w-100 book-now-btn mt-4">
-                  Book Now
-                </Button>
-              </Card.Body>
-            </Card>
+          <Col md={4} className="mb-4">
+            <div>
+              <Card className="detail-info-box">
+                <Card.Header as="h3">Activity Information</Card.Header>
+                <ListGroup variant="flush">
+                  <ListGroup.Item>
+                    <strong>Price:</strong> ${activity.price} / person
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Duration:</strong> {activity.duration}{" "}
+                    {Number(activity.duration) === 1 ? "Day" : "Days"}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Start date: </strong> {activity.start_date}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>End date: </strong> {activity.end_date}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Group Size:</strong> Up to{" "}
+                    {activity.max_participants}{" "}
+                    {Number(activity.max_participants) === 1
+                      ? "person"
+                      : "people"}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Difficulty:</strong> {activity.difficulty_level}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Status:</strong> {activity.status}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Registration deadline: </strong>
+                    {activity.registration_deadline}
+                  </ListGroup.Item>
+                </ListGroup>
+                <Card.Body>
+                  <Button
+                    variant="warning"
+                    className="w-100 book-now-btn mt-4"
+                    style={{
+                      color: "#fff",
+                      fontWeight: "bold",
+                      fontSize: "1.2rem",
+                    }}>
+                    Book Now
+                  </Button>
+                </Card.Body>
+              </Card>
+            </div>
           </Col>
         </Row>
       </Container>

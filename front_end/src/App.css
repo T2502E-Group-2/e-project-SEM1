@@ -503,7 +503,7 @@ main {
 }
 
 .detail-banner {
-  height: 50svh;
+  height: 60svh;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -877,12 +877,16 @@ main {
 
 .post-content {
   font-size: 20px;
+  padding: 20px;
   line-height: 1.8;
   color: #000000;
+  text-align: justify;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .post-content p {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0rem;
 }
 
 .post-content img {
@@ -899,7 +903,7 @@ main {
   margin-top: 2rem;
   margin-bottom: 1rem;
   font-weight: 600;
-  color: #212529;
+  color: #000000;
 }
 
 .post-detail-page-wrapper .breadcrumb-item a {

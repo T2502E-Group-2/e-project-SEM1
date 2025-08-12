@@ -22,7 +22,7 @@ const Activity = ({ activity }) => {
         <div className="row meta">
           <div className="col-md-3">
             <h5>{duration}</h5>
-            <h6> Days</h6>
+            <h6> {Number(duration) === 1 ? "Day" : "Days"}</h6>
           </div>
           <div className="col-md-4">
             <h5>{max_participants}</h5>
