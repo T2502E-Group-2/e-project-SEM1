@@ -1,12 +1,13 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 // CORS headers
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 }
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Methods: *");
+header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Credentials: true");
 
 // Handle OPTIONS preflight
@@ -15,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once(__DIR__ . "/../../db/connect.php");
+require_once("../../db/connect.php");
 $conn = connect();
 
 $data = json_decode(file_get_contents("php://input"), true);
@@ -23,11 +24,10 @@ $data = json_decode(file_get_contents("php://input"), true);
 // Basic validation
 if (
     !$data ||
-    !isset($data['paypalOrderId']) ||
-    !isset($data['totalAmount']) ||
-    !isset($data['cartItems']) ||
-    !is_array($data['cartItems']) ||
-    !isset($data['userInfo'])
+    empty($data['paypalOrderId']) ||
+    empty($data['totalAmount']) ||
+    !isset($data['cartItems']) || !is_array($data['cartItems']) || empty($data['cartItems']) ||
+    !isset($data['userInfo']) || !is_array($data['userInfo'])
 ) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Invalid data provided.']);
@@ -37,51 +37,75 @@ if (
 $conn->begin_transaction();
 
 try {
-    // Fix: accept both user_id and userId from frontend
-    $user_id = $data['user_id'] ?? $data['userId'] ?? null;
-
-    $paypal_order_id = $data['paypalOrderId'];
-    $total_amount = $data['totalAmount'];
+    // Lấy dữ liệu từ request
+    $user_id = isset($data['user_id']) ? (int)$data['user_id'] : (isset($data['userId']) ? (int)$data['userId'] : null);
+    $paypal_order_id = (string)$data['paypalOrderId'];
+    $total_amount = (float)$data['totalAmount'];
     $user_info = $data['userInfo'];
 
     // Insert into orders
-    $sql_order = "INSERT INTO orders (user_id, paypal_order_id, total_amount, status, customer_name, customer_address, customer_phone, customer_note) VALUES (?, ?, ?, 'completed', ?, ?, ?, ?)";
-    $stmt_order = $conn->prepare($sql_order);
-    if (!$stmt_order) {
-        throw new Exception("Order prepare failed: " . $conn->error);
+    $sql_order = "INSERT INTO orders (user_id, paypal_order_id, total_amount, status, full_name, address, phone, note)
+              VALUES (?, ?, 0, 'pending', ?, ?, ?, ?)";
+$stmt_order = $conn->prepare($sql_order);
+$customer_name   = $user_info['fullName'] ?? '';
+$customer_address = $user_info['address'] ?? '';
+$customer_phone   = $user_info['phone'] ?? '';
+$customer_note    = $user_info['note'] ?? '';
+$stmt_order->bind_param("isssss", $user_id, $paypal_order_id, $customer_name, $customer_address, $customer_phone, $customer_note);
+$stmt_order->execute();
+$order_id = $conn->insert_id;
+$stmt_order->close();
+
+// 2) Chuẩn bị insert items - ĐÚNG cột và ĐÚNG kiểu
+$sql_item = "INSERT INTO order_items (order_id, activity_id, equipment_id, quantity, price_at_time_of_purchase)
+             VALUES (?, ?, ?, ?, ?)";
+$stmt_item = $conn->prepare($sql_item);
+
+// 3) Lặp items: kiểm XOR, tra giá server-side, tính tổng
+$computed_total = 0.0;
+
+foreach ($data['cartItems'] as $item) {
+    $activity_id  = $item['activity_id'] ?? null;
+    $equipment_id = $item['equipment_id'] ?? null;
+    $quantity     = isset($item['quantity']) ? (int)$item['quantity'] : 0;
+
+    $hasActivity  = !empty($activity_id);
+    $hasEquipment = !empty($equipment_id);
+    if ($hasActivity === $hasEquipment) {
+        throw new Exception("Each item must be either activity OR equipment.");
     }
+    if ($quantity <= 0) throw new Exception("Invalid quantity.");
 
-    $customer_name = $user_info['fullName'] ?? '';
-    $customer_address = $user_info['address'] ?? '';
-    $customer_phone = $user_info['phone'] ?? '';
-    $customer_note = $user_info['note'] ?? '';
-
-    $stmt_order->bind_param("isdssss", $user_id, $paypal_order_id, $total_amount, $customer_name, $customer_address, $customer_phone, $customer_note);
-    $stmt_order->execute();
-    $order_id = $conn->insert_id;
-    $stmt_order->close();
-
-    // Insert into order_items
-    $sql_item = "INSERT INTO order_items (order_id, activity_id, equipment_id, quantity, price) VALUES (?, ?, ?, ?, ?)";
-    $stmt_item = $conn->prepare($sql_item);
-    if (!$stmt_item) {
-        throw new Exception("Order item prepare failed: " . $conn->error);
+    // Tra giá từ DB (không dùng giá client)
+    if ($hasEquipment) {
+        $q = $conn->prepare("SELECT price FROM equipments WHERE equipment_id=?");
+        $q->bind_param("i", $equipment_id);
+    } else {
+        $q = $conn->prepare("SELECT price FROM activities WHERE activity_id=?");
+        $q->bind_param("i", $activity_id);
     }
+    $q->execute();
+    $q->bind_result($unit_price);
+    if (!$q->fetch()) throw new Exception("Item not found.");
+    $q->close();
 
-    foreach ($data['cartItems'] as $item) {
-        $activity_id = $item['activity_id'] ?? null;
-        $equipment_id = $item['equipment_id'] ?? null;
-        $quantity = $item['quantity'];
-        $price = $item['price'];
+    $line_price = (float)$unit_price;
+    $computed_total += $line_price * $quantity;
 
-        if ($activity_id === null && $equipment_id === null) {
-            continue;
-        }
+    // LƯU Ý: đúng chuỗi kiểu "iiiid"
+    $stmt_item->bind_param("iiiid", $order_id, $activity_id, $equipment_id, $quantity, $line_price);
+    $stmt_item->execute();
+}
+$stmt_item->close();
 
-        $stmt_item->bind_param("iiidd", $order_id, $activity_id, $equipment_id, $quantity, $price);
-        $stmt_item->execute();
-    }
-    $stmt_item->close();
+// 4) So khớp tổng và cập nhật đơn -> completed
+if (abs(((float)$data['totalAmount']) - $computed_total) > 0.01) {
+    throw new Exception("Total mismatch.");
+}
+$up = $conn->prepare("UPDATE orders SET total_amount=?, status='completed' WHERE id=?");
+$up->bind_param("di", $computed_total, $order_id);
+$up->execute();
+$up->close();
 
     $conn->commit();
 

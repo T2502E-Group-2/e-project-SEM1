@@ -29,7 +29,8 @@ const ActivityBooking = () => {
 
   // Retrieve user info and login status from localStorage or context as needed
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
-  const isLoggedIn = !!userInfo;
+  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+  const isLoggedIn = !!userInfo || !!storedUser;
 
   useEffect(() => {
     const fetchActivity = async () => {
@@ -211,15 +212,21 @@ const ActivityBooking = () => {
                   onApprove={(data, actions) => {
                     return actions.order.capture().then(async (details) => {
                       try {
+                        console.log("userInfo", userInfo); //test
+                        console.log("storedUser", storedUser); //test
+                        console.log("isLoggedIn", isLoggedIn); //test
+
                         const res = await axios_instance.post(URL.PAYMENT, {
                           type: "activity",
-                          userId: isLoggedIn ? userInfo.id : null,
+                          user_id: isLoggedIn
+                            ? userInfo?.user_id || storedUser?.user_id
+                            : null,
                           paypalOrderId: details.id,
                           totalAmount: (totalCost * 0.3).toFixed(2),
                           cartItems: [
                             {
-                              id: activity.activity_id,
-                              product_type: "activity",
+                              activity_id: activity.activity_id, // ✅ key khớp backend
+                              equipment_id: null, // ✅ để rõ ràng
                               quantity: form.participants,
                               price: activity.price,
                             },

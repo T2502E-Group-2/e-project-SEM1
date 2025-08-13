@@ -166,7 +166,6 @@ const Cart = () => {
         paypalOrderId: details.id,
         totalAmount: total,
         cartItems: selectedCartItems.map((item) => ({
-          id: item.id,
           activity_id: null,
           equipment_id: item.id,
           quantity: item.quantity,
