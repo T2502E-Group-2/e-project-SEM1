@@ -41,7 +41,7 @@ const Header = () => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
-      setSearchTerm(""); // Xóa nội dung trong ô tìm kiếm sau khi tìm
+      setSearchTerm("");
     }
   };
 
@@ -51,21 +51,20 @@ const Header = () => {
     dispatch({ type: LOGOUT });
   };
 
-  // Khôi phục trạng thái đăng nhập từ localStorage khi tải trang
+  // Restore login status from Localstorage when loading page
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
-        // Dispatch action để cập nhật context, reducer sẽ tự động cập nhật localStorage
         dispatch({ type: LOGIN_SUCCESS, payload: JSON.parse(storedUser) });
       } catch (e) {
         console.error("Failed to parse user from localStorage", e);
-        localStorage.removeItem("user"); // Xóa dữ liệu hỏng
+        localStorage.removeItem("user");
       }
     }
   }, [dispatch]);
 
-  // Theo dõi scroll để đổi màu chữ
+  // Handle scroll event to change header style
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -74,7 +73,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Tải danh mục thiết bị
+  // Download the list of equipment
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -280,9 +279,11 @@ const Header = () => {
                   ))}
                 </div>
               </Nav.Item>
-              <Nav.Link as={Link} to="/admin/order">
-                Admin Functions
-              </Nav.Link>
+              {state.user && state.user.role === "admin" && (
+                <Nav.Link as={Link} to="/admin/order">
+                  Admin Functions
+                </Nav.Link>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>

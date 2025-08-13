@@ -123,16 +123,14 @@ function AdminOrder() {
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "200px" }}
-    >
+      style={{ paddingTop: "200px" }}>
       <h1
         className="text-center mb-4"
         style={{
           color: "#ffff",
           fontWeight: "bold",
           textShadow: "1px 1px 2px #000",
-        }}
-      >
+        }}>
         Orders management (Admin)
       </h1>
       <Row className="mb-3">
@@ -167,8 +165,7 @@ function AdminOrder() {
                 <th style={thStyle}>Phone No.</th>
                 <th style={thStyle}>Add.</th>
                 <th style={thStyle}>Notes</th>
-                <th style={thStyle}>Product ID</th>
-                <th style={thStyle}>Product Type</th>
+                <th style={thStyle}>Item</th>
                 <th style={thStyle}>Quantity</th>
                 <th style={thStyle}>Order Price</th>
                 <SortableHeader column="total_amount" label="Total Amount" />
@@ -181,16 +178,20 @@ function AdminOrder() {
                   key={index}
                   style={{
                     backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9",
-                  }}
-                >
+                  }}>
                   <td style={tdStyle}>{row.order_id}</td>
                   <td style={tdStyle}>{row.paypal_order_id}</td>
                   <td style={tdStyle}>{row.full_name}</td>
                   <td style={tdStyle}>{row.phone}</td>
                   <td style={tdStyle}>{row.address}</td>
                   <td style={tdStyle}>{row.note}</td>
-                  <td style={tdStyle}>{row.product_id}</td>
-                  <td style={tdStyle}>{row.product_type}</td>
+                  <td style={tdStyle}>
+                    {row.activity_id
+                      ? `Activity: ${row.activity_id}`
+                      : row.equipment_id
+                      ? `Equipment: ${row.equipment_id}`
+                      : "-"}
+                  </td>
                   <td style={tdStyle}>{row.quantity}</td>
                   <td style={tdStyle}>
                     ${parseFloat(row.price_at_time_of_purchase).toFixed(2)}

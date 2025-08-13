@@ -3,7 +3,7 @@ session_start();
 
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-} 
+}
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -53,10 +53,11 @@ $sql = "
         o.full_name,
         o.address,
         o.phone,
+        o.email,
         o.note,
         DATE_FORMAT(o.created_at, '%Y-%m-%d %H:%i:%s') as created_at,
-        oi.product_id,
-        oi.product_type,
+        oi.activity_id,
+        oi.equipment_id,
         oi.quantity,
         oi.price_at_time_of_purchase
     FROM orders o
@@ -67,11 +68,11 @@ $params = [];
 $types = '';
 
 if (!empty($search)) {
-    $sql .= " WHERE o.full_name LIKE ? OR o.paypal_order_id LIKE ? OR o.phone LIKE ? OR o.address LIKE ? OR o.id LIKE ?";
+    $sql .= " WHERE o.full_name LIKE ? OR o.paypal_order_id LIKE ? OR o.phone LIKE ? OR o.address LIKE ? OR o.email LIKE ? OR o.id LIKE ?";
     $searchTerm = "%" . $search . "%";
     // Thêm các tham số vào mảng
-    array_push($params, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
-    $types = 'sssss';
+    array_push($params, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+    $types = 'ssssss';
 }
 
 $sql .= " ORDER BY o.{$sortBy} {$sortOrder}";
