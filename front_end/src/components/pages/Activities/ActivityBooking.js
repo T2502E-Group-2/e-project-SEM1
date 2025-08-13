@@ -178,7 +178,11 @@ const ActivityBooking = () => {
                   </Button>
                 </InputGroup>
                 <Form.Text muted>
-                  Maximum {activity.max_participants} people allowed.
+                  Maximum {activity.max_participants}{" "}
+                  {Number(activity.max_participants) === 1
+                    ? "person"
+                    : "people"}{" "}
+                  allowed.
                 </Form.Text>
               </Form.Group>
 
@@ -225,8 +229,8 @@ const ActivityBooking = () => {
                           totalAmount: (totalCost * 0.3).toFixed(2),
                           cartItems: [
                             {
-                              activity_id: activity.activity_id, // ✅ key khớp backend
-                              equipment_id: null, // ✅ để rõ ràng
+                              activity_id: activity.activity_id,
+                              equipment_id: null,
                               quantity: form.participants,
                               price: activity.price,
                             },

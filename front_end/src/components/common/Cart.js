@@ -66,23 +66,26 @@ const Cart = () => {
     }, 0);
   };
 
+  // Load cart from localStorage on initial render
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
     const initialSelectedItems = storedCart.map((item) => item.id);
     setSelectedItems(initialSelectedItems);
-
     const newTotal = calculateTotal(storedCart, initialSelectedItems);
     setTotal(newTotal);
+  }, []);
 
+  // Auto-fill checkout form when user logs in, preserving the note
+  useEffect(() => {
     if (isLoggedIn && userInfo) {
-      setCheckoutInfo({
+      setCheckoutInfo((prevInfo) => ({
+        ...prevInfo,
         fullName: `${userInfo.first_name} ${userInfo.last_name}`,
         address: userInfo.address_line1 || "",
         email: userInfo.email || "",
         phone: userInfo.phone_number || "",
-        note: "",
-      });
+      }));
     }
   }, [isLoggedIn, userInfo]);
 
@@ -162,6 +165,7 @@ const Cart = () => {
       const currentUserInfo = userInfoRef.current;
 
       const orderData = {
+        type: "equipment", // Add type for backend validation
         user_id: currentUserInfo ? currentUserInfo.user_id : null,
         paypalOrderId: details.id,
         totalAmount: total,
@@ -169,7 +173,6 @@ const Cart = () => {
           activity_id: null,
           equipment_id: item.id,
           quantity: item.quantity,
-          price: item.price,
         })),
         userInfo: checkoutInfo,
       };
@@ -231,7 +234,7 @@ const Cart = () => {
       </h2>
       {cart.length === 0 ? (
         <Alert variant="info">
-          Your cart is empty.<Link to="/">Continue shopping</Link>
+          Your cart is empty.<Link to="/equipment">Continue shopping</Link>
         </Alert>
       ) : (
         <>
