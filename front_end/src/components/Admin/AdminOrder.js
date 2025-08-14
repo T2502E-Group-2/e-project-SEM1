@@ -14,6 +14,9 @@ function AdminOrder() {
   const [sortOrder, setSortOrder] = useState("desc");
 
   useEffect(() => {
+    if (!state.user || state.user.role !== "admin") {
+      return;
+    }
     setLoading(true);
     const params = new URLSearchParams({
       search: searchTerm,
@@ -44,7 +47,7 @@ function AdminOrder() {
       .finally(() => {
         setLoading(false);
       });
-  }, [searchTerm, sortBy, sortOrder]);
+  }, [state.user, searchTerm, sortBy, sortOrder]);
 
   const handleSort = (column) => {
     if (sortBy === column) {
@@ -145,7 +148,10 @@ function AdminOrder() {
             <Button variant="primary" type="submit">
               Search
             </Button>
-            <Button variant="outline-secondary" onClick={clearSearch}>
+            <Button
+              variant="secondary"
+              style={{ backgroundColor: "darkorange" }}
+              onClick={clearSearch}>
               Clear
             </Button>
           </InputGroup>

@@ -21,6 +21,7 @@ const Header = () => {
   const { state, dispatch } = useContext(UserContext);
   const { cartItemCount } = useContext(CartContext);
   const [gearCategories, setGearCategories] = useState([]);
+  const [activityCategories, setActivityCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [scrolled, setScrolled] = useState(false);
@@ -73,7 +74,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Download the list of equipment
+  // Fetch the list of equipment
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -87,6 +88,21 @@ const Header = () => {
       }
     };
     fetchCategories();
+  }, []);
+  // Fetch the list of Activities
+  const fetchActivities = async () => {
+    try {
+      const url = URL.ACTIVITY_CATEGORIES;
+      const rs = await axios_instance.get(url);
+      if (rs.data.status && rs.data.data) {
+        setActivityCategories(rs.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to load activity categories:", error);
+    }
+  };
+  useEffect(() => {
+    fetchActivities();
   }, []);
 
   return (
@@ -231,17 +247,14 @@ const Header = () => {
                   Activities
                 </Nav.Link>
                 <div className="dropdown-menu">
-                  <Link
-                    to="/activities/mountaineering"
-                    className="dropdown-item">
-                    Mountaineering
-                  </Link>
-                  <Link to="/activities/climbing" className="dropdown-item">
-                    Climbing
-                  </Link>
-                  <Link to="/activities/trekking" className="dropdown-item">
-                    Trekking
-                  </Link>
+                  {activityCategories.map((category) => (
+                    <Link
+                      key={category.category_id}
+                      to={`/activities?category_id=${category.category_id}`}
+                      className="dropdown-item">
+                      {category.category_name}
+                    </Link>
+                  ))}
                 </div>
               </Nav.Item>
 

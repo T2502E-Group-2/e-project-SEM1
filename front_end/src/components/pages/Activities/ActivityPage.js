@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Row, Col } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 import axios_instance from "../../../util/axios_instance";
 import URL from "../../../util/url";
 import Activity from "../../shared/Activity";
@@ -14,6 +15,10 @@ const ActivityPage = () => {
 
   const allActivitiesRef = useRef(null);
   const allActivitiesTitleRef = useRef(null);
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const categoryId = params.get("category_id");
 
   const useAnimateOnScroll = (refs) => {
     useEffect(() => {
@@ -53,7 +58,11 @@ const ActivityPage = () => {
     const fetchActivities = async () => {
       try {
         const [allRes, featuredRes, latestRes] = await Promise.all([
-          axios_instance.get(URL.ALL_ACTIVITIES),
+          axios_instance.get(
+            categoryId
+              ? `${URL.ALL_ACTIVITIES}?category_id=${categoryId}`
+              : URL.ALL_ACTIVITIES
+          ),
           axios_instance.get(URL.FEATURED_ACTIVITIES),
           axios_instance.get(URL.LATEST_ACTIVITIES),
         ]);
@@ -70,7 +79,7 @@ const ActivityPage = () => {
     };
 
     fetchActivities();
-  }, []);
+  }, [categoryId]);
 
   if (loading)
     return <div className="text-center mt-5">Loading activities...</div>;

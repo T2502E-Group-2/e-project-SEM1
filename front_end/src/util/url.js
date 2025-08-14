@@ -12,8 +12,7 @@ const URL = {
   GET_USER_DETAILS: BASE + "/Users/get_user_details.php",
   UPDATE_AVATAR: BASE + "/Users/update_avatar.php",
   //ACTIVITIES
-  CATEGORY_ACTIVITIES: BASE + "/Activities/category_activities.php",
-  ACTIVITIES_BY_CATEGORY: BASE + "/Activities/activities.php?category_id=",
+  ACTIVITY_CATEGORIES: BASE + "/Activities/activity_categories.php",
   LATEST_ACTIVITIES: BASE + "/Activities/latest_activities.php",
   FEATURED_ACTIVITIES: BASE + "/Activities/featured_activities.php",
   ACTIVITY_DETAIL: BASE + "/Activities/activity_details.php?id=",
