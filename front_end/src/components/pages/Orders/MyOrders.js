@@ -1,28 +1,36 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import axios from "axios";
-import UserContext from "../../../context/context"; // UserContext gốc để lấy user_id
+import UserContext from "../../../context/context";
 import UserOrderContext, {
   FETCH_ORDERS_REQUEST,
   FETCH_ORDERS_SUCCESS,
   FETCH_ORDERS_FAILURE,
 } from "../../../context/UserOrderContext";
-import { Container, Spinner, Alert, Card } from "react-bootstrap";
+import { Container, Spinner, Alert, Card, Form, Button } from "react-bootstrap";
 import URL from "../../../util/url";
 
 const MyOrders = () => {
   const { state: userState } = useContext(UserContext);
   const { state: orderState, dispatch } = useContext(UserOrderContext);
+  const [searchParams, setSearchParams] = useState({
+    paypal_order_id: "",
+    email: "",
+    phone: "",
+  });
 
-  //   console.log("Current userState:", userState);
+  const handleSearchChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams({ ...searchParams, [name]: value });
+  };
 
-  useEffect(() => {
-    console.log("userState.user.user_id:", userState.user?.user_id);
-
-    const fetchOrders = async (userId) => {
+  const fetchOrders = React.useCallback(
+    async (params) => {
       dispatch({ type: FETCH_ORDERS_REQUEST });
+      let apiUrl = `${URL.GET_USER_ORDERS}?`;
+      const queryParams = new URLSearchParams(params).toString();
+      apiUrl += queryParams;
 
       try {
-        const apiUrl = `${URL.GET_USER_ORDERS}?user_id=${userId}`;
         const response = await axios.get(apiUrl);
 
         if (response.data.success) {
@@ -43,48 +51,148 @@ const MyOrders = () => {
         });
         console.error("Error fetching orders:", err);
       }
-    };
+    },
+    [dispatch]
+  );
 
+  // Automatically fetch orders for logged in users
+  useEffect(() => {
     if (userState.user?.user_id) {
-      fetchOrders(userState.user.user_id);
-    } else if (!userState.isLoggedIn) {
+      fetchOrders({ user_id: userState.user.user_id });
+    } else {
+      dispatch({ type: FETCH_ORDERS_SUCCESS, payload: [] });
+    }
+  }, [userState.user?.user_id, dispatch, fetchOrders]);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const { paypal_order_id, email, phone } = searchParams;
+    if (!paypal_order_id && (!email || !phone)) {
       dispatch({
         type: FETCH_ORDERS_FAILURE,
-        payload: "Please login to see your orders.",
+        payload:
+          "Please enter Paypal order code, or both email and phone number to look up.",
       });
+      return;
     }
-  }, [userState.isLoggedIn, userState.user?.user_id, dispatch]);
 
-  if (orderState.loading) {
-    return (
-      <Container className="text-center mt-5" style={{ paddingTop: "200px" }}>
-        <Spinner animation="border" variant="primary" />
-        <p>Loading...</p>
-      </Container>
-    );
+    if (paypal_order_id) {
+      fetchOrders({ paypal_order_id: paypal_order_id });
+    } else {
+      // If there is no code, use email and phone number
+      fetchOrders({ email, phone });
+    }
+  };
+
+  const renderSearchForm = () => (
+    <Container
+      className="container-fluid post-detail-page-wrapper"
+      style={{ paddingTop: "200px" }}>
+      <h2
+        className="text-center mb-4"
+        style={{
+          color: "#ffff",
+          fontWeight: "bold",
+          textShadow: "1px 1px 2px #000",
+        }}>
+        Search for your order
+      </h2>
+
+      <Card onSubmit={handleSearchSubmit} className="p-4 border rounded p-3">
+        <Form.Group className="mb-3">
+          <Form.Label>
+            <strong>Option 1: Search by Paypal order code</strong>
+          </Form.Label>
+          <Form.Control
+            typ="text"
+            name="paypal_order_id"
+            value={searchParams.paypal_order_id}
+            onChange={handleSearchChange}
+            placeholder="Enter your Paypal Order ID"
+          />
+        </Form.Group>
+        <p className="text-center" style={{ fontSize: "1.2rem" }}>
+          <strong>OR</strong>
+        </p>
+        <Form.Group className="mb-3">
+          <Form.Label>
+            <strong>Option 2: Search by Email and Phone number</strong>
+          </Form.Label>
+          <Form.Control
+            type="email"
+            name="email"
+            value={searchParams.email}
+            onChange={handleSearchChange}
+            className="mb-2"
+            placeholder="Enter your email"
+          />
+          <Form.Control
+            type="tel"
+            name="phone"
+            value={searchParams.phone}
+            onChange={handleSearchChange}
+            placeholder="Enter your phone number"
+          />
+        </Form.Group>
+        <Button variant="primary" type="submit" disabled={orderState.loading}>
+          {orderState.loading ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            "Search"
+          )}
+        </Button>
+      </Card>
+
+      {orderState.error && (
+        <Alert variant="danger" className="mt-3">
+          {orderState.error}
+        </Alert>
+      )}
+    </Container>
+  );
+
+  if (userState.user?.user_id) {
+    if (orderState.loading) {
+      return (
+        <Container className="text-center mt-5" style={{ paddingTop: "200px" }}>
+          <Spinner animation="border" variant="primary" />
+          <p>Loading...</p>
+        </Container>
+      );
+    }
+
+    if (orderState.error) {
+      return (
+        <Container className="mt-5" style={{ paddingTop: "200px" }}>
+          <Alert variant="danger">{orderState.error}</Alert>
+        </Container>
+      );
+    }
+
+    if (!orderState.orders || orderState.orders.length === 0) {
+      return (
+        <Container
+          className="container-fluid post-detail-page-wrapper"
+          style={{ paddingTop: "200px" }}>
+          <Alert variant="info">You do not have any orders yet.</Alert>
+        </Container>
+      );
+    }
+  } else {
+    //Show the search form if the user has not logged in
+    if (orderState.orders.length === 0) {
+      return renderSearchForm();
+    }
   }
 
-  if (orderState.error) {
-    return (
-      <Container className="mt-5" style={{ paddingTop: "200px" }}>
-        <Alert variant="danger">{orderState.error}</Alert>
-      </Container>
-    );
-  }
-
-  if (!orderState.orders || orderState.orders.length === 0) {
-    return (
-      <Container className="mt-5" style={{ paddingTop: "200px" }}>
-        <Alert variant="info">You do not have any orders yet.</Alert>
-      </Container>
-    );
-  }
-
+  //Display the list of orders for both cases
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
       style={{ paddingTop: "200px" }}>
-      <h2 className="text-center mb-4">My Orders List</h2>
+      <h2 className="text-center mb-4">
+        {userState.user?.user_id ? "My Orders" : "Search Results"}
+      </h2>
       {orderState.orders.map((order) => (
         <Card key={order.id} className="order-card mb-4 p-4 border rounded">
           <div className="order-header d-flex justify-content-between align-items-center mb-3">
@@ -98,7 +206,7 @@ const MyOrders = () => {
           </div>
           <div className="order-details mb-3">
             <p>
-              <strong>Order Date:</strong>{" "}
+              <strong>OrderDate:</strong>{" "}
               {new Date(order.created_at).toLocaleDateString()}
             </p>
             <p>
@@ -117,9 +225,7 @@ const MyOrders = () => {
                   className="list-group-item d-flex justify-content-between">
                   <span>{item.product_name}</span>
                   <span>Quantity: {item.quantity}</span>
-                  <span>
-                    Price at time of purchase: ${item.price_at_time_of_purchase}
-                  </span>
+                  <span>Unit Price: ${item.price_at_time_of_purchase}</span>
                 </li>
               ))}
           </ul>

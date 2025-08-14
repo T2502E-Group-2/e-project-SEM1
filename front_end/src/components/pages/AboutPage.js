@@ -4,8 +4,7 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 const AboutPage = () => {
   return (
     <div
-      style={{ paddingTop: "200px", color: "white", fontFamily: "sans-serif" }}
-    >
+      style={{ paddingTop: "200px", color: "white", fontFamily: "sans-serif" }}>
       {/* Hero Section */}
       <div className="about-hero-section">
         <Container className="text-center">
@@ -121,7 +120,7 @@ const AboutPage = () => {
             <Card className="text-center border-0">
               <Card.Img
                 variant="top"
-                src="https://lavenderstudio.com.vn/wp-content/uploads/2019/10/gia-chup-hinh-chan-dung-ca-nhan-tp-hcm-01.jpg"
+                src="https://www.ifpri.org/wp-content/uploads/2015/02/ulimwengu_john.jpg"
                 className="rounded-circle w-50 mx-auto mt-3"
               />
               <Card.Body>
@@ -147,7 +146,7 @@ const AboutPage = () => {
             <Card className="text-center border-0">
               <Card.Img
                 variant="top"
-                src="/guides/guide-3.jpg"
+                src="https://www.friedfrank.com/uploads/images/77ceffeddba2de3cb36ee4ada89d17e1.png"
                 className="rounded-circle w-50 mx-auto mt-3"
               />
               <Card.Body>
