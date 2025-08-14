@@ -30,6 +30,7 @@ import EquipmentDetail from "./components/pages/Equipments/EquipmentDetail";
 
 import PostPage from "./components/pages/Posts/PostPage";
 import PostDetailPage from "./components/pages/Posts/PostDetailPage";
+import PostEditor from "./components/common/PostEditor";
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -61,7 +62,8 @@ function App() {
           <div
             className={`header-and-menu-container ${
               scrolled ? "scrolled" : ""
-            }`}>
+            }`}
+          >
             <Header />
           </div>
           <main>
@@ -88,6 +90,7 @@ function App() {
 
                 <Route path="/posts" element={<PostPage />} />
                 <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
+                <Route path="/post-editor" element={<PostEditor />} />
               </Routes>
             </UserOrderProvider>
           </main>

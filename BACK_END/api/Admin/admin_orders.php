@@ -44,7 +44,6 @@ if ($sortOrder !== 'ASC' && $sortOrder !== 'DESC') {
     $sortOrder = 'DESC'; // Mặc định
 }
 
-// Xây dựng câu truy vấn SQL
 $sql = "
     SELECT
         o.id AS order_id,

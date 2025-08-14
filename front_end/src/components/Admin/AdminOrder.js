@@ -68,12 +68,12 @@ function AdminOrder() {
     setSearchTerm("");
   };
   if (!state.user || state.user.role !== "admin") {
-    return <div>Bạn không có quyền truy cập trang này.</div>;
+    return <div>You do not have permission to access to this page.</div>;
   }
 
-  if (loading) return <div>Đang tải đơn hàng...</div>;
+  if (loading) return <div>Loading orders ...</div>;
   if (error) return <div>Lỗi: {error}</div>;
-  if (!orders.length) return <div>Không có đơn hàng nào.</div>;
+  if (!orders.length) return <div>There are no orders.</div>;
 
   const SortableHeader = ({ column, label }) => (
     <th style={thStyle} onClick={() => handleSort(column)}>
@@ -126,14 +126,16 @@ function AdminOrder() {
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "200px" }}>
+      style={{ paddingTop: "200px" }}
+    >
       <h1
         className="text-center mb-4"
         style={{
           color: "#ffff",
           fontWeight: "bold",
           textShadow: "1px 1px 2px #000",
-        }}>
+        }}
+      >
         Orders management (Admin)
       </h1>
       <Row className="mb-3">
@@ -151,7 +153,8 @@ function AdminOrder() {
             <Button
               variant="secondary"
               style={{ backgroundColor: "darkorange" }}
-              onClick={clearSearch}>
+              onClick={clearSearch}
+            >
               Clear
             </Button>
           </InputGroup>
@@ -176,6 +179,7 @@ function AdminOrder() {
                 <th style={thStyle}>Order Price</th>
                 <SortableHeader column="total_amount" label="Total Amount" />
                 <SortableHeader column="created_at" label="Order Date" />
+                <th style={thStyle}>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -184,7 +188,8 @@ function AdminOrder() {
                   key={index}
                   style={{
                     backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9",
-                  }}>
+                  }}
+                >
                   <td style={tdStyle}>{row.order_id}</td>
                   <td style={tdStyle}>{row.paypal_order_id}</td>
                   <td style={tdStyle}>{row.full_name}</td>
@@ -206,6 +211,7 @@ function AdminOrder() {
                     ${parseFloat(row.total_amount).toFixed(2)}
                   </td>
                   <td style={tdStyle}>{row.created_at}</td>
+                  <td style={tdStyle}>{row.status}</td>
                 </tr>
               ))}
             </tbody>

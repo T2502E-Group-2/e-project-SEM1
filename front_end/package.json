@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^11.0.0",
     "@paypal/react-paypal-js": "^8.8.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -11,6 +12,8 @@
     "axios": "^1.11.0",
     "bootstrap-icons": "^1.13.1",
     "carousel": "^0.0.3",
+    "ckeditor5": "^46.0.1",
+    "ckeditor5-premium-features": "^46.0.1",
     "imagekit-javascript": "^4.0.1",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
