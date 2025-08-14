@@ -292,6 +292,9 @@ const Header = () => {
                   ))}
                 </div>
               </Nav.Item>
+              <Nav.Link as={Link} to="/my-orders">
+                My Orders
+              </Nav.Link>
               {state.user && state.user.role === "admin" && (
                 <Nav.Link as={Link} to="/admin/order">
                   Admin Functions

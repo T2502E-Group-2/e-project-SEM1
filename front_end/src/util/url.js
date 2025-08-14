@@ -29,6 +29,8 @@ const URL = {
   POST_DETAIL: BASE + "/Posts/post_details.php?id=",
   //PAYMENT
   PAYMENT: BASE + "/Payments/payment.php",
+  //ORDERS
+  GET_USER_ORDERS: BASE + "/Users/get_user_orders.php",
 };
 
 export default URL;

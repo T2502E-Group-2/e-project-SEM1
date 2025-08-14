@@ -5,6 +5,7 @@ import reducer from "./context/reducer";
 import { CartProvider } from "./context/CartContext";
 import { UserProvider } from "./context/context";
 import { Route, Routes } from "react-router-dom";
+import { UserOrderProvider } from "./context/UserOrderContext";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -18,6 +19,7 @@ import AboutPage from "./components/pages/AboutPage";
 import Cart from "./components/common/Cart";
 import Category from "./components/shared/Category";
 import AdminOrder from "./components/Admin/AdminOrder";
+import MyOrders from "./components/pages/Orders/MyOrders";
 
 import ActivityPage from "./components/pages/Activities/ActivityPage";
 import ActivityDetail from "./components/pages/Activities/ActivityDetail";
@@ -59,33 +61,35 @@ function App() {
           <div
             className={`header-and-menu-container ${
               scrolled ? "scrolled" : ""
-            }`}
-          >
+            }`}>
             <Header />
           </div>
           <main>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/category/:id" element={<Category />} />
-              <Route path="/admin/order" element={<AdminOrder />} />
-              <Route path="/search" element={<SearchResultsPage />} />
+            <UserOrderProvider>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/category/:id" element={<Category />} />
+                <Route path="/admin/order" element={<AdminOrder />} />
+                <Route path="/my-orders" element={<MyOrders />} />
+                <Route path="/search" element={<SearchResultsPage />} />
 
-              <Route path="/activities" element={<ActivityPage />} />
-              <Route path="/activities/:id" element={<ActivityDetail />} />
-              <Route
-                path="/activity/:id/booking"
-                element={<ActivityBooking />}
-              />
+                <Route path="/activities" element={<ActivityPage />} />
+                <Route path="/activities/:id" element={<ActivityDetail />} />
+                <Route
+                  path="/activity/:id/booking"
+                  element={<ActivityBooking />}
+                />
 
-              <Route path="/equipment" element={<EquipmentPage />} />
-              <Route path="/equipment/:id" element={<EquipmentDetail />} />
+                <Route path="/equipment" element={<EquipmentPage />} />
+                <Route path="/equipment/:id" element={<EquipmentDetail />} />
 
-              <Route path="/posts" element={<PostPage />} />
-              <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
-            </Routes>
+                <Route path="/posts" element={<PostPage />} />
+                <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
+              </Routes>
+            </UserOrderProvider>
           </main>
           <Footer />
         </div>

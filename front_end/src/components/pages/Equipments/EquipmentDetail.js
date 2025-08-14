@@ -33,7 +33,7 @@ const EquipmentDetail = () => {
   });
 
   const [validationError, setValidationError] = useState("");
-  // Thêm một state để lưu các lỗi của từng trường
+  // Add a state to save the errors of each field
   const [formErrors, setFormErrors] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -48,7 +48,7 @@ const EquipmentDetail = () => {
           setEquipment(rs.data.data);
           console.log(rs.data.data);
 
-          // Lấy thông tin người dùng từ localStorage để kiểm tra đăng nhập
+          // Get user information from Localstorage to check the login
           const loggedInUser = JSON.parse(localStorage.getItem("user"));
           if (loggedInUser) {
             setIsLoggedIn(true);
@@ -90,7 +90,7 @@ const EquipmentDetail = () => {
   };
 
   const handleBuyNow = () => {
-    // Reset lỗi validation khi mở modal
+    // Reset Validation error when opening modal
     setValidationError("");
     setFormErrors({});
     setShowModal(true);
