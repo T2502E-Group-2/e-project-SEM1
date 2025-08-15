@@ -31,9 +31,11 @@ $conn = connect();
 $search = $_GET['search'] ?? '';
 $sortBy = $_GET['sort_by'] ?? 'created_at';
 $sortOrder = $_GET['sort_order'] ?? 'DESC';
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
 // Whitelist các cột được phép sắp xếp để tránh SQL Injection
-$allowedSortColumns = ['order_id', 'paypal_order_id', 'total_amount', 'full_name', 'created_at'];
+$allowedSortColumns = ['id', 'created_at','status', 'full_name'];
 if (!in_array($sortBy, $allowedSortColumns)) {
     $sortBy = 'created_at'; // Mặc định
 }
@@ -54,6 +56,7 @@ $sql = "
         o.phone,
         o.email,
         o.note,
+        o.status,
         DATE_FORMAT(o.created_at, '%Y-%m-%d %H:%i:%s') as created_at,
         oi.activity_id,
         oi.equipment_id,
@@ -62,20 +65,41 @@ $sql = "
     FROM orders o
     JOIN order_items oi ON o.id = oi.order_id
 ";
-
+$where = [];
 $params = [];
 $types = '';
 
+// Search conditions
 if (!empty($search)) {
-    $sql .= " WHERE o.full_name LIKE ? OR o.paypal_order_id LIKE ? OR o.phone LIKE ? OR o.address LIKE ? OR o.email LIKE ? OR o.id LIKE ?";
+    $where[] = "(o.full_name LIKE ? OR o.paypal_order_id LIKE ? OR o.phone LIKE ? OR o.address LIKE ? OR o.email LIKE ? OR o.id LIKE ?)";
     $searchTerm = "%" . $search . "%";
-    // Thêm các tham số vào mảng
     array_push($params, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
-    $types = 'ssssss';
+    $types .= 'ssssss';
+}
+
+//Date filtering conditions
+if (!empty($start_date) && !empty($end_date)) {
+    $where[] = "DATE(o.created_at) BETWEEN ? AND ?";
+    array_push($params, $start_date, $end_date);
+    $types .= 'ss';
+} elseif (!empty($start_date)) {
+    $where[] = "DATE(o.created_at) >= ?";
+    array_push($params, $start_date);
+    $types .= 's';
+} elseif (!empty($end_date)) {
+    $where[] = "DATE(o.created_at) <= ?";
+    array_push($params, $end_date);
+    $types .= 's';
+}
+
+// If possible, add to the SQL statement
+if (!empty($where)) {
+    $sql .= " WHERE " . implode(" AND ", $where);
 }
 
 $sql .= " ORDER BY o.{$sortBy} {$sortOrder}";
 
+// Prepare statement
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
     http_response_code(500);

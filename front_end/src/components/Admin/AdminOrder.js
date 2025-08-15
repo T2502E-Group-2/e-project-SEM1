@@ -1,15 +1,28 @@
 import React, { useEffect, useState, useContext } from "react";
 import UserContext from "../../context/context";
 import URL from "../../util/url";
-import { Container, Row, Form, Button, InputGroup } from "react-bootstrap";
+import {
+  Container,
+  Col,
+  Row,
+  Form,
+  Button,
+  InputGroup,
+  Card,
+} from "react-bootstrap";
 
 function AdminOrder() {
   const { state } = useContext(UserContext);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [searchInput, setSearchInput] = useState("");
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   const [sortBy, setSortBy] = useState("created_at");
   const [sortOrder, setSortOrder] = useState("desc");
 
@@ -22,6 +35,8 @@ function AdminOrder() {
       search: searchTerm,
       sort_by: sortBy,
       sort_order: sortOrder,
+      start_date: startDate,
+      end_date: endDate,
     });
 
     fetch(`${URL.ADMIN_ORDER}?${params.toString()}`, {
@@ -47,7 +62,7 @@ function AdminOrder() {
       .finally(() => {
         setLoading(false);
       });
-  }, [state.user, searchTerm, sortBy, sortOrder]);
+  }, [state.user, searchTerm, sortBy, sortOrder, startDate, endDate]);
 
   const handleSort = (column) => {
     if (sortBy === column) {
@@ -67,24 +82,50 @@ function AdminOrder() {
     setSearchInput("");
     setSearchTerm("");
   };
+
+  const clearDateFilters = () => {
+    setStartDate("");
+    setEndDate("");
+  };
+
   if (!state.user || state.user.role !== "admin") {
-    return <div>You do not have permission to access to this page.</div>;
+    return (
+      <Container style={{ paddingTop: "200px" }}>
+        <Card>
+          <h3 className="text-center text-danger p-3 mb-3 ">
+            ⚠️ You do not have permission to access this page! ⚠️
+          </h3>
+        </Card>
+      </Container>
+    );
   }
 
   if (loading) return <div>Loading orders ...</div>;
   if (error) return <div>Lỗi: {error}</div>;
   if (!orders.length) return <div>There are no orders.</div>;
 
-  const SortableHeader = ({ column, label }) => (
-    <th style={thStyle} onClick={() => handleSort(column)}>
-      {label}
-      {sortBy === column && (
-        <span style={{ marginLeft: "5px" }}>
-          {sortOrder === "asc" ? "▲" : "▼"}
+  const SortableHeader = ({ column, label }) => {
+    const isActive = sortBy === column;
+
+    return (
+      <th
+        style={{ ...thStyle, cursor: "pointer", whiteSpace: "nowrap" }}
+        onClick={() => handleSort(column)}>
+        {label}
+        <span style={{ marginLeft: "5px", fontSize: "0.8em" }}>
+          {isActive ? (
+            sortOrder === "asc" ? (
+              "▲"
+            ) : (
+              "▼"
+            )
+          ) : (
+            <span style={{ opacity: 0.3 }}>▲▼</span>
+          )}
         </span>
-      )}
-    </th>
-  );
+      </th>
+    );
+  };
 
   // --- START: STYLES FOR TABLE ---
   const tableContainerStyle = {
@@ -126,38 +167,59 @@ function AdminOrder() {
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "200px" }}
-    >
+      style={{ paddingTop: "200px" }}>
       <h1
         className="text-center mb-4"
         style={{
           color: "#ffff",
           fontWeight: "bold",
           textShadow: "1px 1px 2px #000",
-        }}
-      >
+        }}>
         Orders management (Admin)
       </h1>
       <Row className="mb-3">
         <Form onSubmit={handleSearchSubmit}>
-          <InputGroup>
-            <Form.Control
-              type="text"
-              placeholder="Search by name, PayPal ID, phone, address, or Order ID..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-            />
-            <Button variant="primary" type="submit">
-              Search
-            </Button>
-            <Button
-              variant="secondary"
-              style={{ backgroundColor: "darkorange" }}
-              onClick={clearSearch}
-            >
-              Clear
-            </Button>
-          </InputGroup>
+          <Row>
+            <Col xs={12} md={8} className="mb-2">
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  placeholder="Search by name, PayPal ID, phone, address, or Order ID..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+                <Button variant="primary" type="submit">
+                  Search
+                </Button>
+                <Button
+                  variant="secondary"
+                  style={{ backgroundColor: "darkorange" }}
+                  onClick={clearSearch}>
+                  Clear
+                </Button>
+              </InputGroup>
+            </Col>
+            <Col xs={12} md={4} className="mb-2">
+              <InputGroup>
+                <Form.Control
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                <Form.Control
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+                <Button
+                  variant="secondary"
+                  style={{ backgroundColor: "darkorange" }}
+                  onClick={clearDateFilters}>
+                  Clear
+                </Button>
+              </InputGroup>
+            </Col>
+          </Row>
         </Form>
       </Row>
       <Row>
@@ -166,20 +228,17 @@ function AdminOrder() {
             <thead style={theadStyle}>
               <tr style={{ maxHeight: "80%" }}>
                 <SortableHeader column="order_id" label="Order ID" />
-                <SortableHeader
-                  column="paypal_order_id"
-                  label="PayPal Order ID"
-                />
+                <th style={thStyle}>PayPal Order ID</th>
                 <SortableHeader column="full_name" label="Customer Name" />
                 <th style={thStyle}>Phone No.</th>
-                <th style={thStyle}>Add.</th>
+                <th style={thStyle}>Address</th>
                 <th style={thStyle}>Notes</th>
                 <th style={thStyle}>Item</th>
                 <th style={thStyle}>Quantity</th>
                 <th style={thStyle}>Order Price</th>
-                <SortableHeader column="total_amount" label="Total Amount" />
+                <th style={thStyle}>Total Amount</th>
                 <SortableHeader column="created_at" label="Order Date" />
-                <th style={thStyle}>Status</th>
+                <SortableHeader column="status" label="Payment status" />
               </tr>
             </thead>
             <tbody>
@@ -188,8 +247,7 @@ function AdminOrder() {
                   key={index}
                   style={{
                     backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9",
-                  }}
-                >
+                  }}>
                   <td style={tdStyle}>{row.order_id}</td>
                   <td style={tdStyle}>{row.paypal_order_id}</td>
                   <td style={tdStyle}>{row.full_name}</td>

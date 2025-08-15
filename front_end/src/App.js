@@ -18,7 +18,13 @@ import Profile from "./components/pages/Profile";
 import AboutPage from "./components/pages/AboutPage";
 import Cart from "./components/common/Cart";
 import Category from "./components/shared/Category";
+import AdminFunction from "./components/Admin/AdminFunctions";
 import AdminOrder from "./components/Admin/AdminOrder";
+import AdminUser from "./components/Admin/AdminUser";
+import AdminPost from "./components/Admin/AdminPost";
+import AdminActivity from "./components/Admin/AdminActivity";
+import AdminEquipment from "./components/Admin/AdminEquipment";
+
 import MyOrders from "./components/pages/Orders/MyOrders";
 
 import ActivityPage from "./components/pages/Activities/ActivityPage";
@@ -62,8 +68,7 @@ function App() {
           <div
             className={`header-and-menu-container ${
               scrolled ? "scrolled" : ""
-            }`}
-          >
+            }`}>
             <Header />
           </div>
           <main>
@@ -74,7 +79,22 @@ function App() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/category/:id" element={<Category />} />
-                <Route path="/admin/order" element={<AdminOrder />} />
+                <Route path="/admin" element={<AdminFunction />} />
+                <Route
+                  path="/admin/order-management"
+                  element={<AdminOrder />}
+                />
+                <Route path="/admin/user-management" element={<AdminUser />} />
+                <Route path="/admin/post-management" element={<AdminPost />} />
+                <Route
+                  path="/admin/activity-management"
+                  element={<AdminActivity />}
+                />
+                <Route
+                  path="/admin/equipment-management"
+                  element={<AdminEquipment />}
+                />
+
                 <Route path="/my-orders" element={<MyOrders />} />
                 <Route path="/search" element={<SearchResultsPage />} />
 

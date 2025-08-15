@@ -296,7 +296,7 @@ const Header = () => {
                 My Orders
               </Nav.Link>
               {state.user && state.user.role === "admin" && (
-                <Nav.Link as={Link} to="/admin/order">
+                <Nav.Link as={Link} to="/admin">
                   Admin Functions
                 </Nav.Link>
               )}
