@@ -5,7 +5,7 @@ if (isset($_SERVER['HTTP_ORIGIN'])) {
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 }
 header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -26,6 +26,70 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 
 $conn = connect();
 
+// ========== HANDLE DELETE ==========
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    parse_str(file_get_contents("php://input"), $deleteData);
+    $userId = intval($_GET['id'] ?? 0);
+
+    if ($userId <= 0) {
+        http_response_code(400);
+        echo json_encode(["error" => "Invalid user ID"]);
+        exit();
+    }
+
+    $stmt = $conn->prepare("DELETE FROM users WHERE user_id = ?");
+    $stmt->bind_param("i", $userId);
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true]);
+    } else {
+        http_response_code(500);
+        echo json_encode(["error" => $stmt->error]);
+    }
+    $stmt->close();
+    $conn->close();
+    exit();
+}
+
+// ========== HANDLE UPDATE ==========
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    if (!$data || !isset($data['user_id'])) {
+        http_response_code(400);
+        echo json_encode(["error" => "Invalid input"]);
+        exit();
+    }
+
+    $stmt = $conn->prepare("
+        UPDATE users
+        SET first_name = ?, last_name = ?, email = ?, phone_number = ?, role = ?, is_active = ?, updated_at = NOW()
+        WHERE user_id = ?
+    ");
+
+    $stmt->bind_param(
+        "sssssii",
+        $data['first_name'],
+        $data['last_name'],
+        $data['email'],
+        $data['phone_number'],
+        $data['role'],
+        $data['is_active'],
+        $data['user_id']
+    );
+
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true]);
+    } else {
+        http_response_code(500);
+        echo json_encode(["error" => $stmt->error]);
+    }
+
+    $stmt->close();
+    $conn->close();
+    exit();
+}
+
+// ========== HANDLE SEARCH ==========
 $search = $_GET['search'] ?? '';
 $sortBy = $_GET['sort_by'] ?? 'created_at';
 $sortOrder = $_GET['sort_order'] ?? 'DESC';
@@ -43,6 +107,8 @@ if (!in_array($sortOrder, ['ASC', 'DESC'])) {
 $sql = "
     SELECT
         u.user_id,
+        u.first_name,
+        u.last_name,
         CONCAT(u.first_name, ' ', u.last_name) AS full_name,
         u.email,
         u.phone_number,
@@ -68,7 +134,7 @@ if (!empty($search)) {
               OR u.role LIKE ? 
               OR CONCAT_WS(', ', u.address_line1, u.address_line2, u.city, u.state_province, u.zip_code, u.country) LIKE ?";
     $searchTerm = "%" . $search . "%";
-    array_push($params, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+    array_push($params, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
     $types = 'sssss';
 }
 

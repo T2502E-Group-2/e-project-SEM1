@@ -114,8 +114,8 @@ const Header = () => {
             <Image
               src="/logo.png"
               alt="Logo"
-              width={"120px"}
-              height={"120px"}
+              width={"110px"}
+              height={"110px"}
               style={{ cursor: "pointer" }}
               onClick={() => navigate("/")}
             />
