@@ -102,14 +102,27 @@ function AdminOrder() {
 
   if (loading) return <div>Loading orders ...</div>;
   if (error) return <div>Lỗi: {error}</div>;
-  if (!orders.length) return <div>There are no orders.</div>;
+  if (!orders.length)
+    return (
+      <h3
+        className="text-center"
+        style={{
+          color: "#ffff",
+          textShadow: "1px 1px 2px #000",
+          paddingTop: "200px",
+        }}>
+        {" "}
+        There are no orders.
+      </h3>
+    );
 
   const SortableHeader = ({ column, label }) => {
     const isActive = sortBy === column;
 
     return (
       <th
-        style={{ ...thStyle, cursor: "pointer", whiteSpace: "nowrap" }}
+        className="thStyle"
+        style={{ cursor: "pointer", whiteSpace: "nowrap" }}
         onClick={() => handleSort(column)}>
         {label}
         <span style={{ marginLeft: "5px", fontSize: "0.8em" }}>
@@ -127,47 +140,15 @@ function AdminOrder() {
     );
   };
 
-  // --- START: STYLES FOR TABLE ---
-  const tableContainerStyle = {
-    maxHeight: "70vh", // Đặt chiều cao tối đa cho vùng cuộn
-    overflowY: "auto", // Bật thanh cuộn dọc
-    borderRadius: "8px",
-    border: "1px solid #ddd",
-    backgroundColor: "#ffff",
-  };
-
-  const tableStyle = {
-    width: "100%",
-    borderCollapse: "collapse",
-  };
-
-  const theadStyle = {
-    position: "sticky",
-    top: 0,
-    zIndex: 1,
-    backgroundColor: "#f2f2f2",
-  };
-
-  const thStyle = {
-    borderBottom: "2px solid #ddd",
-    padding: "12px",
-    textAlign: "left",
-    color: "#333",
-    fontWeight: "bold",
-  };
-
-  const tdStyle = {
-    borderBottom: "1px solid #ddd",
-    padding: "12px",
-    maxHeight: "80px",
-    overflow: "hidden",
-  };
-  // --- END: STYLES FOR TABLE ---
-
   return (
     <Container
-      className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "200px" }}>
+      fluid
+      style={{
+        paddingTop: "200px",
+        paddingBottom: "50px",
+        paddingLeft: "50px",
+        paddingRight: "50px",
+      }}>
       <h1
         className="text-center mb-4"
         style={{
@@ -223,20 +204,20 @@ function AdminOrder() {
         </Form>
       </Row>
       <Row>
-        <div style={tableContainerStyle}>
-          <table style={tableStyle}>
-            <thead style={theadStyle}>
+        <div className="tableContainerStyle">
+          <table className="tableStyle">
+            <thead className="theadStyle">
               <tr style={{ maxHeight: "80%" }}>
                 <SortableHeader column="order_id" label="Order ID" />
-                <th style={thStyle}>PayPal Order ID</th>
+                <th className="thStyle">PayPal Order ID</th>
                 <SortableHeader column="full_name" label="Customer Name" />
-                <th style={thStyle}>Phone No.</th>
-                <th style={thStyle}>Address</th>
-                <th style={thStyle}>Notes</th>
-                <th style={thStyle}>Item</th>
-                <th style={thStyle}>Quantity</th>
-                <th style={thStyle}>Order Price</th>
-                <th style={thStyle}>Total Amount</th>
+                <th className="thStyle">Phone No.</th>
+                <th className="thStyle">Address</th>
+                <th className="thStyle">Notes</th>
+                <th className="thStyle">Item</th>
+                <th className="thStyle">Quantity</th>
+                <th className="thStyle">Order Price</th>
+                <th className="thStyle">Total Amount</th>
                 <SortableHeader column="created_at" label="Order Date" />
                 <SortableHeader column="status" label="Payment status" />
               </tr>
@@ -248,28 +229,28 @@ function AdminOrder() {
                   style={{
                     backgroundColor: index % 2 === 0 ? "#fff" : "#f9f9f9",
                   }}>
-                  <td style={tdStyle}>{row.order_id}</td>
-                  <td style={tdStyle}>{row.paypal_order_id}</td>
-                  <td style={tdStyle}>{row.full_name}</td>
-                  <td style={tdStyle}>{row.phone}</td>
-                  <td style={tdStyle}>{row.address}</td>
-                  <td style={tdStyle}>{row.note}</td>
-                  <td style={tdStyle}>
+                  <td className="tdStyle">{row.order_id}</td>
+                  <td className="tdStyle">{row.paypal_order_id}</td>
+                  <td className="tdStyle">{row.full_name}</td>
+                  <td className="tdStyle">{row.phone}</td>
+                  <td className="tdStyle">{row.address}</td>
+                  <td className="tdStyle">{row.note}</td>
+                  <td className="tdStyle">
                     {row.activity_id
                       ? `Activity: ${row.activity_id}`
                       : row.equipment_id
                       ? `Equipment: ${row.equipment_id}`
                       : "-"}
                   </td>
-                  <td style={tdStyle}>{row.quantity}</td>
-                  <td style={tdStyle}>
+                  <td className="tdStyle">{row.quantity}</td>
+                  <td className="tdStyle">
                     ${parseFloat(row.price_at_time_of_purchase).toFixed(2)}
                   </td>
-                  <td style={tdStyle}>
+                  <td className="tdStyle">
                     ${parseFloat(row.total_amount).toFixed(2)}
                   </td>
-                  <td style={tdStyle}>{row.created_at}</td>
-                  <td style={tdStyle}>{row.status}</td>
+                  <td className="tdStyle">{row.created_at}</td>
+                  <td className="tdStyle">{row.status}</td>
                 </tr>
               ))}
             </tbody>

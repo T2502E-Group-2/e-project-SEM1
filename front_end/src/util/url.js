@@ -31,6 +31,9 @@ const URL = {
   //POSTS
   ALL_POST: BASE + "/Posts/posts.php",
   POST_DETAIL: BASE + "/Posts/post_details.php?id=",
+  CREATE_POST: BASE + "/Posts/create_posts.php",
+  UPDATE_POST: BASE + "/Posts/update_posts.php",
+  UPLOAD_IMAGE: BASE + "/upload_image.php",
   //PAYMENT
   PAYMENT: BASE + "/Payments/payment.php",
   //ORDERS

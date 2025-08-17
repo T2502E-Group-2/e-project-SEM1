@@ -36,7 +36,7 @@ import EquipmentDetail from "./components/pages/Equipments/EquipmentDetail";
 
 import PostPage from "./components/pages/Posts/PostPage";
 import PostDetailPage from "./components/pages/Posts/PostDetailPage";
-import PostEditor from "./components/common/PostEditor";
+import UserPost from "./components/pages/Posts/UserPost";
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -110,7 +110,7 @@ function App() {
 
                 <Route path="/posts" element={<PostPage />} />
                 <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
-                <Route path="/post-editor" element={<PostEditor />} />
+                <Route path="/posts/create" element={<UserPost />} />
               </Routes>
             </UserOrderProvider>
           </main>

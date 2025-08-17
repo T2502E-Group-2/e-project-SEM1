@@ -61,7 +61,7 @@ function AdminFunction() {
       <Row>
         {adminLinks.map((link, index) => (
           <Col xs={12} md={6} lg={4} key={index} className="mb-3">
-            <Card>
+            <Card className="text-center p-0">
               <Card.Body>
                 <NavLink
                   to={link.path}

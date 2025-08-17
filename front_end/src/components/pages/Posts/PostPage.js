@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Container, Row, Col, Card, Spinner, Alert } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Spinner,
+  Alert,
+  Button,
+} from "react-bootstrap";
 import axios_instance from "../../../util/axios_instance";
 import URL from "../../../util/url";
 
@@ -8,6 +16,7 @@ const PostPage = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -72,6 +81,11 @@ const PostPage = () => {
 
   return (
     <div className="post-page-wrapper">
+      <Container className="mb-4" style={{ paddingTop: "30px" }}>
+        <Button onClick={() => navigate("/posts/create")} variant="success">
+          Create Your Post
+        </Button>
+      </Container>
       <Container fluid>
         <Row className="g-4">
           {posts.map((post) => (

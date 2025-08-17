@@ -18,6 +18,7 @@ ini_set('display_errors', 1);
 
 require_once '../../db/connect.php';
 
+//========== LIMIT USER ACCESS TO ADMIN ONLY ==========
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     http_response_code(403);
     echo json_encode(["error" => "Access Denied"]);
@@ -93,6 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $search = $_GET['search'] ?? '';
 $sortBy = $_GET['sort_by'] ?? 'created_at';
 $sortOrder = $_GET['sort_order'] ?? 'DESC';
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
 $allowedSortColumns = ['user_id', 'full_name', 'created_at', 'updated_at', 'role', 'is_active'];
 if (!in_array($sortBy, $allowedSortColumns)) {
@@ -126,16 +129,37 @@ $sql = "
 
 $params = [];
 $types = '';
+$where = [];
 
+// Search conditions
 if (!empty($search)) {
-    $sql .= " WHERE CONCAT(u.first_name, ' ', u.last_name) LIKE ? 
+    $where[] = "(CONCAT(u.first_name, ' ', u.last_name) LIKE ? 
               OR u.email LIKE ? 
               OR u.phone_number LIKE ? 
               OR u.role LIKE ? 
-              OR CONCAT_WS(', ', u.address_line1, u.address_line2, u.city, u.state_province, u.zip_code, u.country) LIKE ?";
+              OR CONCAT_WS(', ', u.address_line1, u.address_line2, u.city, u.state_province, u.zip_code, u.country) LIKE ?)";
     $searchTerm = "%" . $search . "%";
     array_push($params, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
-    $types = 'sssss';
+    $types .= 'sssss';
+}
+
+//Date filtering conditions
+if (!empty($start_date) && !empty($end_date)) {
+    $where[] = "DATE(u.created_at) BETWEEN ? AND ?";
+    array_push($params, $start_date, $end_date);
+    $types .= 'ss';
+} elseif (!empty($start_date)) {
+    $where[] = "DATE(u.created_at) >= ?";
+    array_push($params, $start_date);
+    $types .= 's';
+} elseif (!empty($end_date)) {
+    $where[] = "DATE(u.created_at) <= ?";
+    array_push($params, $end_date);
+    $types .= 's';
+}
+
+if (count($where) > 0) {
+    $sql .= " WHERE " . implode(" AND ", $where);
 }
 
 $sql .= " ORDER BY {$sortBy} {$sortOrder}";

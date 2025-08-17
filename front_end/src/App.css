@@ -1,28 +1,3 @@
-/*CKEditor*/
-@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap");
-
-@media print {
-  body {
-    margin: 0 !important;
-  }
-}
-
-:root {
-  --ck-content-font-family: "Lato";
-}
-
-.main-container {
-  font-family: var(--ck-content-font-family);
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.editor-container_classic-editor .editor-container__editor {
-  min-width: 795px;
-  max-width: 795px;
-}
-
 /* General Styles */
 h5 {
   margin: 0;
@@ -1003,3 +978,46 @@ main {
   font-weight: bold;
   color: #6e6b66;
 }
+.Label {
+  font-weight: bold;
+  color: #6e6b66;
+}
+
+/*TABLE STYLES*/
+
+.tableContainerStyle {
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #ffff;
+}
+
+.tableStyle {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.theadStyle {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #f2f2f2;
+}
+
+.thStyle {
+  border-bottom: 2px solid #ddd;
+  padding: 12px;
+  text-align: left;
+  color: #333;
+  font-weight: bold;
+}
+
+.tdStyle {
+  border-bottom: 1px solid #ddd;
+  padding: 12px;
+  max-height: 80px;
+  overflow: hidden;
+}
+/* --- END: STYLES FOR TABLE --- */

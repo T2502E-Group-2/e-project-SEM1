@@ -8,6 +8,7 @@ import {
   Modal,
   Spinner,
   ButtonGroup,
+  Col,
 } from "react-bootstrap";
 import UserContext from "../../context/context";
 import URL from "../../util/url";
@@ -42,6 +43,9 @@ function AdminUser() {
   const [sortBy, setSortBy] = useState("created_at");
   const [sortOrder, setSortOrder] = useState("desc");
 
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(null);
@@ -53,6 +57,8 @@ function AdminUser() {
       search: searchTerm,
       sort_by: sortBy,
       sort_order: sortOrder,
+      start_date: startDate,
+      end_date: endDate,
     });
 
     fetch(`${URL.ADMIN_USERS}?${params.toString()}`, {
@@ -64,7 +70,7 @@ function AdminUser() {
       .then((data) => setRows(data))
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
-  }, [searchTerm, sortBy, sortOrder]);
+  }, [searchTerm, sortBy, sortOrder, startDate, endDate]);
 
   useEffect(() => {
     if (!state.user || state.user.role !== "admin") return;
@@ -89,9 +95,21 @@ function AdminUser() {
     setSearchTerm("");
   };
 
-  // Edit
+  const clearDateFilters = () => {
+    setStartDate("");
+    setEndDate("");
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [startDate, endDate, fetchUsers]);
+
+  // EDIT
   const handleEdit = (user) => {
-    setFormData(user);
+    setFormData({
+      ...user,
+      is_active: user.is_active === "Active" ? "1" : "0",
+    });
     setShowModal(true);
   };
 
@@ -148,19 +166,12 @@ function AdminUser() {
   if (loading) return <div className="text-center mt-5">Loading users...</div>;
   if (error) return <div className="text-center text-danger mt-5">{error}</div>;
 
-  const thStyle = {
-    borderBottom: "2px solid #ddd",
-    padding: "12px",
-    textAlign: "left",
-    fontWeight: "bold",
-  };
-  const tdStyle = { borderBottom: "1px solid #ddd", padding: "12px" };
-
   const SortableHeader = ({ column, label }) => {
     const active = sortBy === column;
     return (
       <th
-        style={{ ...thStyle, cursor: "pointer", whiteSpace: "nowrap" }}
+        className="thStyle"
+        style={{ cursor: "pointer", whiteSpace: "nowrap" }}
         onClick={() => handleSort(column)}>
         {label}
         <span style={{ marginLeft: 6, fontSize: "0.85em" }}>
@@ -174,7 +185,12 @@ function AdminUser() {
     <Container
       fluid
       className="container-fluid"
-      style={{ paddingTop: "200px" }}>
+      style={{
+        paddingTop: "200px",
+        paddingBottom: "50px",
+        paddingLeft: "50px",
+        paddingRight: "50px",
+      }}>
       <h1
         className="text-center mb-4"
         style={{ color: "#fff", textShadow: "1px 1px 2px #000" }}>
@@ -184,40 +200,64 @@ function AdminUser() {
       {/* Search */}
       <Row className="mb-3">
         <Form onSubmit={handleSearchSubmit}>
-          <InputGroup>
-            <Form.Control
-              type="text"
-              placeholder="Search by name, email, phone or address..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-            />
-            <Button type="submit">Search</Button>
-            <Button
-              variant="secondary"
-              style={{ backgroundColor: "darkorange" }}
-              onClick={clearSearch}>
-              Clear
-            </Button>
-          </InputGroup>
+          <Row>
+            <Col xs={12} md={8} className="mb-2">
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  placeholder="Search by name, email, phone or address..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+                <Button type="submit">Search</Button>
+                <Button
+                  variant="secondary"
+                  style={{ backgroundColor: "darkorange" }}
+                  onClick={clearSearch}>
+                  Clear
+                </Button>
+              </InputGroup>
+            </Col>
+            <Col xs={12} md={4} className="mb-2">
+              <InputGroup>
+                <Form.Control
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                <Form.Control
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+                <Button
+                  variant="secondary"
+                  style={{ backgroundColor: "darkorange" }}
+                  onClick={clearDateFilters}>
+                  Clear
+                </Button>
+              </InputGroup>
+            </Col>
+          </Row>
         </Form>
       </Row>
 
       {/* Table */}
       <Row>
-        <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
-          <table className="table table-bordered">
-            <thead>
-              <tr>
+        <div className="tableContainerStyle">
+          <table className="tableStyle">
+            <thead className="theadStyle">
+              <tr style={{ maxHeight: "80%" }}>
                 <SortableHeader column="user_id" label="User ID" />
                 <SortableHeader column="full_name" label="Full Name" />
                 <SortableHeader column="email" label="Email" />
-                <th style={thStyle}>Phone</th>
-                <th style={thStyle}>Address</th>
+                <th className="thStyle">Phone</th>
+                <th className="thStyle">Address</th>
                 <SortableHeader column="role" label="Role" />
                 <SortableHeader column="is_active" label="Status" />
                 <SortableHeader column="created_at" label="Created At" />
                 <SortableHeader column="updated_at" label="Updated At" />
-                <th style={thStyle}>Action</th>
+                <th className="thStyle">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -225,16 +265,16 @@ function AdminUser() {
                 <tr
                   key={idx}
                   style={{ background: idx % 2 ? "#f9f9f9" : "#fff" }}>
-                  <td style={tdStyle}>{u.user_id}</td>
-                  <td style={tdStyle}>{u.full_name}</td>
-                  <td style={tdStyle}>{u.email}</td>
-                  <td style={tdStyle}>{u.phone_number}</td>
-                  <td style={tdStyle}>{u.address}</td>
-                  <td style={tdStyle}>{u.role}</td>
-                  <td style={tdStyle}>{u.is_active}</td>
-                  <td style={tdStyle}>{u.created_at}</td>
-                  <td style={tdStyle}>{u.updated_at}</td>
-                  <td style={tdStyle}>
+                  <td className="tdStyle">{u.user_id}</td>
+                  <td className="tdStyle">{u.full_name}</td>
+                  <td className="tdStyle">{u.email}</td>
+                  <td className="tdStyle">{u.phone_number}</td>
+                  <td className="tdStyle">{u.address}</td>
+                  <td className="tdStyle">{u.role}</td>
+                  <td className="tdStyle">{u.is_active}</td>
+                  <td className="tdStyle">{u.created_at}</td>
+                  <td className="tdStyle">{u.updated_at}</td>
+                  <td className="tdStyle">
                     <ButtonGroup>
                       <Button
                         size="sm"
