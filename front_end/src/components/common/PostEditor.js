@@ -1,10 +1,9 @@
-import React from "react";
-import ReactQuill from "react-quill-new";
+import React, { useEffect } from "react";
+import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
-import htmlEditButton from "quill-html-edit-button";
+import "./quill-iframe-blot";
 import URL from "../../util/url";
 
-const Quill = ReactQuill.Quill;
 const Parchment = Quill.import("parchment");
 const lineHeightConfig = {
   scope: Parchment.Scope.BLOCK,
@@ -16,6 +15,20 @@ const LineHeightStyle = new Parchment.StyleAttributor(
   lineHeightConfig
 );
 Quill.register(LineHeightStyle, true);
+
+const icons = Quill.import("ui/icons");
+icons["undo"] = '<i class="ql-undo">↶</i>';
+icons["redo"] = '<i class="ql-redo">↷</i>';
+icons["embed"] = '<i class="ql-embed">&lt;/&gt;</i>';
+
+// Undo button
+function undoChange() {
+  this.quill.history.undo();
+}
+// Redo button
+function redoChange() {
+  this.quill.history.redo();
+}
 
 export default function PostEditor({
   value = "",
@@ -32,12 +45,14 @@ export default function PostEditor({
         [{ list: "ordered" }, { list: "bullet" }],
         [{ align: [] }],
         [{ height: ["1", "1.5", "2"] }],
-        ["link", "image"],
+        ["link", "image", "embed"],
+        ["undo", "redo"],
         ["clean"],
       ],
       handlers: {
+        undo: undoChange,
+        redo: redoChange,
         image: function () {
-          // dùng function() để `this` tham chiếu đúng
           const input = document.createElement("input");
           input.setAttribute("type", "file");
           input.setAttribute("accept", "image/*");
@@ -62,18 +77,49 @@ export default function PostEditor({
                 const range = this.quill.getSelection();
                 this.quill.insertEmbed(range.index, "image", data.url);
               } else {
-                alert("Upload thất bại!");
+                alert("Upload Failed!");
               }
             } catch (err) {
               console.error("Upload error:", err);
-              alert("Có lỗi khi upload ảnh.");
+              alert("Error when uploading image.");
             }
           };
         },
+        embed: function () {
+          const url = prompt(
+            "Enter iFrame Embed Code (eg Google Maps, YouTube ...):"
+          );
+          if (url) {
+            const range = this.quill.getSelection(true);
+            const srcMatch = url.match(/src="([^"]+)"/);
+            const src = srcMatch ? srcMatch[1] : url;
+            this.quill.insertEmbed(range.index, "iframe", src, "user");
+          }
+        },
       },
     },
+    history: {
+      delay: 1000,
+      maxStack: 100,
+      userOnly: true,
+    },
   };
+  useEffect(() => {
+    const toolbar = document.querySelector(".ql-toolbar");
+    if (toolbar) {
+      const undoBtn = toolbar.querySelector("button.ql-undo");
+      const redoBtn = toolbar.querySelector("button.ql-redo");
+      const embedBtn = toolbar.querySelector("button.ql-embed");
 
+      if (undoBtn) undoBtn.setAttribute("title", "Undo");
+      if (redoBtn) redoBtn.setAttribute("title", "Redo");
+      if (embedBtn)
+        embedBtn.setAttribute(
+          "title",
+          "Embed link/iframe (Google Maps, Youtube...)"
+        );
+    }
+  }, []);
   const formats = [
     "header",
     "size",
@@ -90,6 +136,7 @@ export default function PostEditor({
     "code-block",
     "link",
     "image",
+    "iframe",
   ];
 
   return (

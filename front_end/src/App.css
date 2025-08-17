@@ -1062,4 +1062,18 @@ main {
 .ql-editor .ql-height-2 {
   line-height: 2;
 }
+
+/*Embed tool*/
+.ql-toolbar .ql-embed {
+  font-size: 16px; /* chỉnh kích thước */
+  font-weight: bold;
+  font-family: monospace; /* cho giống code */
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
 /* --- END: EDITOR STYLES --- */

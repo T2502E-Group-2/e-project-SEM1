@@ -164,14 +164,21 @@ const PostPage = () => {
                     <Card.Text className="text-muted small mb-0">
                       By {post.author_name || "Unknown"}
                     </Card.Text>
-                    <Card.Text className="text-muted small">
+                    <Card.Text className="text-muted small mb-0">
                       {formatDate(post.created_at)}
+                    </Card.Text>
+                    <Card.Text
+                      className="small mb-0"
+                      style={{
+                        color: post.status === "published" ? "darkorange" : "",
+                      }}>
+                      {post.status}
                     </Card.Text>
                   </Card.Body>
                 </Link>
 
                 {isOwner && (
-                  <Card.Footer className="mt-auto bg-transparent border-0 p-2">
+                  <Card.Footer className="mt-0 bg-transparent border-0 p-2">
                     <ButtonGroup className="w-100">
                       <Button
                         variant="outline-secondary"
