@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 if (isset($_SERVER['HTTP_ORIGIN'])) {
-  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 }
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -16,12 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
 
-
 // Helper function to send a structured JSON error and exit.
 function send_json_error($message, $statusCode = 400, $details = null) {
     http_response_code($statusCode);
     $response = ["error" => ["message" => $message]];
-    // Only show detailed errors in a development environment for security
     if ($details !== null && getenv('APP_ENV') !== 'production') {
         $response['error']['details'] = $details;
     }
@@ -30,9 +28,13 @@ function send_json_error($message, $statusCode = 400, $details = null) {
 }
 
 try {
-    // --- 1. Validate File Upload ---
-    if (!isset($_FILES['file']) || !is_uploaded_file($_FILES['file']['tmp_name'])) {
-        send_json_error("No file uploaded or invalid upload mechanism.");
+    // --- 1. Validate File Upload ---    
+    if (
+        !isset($_FILES['file']) ||
+        !isset($_FILES['file']['tmp_name']) ||
+        !is_uploaded_file($_FILES['file']['tmp_name'])
+    ) {
+        send_json_error("No file uploaded or invalid upload mechanism.", 400);
     }
 
     if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
@@ -46,12 +48,16 @@ try {
             UPLOAD_ERR_EXTENSION  => 'A PHP extension stopped the file upload.',
         ];
         $errorMessage = $errorMessages[$_FILES['file']['error']] ?? 'Unknown upload error.';
-        send_json_error($errorMessage);
+        send_json_error($errorMessage, 400);
     }
 
     // --- 2. Get File Info ---
     $tmpFilePath = $_FILES['file']['tmp_name'];
-    $fileName = basename($_FILES['file']['name']); // Use basename for security
+    $fileName = basename($_FILES['file']['name']);
+
+    if (!file_exists($tmpFilePath)) {
+        send_json_error("Temporary file does not exist.", 500, $tmpFilePath);
+    }
 
     // Use finfo for reliable MIME type detection
     if (!extension_loaded('fileinfo')) {
@@ -59,13 +65,11 @@ try {
     }
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mimeType = $finfo->file($tmpFilePath);
+    // var_dump($mimeType); // debug: xem MIME type
 
     // --- 3. Prepare for ImageKit Upload ---
-    // IMPORTANT: For production, store your private key in an environment variable, not in the code.
-    // $privateKey = getenv('IMAGEKIT_PRIVATE_KEY');
     $privateKey = "private_LyqnjbFtFFH5vP9+hpuKWvGmSsE=";
     $endpoint = "https://upload.imagekit.io/api/v1/files/upload";
-
     $folder = isset($_POST['folder']) ? $_POST['folder'] : "/posts";
 
     $postData = [
@@ -83,35 +87,33 @@ try {
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Authorization: Basic " . base64_encode($privateKey . ":"),
     ]);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
     $responseBody = curl_exec($ch);
     $curlError = curl_error($ch);
     curl_close($ch);
 
-    if ($curlError) {
-        send_json_error("cURL Error during upload.", 500, $curlError);
-    }
+    if ($curlError) {        
+        send_json_error("cURL Error during upload.", 500, $curlError);    }
 
+    
     // --- 5. Process ImageKit Response ---
     $data = json_decode($responseBody, true);
-
     if (json_last_error() !== JSON_ERROR_NONE) {
         send_json_error("Failed to parse ImageKit response.", 500, $responseBody);
     }
 
     if (isset($data['url'])) {
-        // Success! Send the response format expected by most rich text editors.
         http_response_code(200);
         echo json_encode([
-            "location" => $data['url']
+            "success" => true,
+            "url" => $data['url']
         ]);
     } else {
-        // The upload failed on ImageKit's side.
-        $errorMessage = isset($data['message']) ? $data['message'] : "Unknown error from ImageKit.";
+        $errorMessage = $data['message'] ?? "Unknown error from ImageKit.";
         send_json_error("ImageKit upload failed.", 400, $errorMessage);
     }
 
 } catch (Throwable $e) {
-    // Catch any other unexpected errors
     send_json_error("An unexpected server error occurred.", 500, $e->getMessage());
 }
