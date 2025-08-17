@@ -14,6 +14,7 @@ const URL = {
   UPDATE_PROFILE: BASE + "/Users/update_profile.php",
   //USERS
   GET_USER_DETAILS: BASE + "/Users/get_user_details.php",
+  GET_USER_POSTS: BASE + "/Users/get_user_posts.php",
   UPDATE_AVATAR: BASE + "/Users/update_avatar.php",
   //ACTIVITIES
   ACTIVITY_CATEGORIES: BASE + "/Activities/activity_categories.php",
@@ -35,6 +36,7 @@ const URL = {
   UPDATE_POST: BASE + "/Posts/update_posts.php",
   UPLOAD_IMAGE: BASE + "/upload_image.php",
   POST_ACTIONS: BASE + "/Posts/user_post_actions.php",
+  POST_CATEGORIES: BASE + "/Posts/post_categories.php",
   //PAYMENT
   PAYMENT: BASE + "/Payments/payment.php",
   //ORDERS

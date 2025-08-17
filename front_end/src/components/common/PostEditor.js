@@ -1,6 +1,7 @@
 import React from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import htmlEditButton from "quill-html-edit-button";
 import URL from "../../util/url";
 
 const Quill = ReactQuill.Quill;

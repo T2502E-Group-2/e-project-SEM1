@@ -41,13 +41,17 @@ const AboutPage = () => {
         </Row>
         <Row>
           {/* Feature 1 */}
-          <Col md={4} className="mb-4">
-            <Card className="h-100 feature-card shadow-sm">
-              <Card.Body>
+          <Col md={4} className="mb-4 d-flex">
+            <Card
+              className="feature-card shadow-sm w-100"
+              style={{ height: "25vh" }}>
+              <Card.Body className="d-flex flex-column">
                 <Card.Title as="h4" className="mb-3">
                   World-Class Guides
                 </Card.Title>
-                <Card.Text>
+                <Card.Text
+                  className="flex-grow-1"
+                  style={{ overflow: "visible" }}>
                   Our guides are among the most experienced and qualified in the
                   world, with extensive training in safety, first aid, and
                   customer service.
@@ -56,13 +60,17 @@ const AboutPage = () => {
             </Card>
           </Col>
           {/* Feature 2 */}
-          <Col md={4} className="mb-4">
-            <Card className="h-100 feature-card shadow-sm">
-              <Card.Body>
+          <Col md={4} className="mb-4 d-flex">
+            <Card
+              className="feature-card shadow-sm w-100"
+              style={{ height: "25vh" }}>
+              <Card.Body className="d-flex flex-column">
                 <Card.Title as="h4" className="mb-3">
                   Unparalleled Safety
                 </Card.Title>
-                <Card.Text>
+                <Card.Text
+                  className="flex-grow-1"
+                  style={{ overflow: "visible" }}>
                   Safety is our top priority. We maintain a low client-to-guide
                   ratio and use the best equipment to ensure your well-being on
                   the mountain.
@@ -71,13 +79,17 @@ const AboutPage = () => {
             </Card>
           </Col>
           {/* Feature 3 */}
-          <Col md={4} className="mb-4">
-            <Card className="h-100 feature-card shadow-sm">
-              <Card.Body>
+          <Col md={4} className="mb-4 d-flex">
+            <Card
+              className="feature-card shadow-sm w-100"
+              style={{ height: "25vh" }}>
+              <Card.Body className="d-flex flex-column">
                 <Card.Title as="h4" className="mb-3">
                   Commitment to Success
                 </Card.Title>
-                <Card.Text>
+                <Card.Text
+                  className="flex-grow-1"
+                  style={{ overflow: "visible" }}>
                   We are committed to helping you succeed. Our high summit
                   success rates are a testament to our expert planning and
                   on-mountain support.

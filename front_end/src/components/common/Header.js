@@ -22,6 +22,7 @@ const Header = () => {
   const { cartItemCount } = useContext(CartContext);
   const [gearCategories, setGearCategories] = useState([]);
   const [activityCategories, setActivityCategories] = useState([]);
+  const [postCategories, setPostCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [scrolled, setScrolled] = useState(false);
@@ -103,6 +104,20 @@ const Header = () => {
   };
   useEffect(() => {
     fetchActivities();
+  }, []);
+
+  useEffect(() => {
+    const fetchPostCategories = async () => {
+      try {
+        const response = await axios_instance.get(URL.POST_CATEGORIES);
+        if (response.data.status && Array.isArray(response.data.data)) {
+          setPostCategories(response.data.data);
+        }
+      } catch (error) {
+        console.error("Failed to load post categories:", error);
+      }
+    };
+    fetchPostCategories();
   }, []);
 
   return (
@@ -263,14 +278,18 @@ const Header = () => {
                   Posts
                 </Nav.Link>
                 <div className="dropdown-menu">
-                  <Link to="/blog" className="dropdown-item">
-                    Blog
-                  </Link>
-                  <Link to="/success" className="dropdown-item">
-                    Success Stories
-                  </Link>
-                  <Link to="/news" className="dropdown-item">
-                    Records
+                  {postCategories.map((category) => {
+                    return (
+                      <Link
+                        key={category.category_id}
+                        to={`/posts?category=${category.category_id}`}
+                        className="dropdown-item">
+                        {category.category_name}
+                      </Link>
+                    );
+                  })}
+                  <Link to="/posts/my-posts" className="dropdown-item">
+                    My Posts
                   </Link>
                 </div>
               </Nav.Item>

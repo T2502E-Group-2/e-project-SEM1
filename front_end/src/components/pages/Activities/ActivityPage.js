@@ -108,7 +108,7 @@ const ActivityPage = () => {
               activities for every level of experience.
             </p>
           </div>
-          <div className="row row-cols-1 row-cols-md-5 g-4 mb-2">
+          <div className="row row-cols-1 row-cols-md-4 g-4 mb-2">
             {allActivities.map((activity) => (
               <div key={activity.activity_id} className="col">
                 <Activity activity={activity} />

@@ -310,6 +310,7 @@ main {
   width: 100%;
   height: 250px;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.5s ease;
 }
 
@@ -317,7 +318,7 @@ main {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-top: 12px;
+  padding-top: 0px;
   padding-bottom: 0px;
   opacity: 100;
   transform: translateY(10px);

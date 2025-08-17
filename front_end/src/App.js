@@ -36,6 +36,7 @@ import EquipmentDetail from "./components/pages/Equipments/EquipmentDetail";
 
 import PostPage from "./components/pages/Posts/PostPage";
 import PostDetailPage from "./components/pages/Posts/PostDetailPage";
+import MyPostsPage from "./components/pages/Posts/MyPostPage";
 import UserPost from "./components/pages/Posts/UserPost";
 
 function App() {
@@ -110,6 +111,7 @@ function App() {
 
                 <Route path="/posts" element={<PostPage />} />
                 <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
+                <Route path="/posts/my-posts" element={<MyPostsPage />} />
                 <Route path="/posts/create" element={<UserPost />} />
                 <Route path="/posts/edit/:postId" element={<UserPost />} />
               </Routes>

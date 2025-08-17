@@ -61,8 +61,7 @@ const SearchResultsPage = () => {
             md={4}
             lg={3}
             key={activity.activity_id}
-            className="mb-4"
-          >
+            className="mb-4">
             <Activity activity={activity} />
           </Col>
         ))}
@@ -74,8 +73,7 @@ const SearchResultsPage = () => {
     <Container style={{ paddingTop: "200px", paddingBottom: "50px" }}>
       <h1
         className="mb-4"
-        style={{ color: "white", textShadow: "1px 1px 2px #000" }}
-      >
+        style={{ color: "white", textShadow: "1px 1px 2px #000" }}>
         Search results for: "{query}"
       </h1>
       {renderContent()}

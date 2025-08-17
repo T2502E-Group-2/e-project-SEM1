@@ -176,7 +176,8 @@ const PostDetailPage = () => {
                   style={{ backgroundColor: "darkorange", border: "none" }}
                   onClick={() => navigate("/posts/create")}
                   variant="success">
-                  Share Your Post with Us
+                  <i className="bi bi-plus-circle-fill me-2"></i>
+                  Share Your Post
                 </Button>
               </Container>
             )}
