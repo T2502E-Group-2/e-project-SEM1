@@ -1021,3 +1021,44 @@ main {
   overflow: hidden;
 }
 /* --- END: STYLES FOR TABLE --- */
+
+/*-- START: EDITOR STYLE--*/
+.editor-container .ql-editor {
+  max-height: 65vh;
+  overflow-y: auto;
+  font-size: 1.1rem;
+}
+.editor-container .ql-toolbar {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
+  border-bottom: 1px solid #ccc;
+}
+/* Line Height styles*/
+
+/* Line-height dropdown */
+.ql-picker.ql-height .ql-picker-label[data-value="1"]::before,
+.ql-picker.ql-height .ql-picker-item[data-value="1"]::before {
+  content: "1";
+}
+.ql-picker.ql-height .ql-picker-label[data-value="1.5"]::before,
+.ql-picker.ql-height .ql-picker-item[data-value="1.5"]::before {
+  content: "1.5";
+}
+.ql-picker.ql-height .ql-picker-label[data-value="2"]::before,
+.ql-picker.ql-height .ql-picker-item[data-value="2"]::before {
+  content: "2";
+}
+
+/* Apply Style Line-height to content in editor */
+.ql-editor .ql-height-1 {
+  line-height: 1;
+}
+.ql-editor .ql-height-1-5 {
+  line-height: 1.5;
+}
+.ql-editor .ql-height-2 {
+  line-height: 2;
+}
+/* --- END: EDITOR STYLES --- */

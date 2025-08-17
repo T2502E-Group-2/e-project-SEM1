@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Container,
   Card,
@@ -9,14 +9,19 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios_instance from "../../../util/axios_instance";
 import URL from "../../../util/url";
 import PostEditor from "../../common/PostEditor";
 import UserContext from "../../../context/context";
 
 const UserPost = () => {
+  const { postId } = useParams(); //Get post_id from the URL, it will be undefined if it is a new creation page
+  const isEditMode = Boolean(postId); // Determine whether the edit is not
+
   const { state } = useContext(UserContext); // Get information user login
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [content, setContent] = useState("");
@@ -25,10 +30,31 @@ const UserPost = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  const navigate = useNavigate();
-
   const isEmptyHtml = (html) =>
     !html || html.replace(/<[^>]*>/g, "").replace(/&nbsp;|\s/g, "") === "";
+
+  useEffect(() => {
+    if (isEditMode) {
+      // Nếu là mode edit, fetch dữ liệu bài viết
+      const fetchPostData = async () => {
+        try {
+          const res = await axios_instance.get(
+            `${URL.POST_ACTIONS}?id=${postId}`
+          );
+          const postData = res.data;
+          // Điền dữ liệu vào form
+          setTitle(postData.title);
+          setContent(postData.content);
+          setThumbnail(postData.thumbnail_url);
+          setCategory(postData.post_category_id);
+        } catch (err) {
+          console.error("Failed to fetch post data:", err);
+          setError("Could not load post data for editing.");
+        }
+      };
+      fetchPostData();
+    }
+  }, [postId, isEditMode]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,26 +74,26 @@ const UserPost = () => {
     setError(null);
     setSuccess(null);
 
+    const postData = {
+      title,
+      content,
+      thumbnail_url: thumbnail,
+      post_category_id: parseInt(category, 10),
+    };
+
     try {
-      const res = await axios_instance.post(URL.CREATE_POST, {
-        title,
-        content,
-        thumbnail_url: thumbnail,
-        post_category_id: parseInt(category, 10),
-      });
-      // Check if the response is successful
-      if (res.status === 201) {
-        setSuccess(
-          res.data?.message || "The article has been successfully posted!"
-        );
-        setTimeout(() => navigate("/posts"), 1500);
+      let res;
+      if (isEditMode) {
+        res = await axios_instance.post(URL.POST_ACTIONS, {
+          ...postData,
+          post_id: postId,
+        });
       } else {
-        // Fallback for the case that the server does not return 201 but still succeed
-        setError(
-          res.data?.message ||
-            "An unexpected response was received from the server."
-        );
+        res = await axios_instance.post(URL.CREATE_POST, postData);
       }
+      // Check if the response is successful
+      setSuccess(res.data?.message || "Action completed successfully!");
+      setTimeout(() => navigate("/posts"), 1500);
     } catch (err) {
       console.error("Failed to post article:", err);
 
@@ -102,7 +128,11 @@ const UserPost = () => {
 
   return (
     <Container fluid style={{ paddingTop: "200px" }}>
-      <h2 className="mb-4">Create Your Post</h2>
+      <h2
+        className="mb-4 text-center"
+        style={{ color: "#ffff", textShadow: "1px 1px 2px black" }}>
+        {isEditMode ? "Edit Your Post" : "Create Your Post"}
+      </h2>
 
       {error && <Alert variant="danger">{error}</Alert>}
       {success && <Alert variant="success">{success}</Alert>}
@@ -112,7 +142,9 @@ const UserPost = () => {
           <Col md={4}>
             <Card className="p-3 mb-3">
               <Form.Group className="mb-3" controlId="title">
-                <Form.Label>Post Title</Form.Label>
+                <Form.Label>
+                  <b>Post Title</b>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter post title"
@@ -122,7 +154,9 @@ const UserPost = () => {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="thumbnail">
-                <Form.Label>Thumbnail URL</Form.Label>
+                <Form.Label>
+                  <b>Thumbnail URL</b>
+                </Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter image URL"
@@ -132,7 +166,9 @@ const UserPost = () => {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="category">
-                <Form.Label>Category</Form.Label>
+                <Form.Label>
+                  <b>Category</b>
+                </Form.Label>
                 <Form.Select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}>
@@ -157,13 +193,24 @@ const UserPost = () => {
           <Col md={8}>
             <Card className="p-3 mb-3">
               <Form.Group className="mb-3">
-                <Form.Label>Content</Form.Label>
+                <Form.Label>
+                  <b>Content</b>
+                </Form.Label>
                 <PostEditor value={content} onChange={setContent} />
               </Form.Group>
             </Card>
           </Col>
         </Row>
       </Form>
+      {/* <Button type="submit" variant="primary" disabled={loading}>
+        {loading ? (
+          <Spinner size="sm" animation="border" />
+        ) : isEditMode ? (
+          "Update Post"
+        ) : (
+          "Submit Post"
+        )}
+      </Button> */}
     </Container>
   );
 };

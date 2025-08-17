@@ -57,34 +57,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$data || !isset($data['post_id'])) {
         http_response_code(400);
-        echo json_encode(["error" => "Invalid input"]);
+        echo json_encode(["error" => "Invalid input, post_id is required"]);
         exit();
     }
 
-    $stmt = $conn->prepare("
-        UPDATE posts
-    SET title = ?, slug = ?, content = ?, status = ?, thumbnail_url = ?, 
-        is_featured = ?, post_category_id = ?, updated_at = NOW()
-    WHERE post_id = ?
-    ");
+    // Channel: Check if this is an Approve or Update Action
+    if (isset($data['action']) && $data['action'] === 'approve') {
+        // === Logic quick approve ===
+        $stmt = $conn->prepare("
+            UPDATE posts
+            SET status = 'published', published_at = NOW() 
+            WHERE post_id = ?
+        ");
+        $stmt->bind_param("i", $data['post_id']);
+        
+        if ($stmt->execute()) {
+            echo json_encode(["success" => true, "message" => "Post approved successfully."]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => $stmt->error]);
+        }
 
-    $stmt->bind_param(
-    "ssssssii",
-    $data['title'],
-    $data['slug'],
-    $data['content'],
-    $data['status'],
-    $data['thumbnail_url'],
-    $data['is_featured'],
-    $data['post_category_id'], // <-- nhận từ dropdown
-    $data['post_id']
-);
-
-    if ($stmt->execute()) {
-        echo json_encode(["success" => true]);
     } else {
-        http_response_code(500);
-        echo json_encode(["error" => $stmt->error]);
+        // === UPDATE LOGIC ===
+        $stmt = $conn->prepare("
+            UPDATE posts
+            SET title = ?, slug = ?, content = ?, status = ?, thumbnail_url = ?, 
+                is_featured = ?, post_category_id = ?, updated_at = NOW()
+            WHERE post_id = ?
+        ");
+
+        $stmt->bind_param(
+            "ssssssii",
+            $data['title'],
+            $data['slug'],
+            $data['content'],
+            $data['status'],
+            $data['thumbnail_url'],
+            $data['is_featured'],
+            $data['post_category_id'],
+            $data['post_id']
+        );
+
+        if ($stmt->execute()) {
+            echo json_encode(["success" => true, "message" => "Post updated successfully."]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => $stmt->error]);
+        }
     }
 
     $stmt->close();

@@ -111,6 +111,7 @@ function App() {
                 <Route path="/posts" element={<PostPage />} />
                 <Route path="/posts/:id/:slug" element={<PostDetailPage />} />
                 <Route path="/posts/create" element={<UserPost />} />
+                <Route path="/posts/edit/:postId" element={<UserPost />} />
               </Routes>
             </UserOrderProvider>
           </main>

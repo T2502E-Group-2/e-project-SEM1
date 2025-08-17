@@ -36,7 +36,8 @@ if ($conn->connect_error) {
 }
 
 $sql = "SELECT 
-            p.post_id, 
+            p.post_id,
+            p.author_id,
             p.title,
             p.slug,
             p.status,

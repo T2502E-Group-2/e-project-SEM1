@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
@@ -8,11 +8,14 @@ import {
   Spinner,
   Alert,
   Button,
+  ButtonGroup,
 } from "react-bootstrap";
 import axios_instance from "../../../util/axios_instance";
 import URL from "../../../util/url";
+import UserContext from "../../../context/context";
 
 const PostPage = () => {
+  const { state } = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,6 +42,31 @@ const PostPage = () => {
 
     fetchPosts();
   }, []);
+
+  // Handle delete post
+  const handleDelete = async (postId) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) {
+      return;
+    }
+
+    try {
+      const response = await axios_instance.delete(
+        `${URL.POST_ACTIONS}?id=${postId}`
+      );
+      if (response.data.success) {
+        alert("Post deleted successfully!");
+        // Update UI by deleting posts from State
+        setPosts((currentPosts) =>
+          currentPosts.filter((p) => p.post_id !== postId)
+        );
+      } else {
+        alert(`Error: ${response.data.error || "Could not delete post."}`);
+      }
+    } catch (err) {
+      console.error("Delete failed:", err);
+      alert("An error occurred while deleting the post.");
+    }
+  };
 
   if (loading) {
     return (
@@ -67,9 +95,6 @@ const PostPage = () => {
     );
   }
 
-  // const featuredPost = posts[0];
-  // const otherPosts = posts.slice(1);
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -81,24 +106,33 @@ const PostPage = () => {
 
   return (
     <div className="post-page-wrapper">
-      <Container className="mb-4" style={{ paddingTop: "30px" }}>
-        <Button onClick={() => navigate("/posts/create")} variant="success">
-          Create Your Post
-        </Button>
-      </Container>
+      {state.user && (
+        <Container className="mb-4">
+          <Button
+            style={{ backgroundColor: "darkorange", border: "none" }}
+            onClick={() => navigate("/create-post")}
+            variant="success">
+            Share Your Post with Us
+          </Button>
+        </Container>
+      )}
+
       <Container fluid>
         <Row className="g-4">
-          {posts.map((post) => (
-            <Col
-              key={post.post_id}
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              className="mb-4">
-              <div className="w-100">
+          {posts.map((post) => {
+            // Check the ownership of the user
+            const isOwner = state.user && state.user.user_id === post.author_id;
+
+            return (
+              <Col
+                key={post.post_id}
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                className="d-flex">
                 <Card
-                  className="post-card border-0 h-100 container-fluid flex-column"
+                  className="post-card border-0 h-100 d-flex flex-column"
                   title={post.title}>
                   <Link
                     to={`/posts/${post.post_id}/${post.slug}`}
@@ -109,7 +143,7 @@ const PostPage = () => {
                       alt={post.title}
                       onError={(e) => (e.target.src = "/default-thumbnail.jpg")}
                     />
-                    <Card.Body>
+                    <Card.Body className="p-1">
                       <Card.Title className="card-title">
                         {post.title}
                       </Card.Title>
@@ -117,12 +151,55 @@ const PostPage = () => {
                         By {post.author_name || "Unknown"} on{" "}
                         {formatDate(post.created_at)}
                       </Card.Text>
+                      <span
+                        style={{
+                          padding: "2px 6px",
+                          borderRadius: "8px",
+                          color:
+                            post.status === "published"
+                              ? "darkorange"
+                              : "#6c757d",
+                          fontSize: "0.75em",
+                        }}>
+                        {post.status}
+                      </span>
                     </Card.Body>
                   </Link>
+
+                  {/* Show Edit/Delete buttons if the owner -> */}
+                  {isOwner && (
+                    <Card.Footer className="mt-auto bg-transparent border-0 p-1">
+                      {isOwner && (
+                        <Button
+                          variant="outline-secondary"
+                          size="sm"
+                          onClick={() =>
+                            navigate(`/posts/edit/${post.post_id}`)
+                          }
+                          style={{
+                            marginRight: "5px",
+                            zIndex: 10,
+                          }}>
+                          <i className="bi bi-pencil-square"></i> Edit
+                        </Button>
+                      )}
+                      <Button
+                        variant="btn"
+                        style={{
+                          backgroundColor: "darkorange",
+                          outlineColor: "darkorange",
+                          color: "#fff",
+                        }}
+                        size="sm"
+                        onClick={() => handleDelete(post.post_id)}>
+                        Delete
+                      </Button>
+                    </Card.Footer>
+                  )}
                 </Card>
-              </div>
-            </Col>
-          ))}
+              </Col>
+            );
+          })}
         </Row>
       </Container>
     </div>

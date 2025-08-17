@@ -104,6 +104,32 @@ function AdminPost() {
     fetchUsers();
   }, [startDate, endDate, fetchUsers]);
 
+  const handleApprove = async (postId) => {
+    if (!window.confirm("Are you sure you want to approve this post?")) return;
+
+    try {
+      const res = await fetch(URL.ADMIN_POSTS, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          post_id: postId,
+          action: "approve", // Gửi action đặc biệt để backend nhận diện
+        }),
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        alert("Post approved successfully!"); // Hoặc dùng toast/notification
+        fetchUsers(); // Tải lại danh sách để cập nhật giao diện
+      } else {
+        alert("Approve failed: " + (result.error || "Unknown error"));
+      }
+    } catch (err) {
+      alert("An error occurred while approving the post.");
+    }
+  };
+
   // EDIT
   const handleEdit = (post) => {
     setFormData({
@@ -271,7 +297,20 @@ function AdminPost() {
                   <td className="tdStyle">{p.author_name}</td>
                   <td className="tdStyle">{p.category_name}</td>
                   <td className="tdStyle">{p.published_at}</td>
-                  <td className="tdStyle">{p.status}</td>
+                  <td className="tdStyle">
+                    <span
+                      style={{
+                        padding: "4px 8px",
+                        borderRadius: "12px",
+                        color: "#fff",
+                        fontWeight: "bold",
+                        backgroundColor:
+                          p.status === "published" ? "#28a745" : "darkorange",
+                        fontSize: "0.8em",
+                      }}>
+                      {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
+                    </span>
+                  </td>
                   <td className="tdStyle">
                     <img
                       src={p.thumbnail_url}
@@ -289,6 +328,15 @@ function AdminPost() {
                   <td className="tdStyle">{p.updated_at}</td>
                   <td className="tdStyle">
                     <ButtonGroup>
+                      {p.status === "draft" && (
+                        <Button
+                          size="sm"
+                          variant="success"
+                          onClick={() => handleApprove(p.post_id)}
+                          style={{ marginRight: "5px" }}>
+                          Approve
+                        </Button>
+                      )}
                       <Button
                         size="sm"
                         variant="warning"
@@ -344,6 +392,17 @@ function AdminPost() {
                   value={formData.content || ""}
                   onChange={handleModalChange}
                 />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Status</Form.Label>
+                <Form.Select
+                  name="status"
+                  value={formData.status || "draft"}
+                  onChange={handleModalChange}>
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>{" "}
+                </Form.Select>
               </Form.Group>
 
               <Form.Group className="mb-3">

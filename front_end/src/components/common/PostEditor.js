@@ -3,6 +3,19 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import URL from "../../util/url";
 
+const Quill = ReactQuill.Quill;
+const Parchment = Quill.import("parchment");
+const lineHeightConfig = {
+  scope: Parchment.Scope.BLOCK,
+  whitelist: ["1", "1.5", "2"],
+};
+const LineHeightStyle = new Parchment.StyleAttributor(
+  "height",
+  "line-height",
+  lineHeightConfig
+);
+Quill.register(LineHeightStyle, true);
+
 export default function PostEditor({
   value = "",
   onChange,
@@ -12,8 +25,12 @@ export default function PostEditor({
     toolbar: {
       container: [
         [{ header: [1, 2, 3, false] }],
+        [{ size: ["small", false, "large", "huge"] }],
         ["bold", "italic", "underline", "strike"],
+        [{ color: [] }, { background: [] }],
         [{ list: "ordered" }, { list: "bullet" }],
+        [{ align: [] }],
+        [{ height: ["1", "1.5", "2"] }],
         ["link", "image"],
         ["clean"],
       ],
@@ -58,11 +75,16 @@ export default function PostEditor({
 
   const formats = [
     "header",
+    "size",
     "bold",
     "italic",
+    "color",
+    "background",
     "underline",
     "strike",
     "list",
+    "align",
+    "height",
     "blockquote",
     "code-block",
     "link",
@@ -70,13 +92,15 @@ export default function PostEditor({
   ];
 
   return (
-    <ReactQuill
-      theme="snow"
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      modules={modules}
-      formats={formats}
-    />
+    <div className="editor-container">
+      <ReactQuill
+        theme="snow"
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        modules={modules}
+        formats={formats}
+      />
+    </div>
   );
 }

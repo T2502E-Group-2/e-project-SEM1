@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios_instance from "../../../util/axios_instance";
 import {
@@ -8,13 +8,16 @@ import {
   Card,
   Row,
   Col,
+  Button,
   ListGroup,
 } from "react-bootstrap";
 import URL from "../../../util/url";
+import UserContext from "../../../context/context";
 
 const PostDetailPage = () => {
   const { id, slug } = useParams();
   const navigate = useNavigate();
+  const { state } = useContext(UserContext);
   const [post, setPost] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,14 +83,56 @@ const PostDetailPage = () => {
 
   if (!post) return null;
 
+  if (!post) return null;
+
+  // ======================= DEBUGGING BLOCK =======================
+  console.log("--- KIỂM TRA QUYỀN SỞ HỮU ---");
+  console.log("Đối tượng user đăng nhập (state.user):", state.user);
+  console.log("Đối tượng bài viết (post):", post);
+
+  // Chỉ log chi tiết ID nếu user và post tồn tại
+  if (state.user && post) {
+    console.log(
+      "ID người dùng:",
+      state.user.user_id,
+      "| Kiểu dữ liệu:",
+      typeof state.user.user_id
+    );
+    console.log(
+      "ID tác giả bài viết:",
+      post.author_id,
+      "| Kiểu dữ liệu:",
+      typeof post.author_id
+    );
+    console.log("So sánh (===):", state.user.user_id === post.author_id);
+  }
+  console.log("---------------------------------");
+  // ===============================================================
+
+  const isOwner = state.user && state.user.user_id === post.author_id;
+
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
       style={{ paddingTop: "200px" }}>
-      <Row className="justify-content-center">
+      <Row className="justify-content-center ">
         {/* Main content */}
         <Col md={8}>
-          <Card className="mb-4 shadow-sm">
+          <Card className="mb-4 shadow-sm position-relative">
+            {isOwner && (
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => navigate(`/posts/edit/${post.post_id}`)}
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  zIndex: 10,
+                }}>
+                <i className="bi bi-pencil-square"></i> Edit
+              </Button>
+            )}
             <Card.Body>
               <h2>{post.title}</h2>
               <p className="text-muted">
@@ -103,7 +148,13 @@ const PostDetailPage = () => {
 
         {/* Sidebar */}
         <Col md={4}>
-          <h4 className="mb-3" style={{ color: "#ffff", fontWeight: "bold" }}>
+          <h4
+            className="mb-3 text-center"
+            style={{
+              color: "#ffff",
+              fontWeight: "bold",
+              textShadow: "1px 1px 2px #000",
+            }}>
             Related Posts
           </h4>
           <ListGroup>
@@ -117,7 +168,19 @@ const PostDetailPage = () => {
                 <small className="text-muted">{item.author_name}</small>
               </ListGroup.Item>
             ))}
-          </ListGroup>
+          </ListGroup>{" "}
+          <div className="text-center">
+            {state.user && (
+              <Container className="mt-3">
+                <Button
+                  style={{ backgroundColor: "darkorange", border: "none" }}
+                  onClick={() => navigate("/posts/create")}
+                  variant="success">
+                  Share Your Post with Us
+                </Button>
+              </Container>
+            )}
+          </div>
         </Col>
         <Col
           md={8}
