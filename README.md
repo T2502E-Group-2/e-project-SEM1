@@ -1,8 +1,3 @@
-# e-project-SEM1
-
-This Repository using for conducting 1st SEM e-project
-UI-UX at: https://www.figma.com/design/0AefAy2FLUeHvKJ5SlDQA1/E-PROJECT?node-id=2-50&p=f&t=ZMeyHiZQfn5BEZTR-0
-
 A. Require Libraries:
 I. FRONTEND
 
@@ -10,11 +5,19 @@ I. FRONTEND
 - React PayPal : npm i @paypal/react-paypal-js
 - Axios, Router DOM, Bootstrap, React-bootstrap-icons: npm i axios react-router-dom react-bootstrap react-bootstrap-icons
 - CKEditor : npm i ckeditor5 ckeditor5-premium-features @ckeditor/ckeditor5-react
+- React-Quill : npm install react-quill@2.0.0 --force
+- Quill Plugin : npm install quill-html-edit-button
 
 II. BACKEND
 
 - PHP guzzle : composer require guzzlehttp/guzzle
 - imagekit/imagekit-php : composer require imagekit/imagekit-php
+- php.ini set up require (Make sure extension=curl and extension=fileinfo in the php.ini file of your Apache Server were enabled):
+
+* ...MAMP\bin\[phpversion]\php.ini: extension=curl extension=fileinfo
+* ...MAMP\conf\[phpversion]\php.ini: Fine line of: extension=php_curl.dll, add: extension=fileinfo
+
+- Notes: If you want to know exactly where your Apache Server used php.ini, run api "info.php" on your local host server. Ex: http://localhost:8888/API/info.php
 
 B. FUNCTION TEST
 I. PayPal Sandbox acount
