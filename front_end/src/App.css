@@ -26,13 +26,46 @@ h6 {
 
 /* Header and Menu Styles */
 /* Default*/
+.search-overlay input {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
 .navbar-links {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
   gap: 20px;
 }
 
+.custom-navbar {
+  margin-top: 0 !important;
+  border-top: none;
+}
+.custom-navbar .navbar-toggler {
+  border: none;
+  box-shadow: none;
+}
+
+/* Keep the link vertically */
+.custom-navbar .navbar-collapse .nav-link {
+  padding: 0.5rem 1rem;
+  color: black;
+}
+
+/* When header scrollled, change black text */
+.custom-navbar.scrolled .navbar-collapse {
+  background: white;
+}
+
+.custom-navbar .navbar-toggler-icon {
+  background-image: url('data:image/svg+xml;charset=utf8,<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path stroke="rgba(255, 255, 255, 1)" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"/></svg>');
+}
+
+/* When scrolled: change to black*/
+.custom-navbar.scrolled .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
 .header-and-menu-container {
   position: fixed;
   top: 0;
@@ -48,7 +81,6 @@ h6 {
 
 .header-and-menu-container .nav-link,
 .header-and-menu-container .navbar-brand,
-.header-and-menu-container .navbar-toggler,
 .header-and-menu-container .nav-dropdown,
 .header-and-menu-container .dropdown-toggle,
 .header-and-menu-container .btn {
@@ -64,16 +96,12 @@ h6 {
 .header-and-menu-container.scrolled .nav-dropdown,
 .header-and-menu-container.scrolled .dropdown-toggle,
 .header-and-menu-container.scrolled .btn {
+  background-color: #fff !important;
   color: #222 !important;
   fill: #222;
 }
 
 .header-and-menu-container.scrolled .header {
-  background-color: rgb(255, 255, 255) !important;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.header-and-menu-container.scrolled .custom-navbar {
   background-color: rgb(255, 255, 255) !important;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -96,8 +124,15 @@ h6 {
   filter: brightness(0) invert(1);
   transition: filter 0.3s ease-in-out;
 }
+.header-and-menu-container .search-icon {
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s ease-in-out;
+}
 
 .header-and-menu-container.scrolled .cart-icon {
+  filter: none;
+}
+.header-and-menu-container.scrolled .search-icon {
   filter: none;
 }
 
@@ -708,7 +743,7 @@ main {
 .product-link {
   text-decoration: none;
   color: inherit;
-  display: block; /* Đảm bảo link chiếm toàn bộ không gian của card */
+  display: block;
 }
 
 .product-link:hover .product-card {
@@ -831,7 +866,7 @@ main {
   font-size: 2.5rem;
   font-weight: bold;
   margin-top: 1rem;
-  color: #212529; /* Đổi thành màu tối để hiển thị trên nền trắng */
+  color: #212529;
 }
 
 /* Grid Post Styles */
@@ -1065,10 +1100,9 @@ main {
 
 /*Embed tool*/
 .ql-toolbar .ql-embed {
-  font-size: 16px; /* chỉnh kích thước */
+  font-size: 16px;
   font-weight: bold;
-  font-family: monospace; /* cho giống code */
-  line-height: 1;
+  font-family: monospace;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1077,3 +1111,36 @@ main {
 }
 
 /* --- END: EDITOR STYLES --- */
+/* ============================================ */
+/* ==   MOBILE NAVBAR OVERLAY & STYLE FIX    == */
+/* ============================================ */
+
+@media (max-width: 991.98px) {
+  .custom-navbar {
+    position: relative;
+  }
+
+  .custom-navbar .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #eee;
+    padding: 10px;
+  }
+
+  .custom-navbar .navbar-collapse .nav-link,
+  .custom-navbar .navbar-collapse .dropdown-item {
+    color: #222 !important;
+  }
+
+  .custom-navbar .navbar-collapse .dropdown-menu {
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+  }
+}
