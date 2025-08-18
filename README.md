@@ -4,8 +4,8 @@ I. FRONTEND
 - React-slick and Slick-carousel : npm install react-slick slick-carousel
 - React PayPal : npm i @paypal/react-paypal-js
 - Axios, Router DOM, Bootstrap, React-bootstrap-icons: npm i axios react-router-dom react-bootstrap react-bootstrap-icons
-- CKEditor : npm i ckeditor5 ckeditor5-premium-features @ckeditor/ckeditor5-react
-- React-Quill : npm install react-quill@2.0.0 --force
+  ;; - CKEditor : npm i ckeditor5 ckeditor5-premium-features @ckeditor/ckeditor5-react (not suitable for this project)
+- React-Quill : npm install react-quill@2.0.0 --force npm install react-quill-new
 - Quill Plugin : npm install quill-html-edit-button
 
 II. BACKEND

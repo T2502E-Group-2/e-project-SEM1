@@ -1,15 +1,28 @@
+/*CSS ROOT*/
+:root {
+  --primary-color: darkorange;
+  --text-color-light: #fff;
+  --text-color-dark: #222;
+  --text-color-secondary: #6e6b66;
+  --background-light: #ffffff;
+  --background-dark: #414040;
+
+  --font-primary: "Montserrat", sans-serif;
+  --font-secondary: "Palatino Linotype", serif;
+}
+
 /* General Styles */
 h5 {
   margin: 0;
   padding: 0;
   border: 0;
   vertical-align: baseline;
-  font-family: "Montserrat", sans-serif;
+  font-family: var(--font-primary);
   letter-spacing: 0.5px;
   font-size: 20px;
   font-weight: bold;
   line-height: 24px;
-  color: darkorange;
+  color: var(--primary-color);
   text-transform: capitalize;
 }
 h6 {
@@ -21,7 +34,7 @@ h6 {
   font-size: 14px;
   line-height: 24px;
   font-family: "Palatino Linotype, serif";
-  color: #6e6b66;
+  color: var(--text-color-secondary);
 }
 
 /* Header and Menu Styles */
@@ -36,6 +49,11 @@ h6 {
   align-items: flex-start !important;
   justify-content: flex-start !important;
   gap: 20px;
+}
+
+.navbar-links .nav-link {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .custom-navbar {
@@ -72,7 +90,7 @@ h6 {
   left: 0;
   right: 0;
   container: fluid;
-  z-index: 1050;
+  z-index: 2000;
   background-color: transparent;
   transition: background-color 0.3s ease-in-out;
   outline: 1px solid rgb(255, 255, 255);
@@ -84,8 +102,8 @@ h6 {
 .header-and-menu-container .nav-dropdown,
 .header-and-menu-container .dropdown-toggle,
 .header-and-menu-container .btn {
-  color: #fff !important;
-  fill: #fff;
+  color: var(--text-color-light) !important;
+  fill: var(--text-color-light);
   transition: color 0.3s ease-in-out;
 }
 
@@ -96,9 +114,9 @@ h6 {
 .header-and-menu-container.scrolled .nav-dropdown,
 .header-and-menu-container.scrolled .dropdown-toggle,
 .header-and-menu-container.scrolled .btn {
-  background-color: #fff !important;
-  color: #222 !important;
-  fill: #222;
+  background-color: var(--text-color-light) !important;
+  color: var(--text-color-dark) !important;
+  fill: var(--text-color-dark);
 }
 
 .header-and-menu-container.scrolled .header {
@@ -138,13 +156,13 @@ h6 {
 
 /* User link */
 .header-and-menu-container .user-link {
-  color: #fff !important;
+  color: var(--text-color-light) !important;
   transition: color 0.3s ease-in-out;
   font-size: large;
 }
 
 .header-and-menu-container.scrolled .user-link {
-  color: #222 !important;
+  color: var(--text-color-dark) !important;
 }
 
 /* Background image */
@@ -206,7 +224,7 @@ main {
 .container.text {
   position: relative;
   z-index: 2;
-  color: #fff;
+  color: var(--text-color-light);
   text-align: left;
   padding: 0 15px;
   max-width: 1200px;
@@ -236,8 +254,8 @@ main {
 .btn-alt.small.activetwo.shadow {
   display: inline-block;
   padding: 10px 25px;
-  background-color: darkorange;
-  color: #fff !important;
+  background-color: var(--primary-color);
+  color: var(--text-color-light) !important;
   font-weight: 600;
   text-decoration: none;
   border-radius: 0;
@@ -255,7 +273,7 @@ main {
   background-color: #e55a2b;
   transform: translateY(-2px);
   box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
-  color: #fff !important;
+  color: var(--text-color-light) !important;
 }
 
 .btn-alt.small.activetwo.shadow::before {
@@ -407,7 +425,7 @@ main {
 .activity-title {
   font-weight: bold;
   font-family: "Palatino Linotype, serif";
-  color: darkorange;
+  color: var(--primary-color);
 }
 .topic-card {
   display: flex;
@@ -416,14 +434,14 @@ main {
   flex-direction: column;
   height: 100%;
 
-  color: #fff;
+  color: var(--text-color-light);
   overflow: hidden;
 }
 .topic-card-text {
   align-items: center;
   justify-content: center;
   display: flex;
-  color: #fff;
+  color: var(--text-color-light);
   margin-bottom: 1rem;
   opacity: 0;
   transform: translateY(30px);
@@ -515,8 +533,8 @@ main {
   display: inline-block;
   padding: 10px 20px;
   margin-top: 15px;
-  background-color: darkorange;
-  color: #fff !important;
+  background-color: var(--primary-color);
+  color: var(--text-color-light) !important;
   font-weight: 600;
   text-decoration: none;
   border-radius: 5px;
@@ -531,7 +549,7 @@ main {
   background-color: #e55a2b;
   transform: translateY(-2px);
   box-shadow: 0 8px 15px rgba(255, 107, 53, 0.3);
-  color: #fff !important;
+  color: var(--text-color-light) !important;
 }
 
 /* Activity Detail Page Styles */
@@ -547,7 +565,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--text-color-light);
 }
 
 .detail-banner-overlay {
@@ -576,14 +594,14 @@ main {
 }
 
 .detail-section-title {
-  color: #fff;
+  color: var(--text-color-light);
   margin-bottom: 1rem;
 }
 
 .detail-info-box {
   position: sticky;
   top: 100px;
-  background-color: #fff !important;
+  background-color: var(--text-color-light) !important;
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -612,14 +630,14 @@ main {
 }
 
 .book-now-btn {
-  background-color: darkorange;
-  border-color: darkorange;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 /*Footer Styles*/
 .footer {
-  background-color: #414040;
-  color: #fff;
+  background-color: var(--background-dark);
+  color: var(--text-color-light);
   padding: 2px 0;
   font-family: "palatino type";
   position: relative;
@@ -645,7 +663,7 @@ main {
 }
 
 .footer-social-icons a:hover {
-  color: darkorange;
+  color: var(--primary-color);
 }
 
 .footer-nav .nav-link {
@@ -655,7 +673,7 @@ main {
 }
 
 .footer-nav .nav-link:hover {
-  color: darkorange;
+  color: var(--primary-color);
 }
 
 .footer-opening-hours,
@@ -680,7 +698,7 @@ main {
   display: none;
   position: absolute;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  z-index: 1;
+  z-index: 1000;
   border-radius: 5px;
   border: none;
   margin-top: 0px;
@@ -700,14 +718,14 @@ main {
 
 /* Scrolled state styles */
 .header-and-menu-container.scrolled .custom-navbar .dropdown-menu {
-  background-color: #fff;
+  background-color: var(--text-color-light);
 }
 .header-and-menu-container.scrolled .custom-navbar .dropdown-item {
-  color: #222 !important;
+  color: var(--text-color-dark) !important;
 }
 .header-and-menu-container.scrolled .custom-navbar .dropdown-item:hover {
-  background-color: darkorange;
-  color: #fff !important;
+  background-color: var(--primary-color);
+  color: var(--text-color-light) !important;
 }
 
 /* Transparent header state styles */
@@ -715,16 +733,16 @@ main {
   background-color: rgba(34, 34, 34, 0.9); /* Dark transparent background */
 }
 .header-and-menu-container:not(.scrolled) .custom-navbar .dropdown-item {
-  color: #fff !important;
+  color: var(--text-color-light) !important;
 }
 .header-and-menu-container:not(.scrolled) .custom-navbar .dropdown-item:hover {
-  background-color: darkorange;
+  background-color: var(--primary-color);
 }
 /*Equipment Page*/
 /*Sidebar-filter*/
 .sidebar-filter {
   padding-top: 160px;
-  border-right: #fff 2px solid;
+  border-right: var(--text-color-light) 2px solid;
   /* position: sticky;
   top: 90px;
   align-self: flex-start;
@@ -737,7 +755,7 @@ main {
   height: 200px;
   object-fit: contain;
   padding: 10px;
-  background-color: #ffffff;
+  background-color: var(--text-color-light) fff;
 }
 
 .product-link {
@@ -845,7 +863,7 @@ main {
 
 /* Featured Post Styles */
 .featured-post-card {
-  background-color: #ffffff;
+  background-color: var(--text-color-light) fff;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   transition: box-shadow 0.3s ease-in-out;
   margin-top: 200px;
@@ -872,7 +890,7 @@ main {
 /* Grid Post Styles */
 .post-card {
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  background-color: #ffffff;
+  background-color: var(--text-color-light) fff;
   border: 1px solid #dee2e6 !important;
 }
 
@@ -909,7 +927,7 @@ main {
   padding-bottom: 4rem;
   padding: 20px;
   color: #070707;
-  /* background-color: #fff; */
+  /* background-color: var(--text-color-light); */
 }
 
 .post-content {
@@ -970,11 +988,11 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 3000;
 }
 
 .modal-box {
-  background: #fff;
+  background: var(--text-color-light);
   padding: 20px;
   border-radius: 8px;
   width: 350px;
@@ -1012,11 +1030,11 @@ main {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
-  color: #6e6b66;
+  color: var(--text-color-secondary);
 }
 .Label {
   font-weight: bold;
-  color: #6e6b66;
+  color: var(--text-color-secondary);
 }
 
 /*TABLE STYLES*/
@@ -1027,7 +1045,7 @@ main {
   overflow-x: auto;
   border-radius: 8px;
   border: 1px solid #ddd;
-  background-color: #ffff;
+  background-color: var(--text-color-light) f;
 }
 
 .tableStyle {
@@ -1038,7 +1056,7 @@ main {
 .theadStyle {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 100;
   background-color: #f2f2f2;
 }
 
@@ -1068,7 +1086,7 @@ main {
   position: sticky;
   top: 0;
   background-color: white;
-  z-index: 10;
+  z-index: 101;
   border-bottom: 1px solid #ccc;
 }
 /* Line Height styles*/
@@ -1115,7 +1133,7 @@ main {
 /* ==   MOBILE NAVBAR OVERLAY & STYLE FIX    == */
 /* ============================================ */
 
-@media (max-width: 991.98px) {
+@media (max-width: 1399.98px) {
   .custom-navbar {
     position: relative;
   }
@@ -1125,8 +1143,8 @@ main {
     top: 100%;
     left: 0;
     right: 0;
-    z-index: 1030;
-    background-color: #ffffff;
+    z-index: 2000;
+    background-color: var(--text-color-light) fff;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     border-top: 1px solid #eee;
@@ -1135,7 +1153,7 @@ main {
 
   .custom-navbar .navbar-collapse .nav-link,
   .custom-navbar .navbar-collapse .dropdown-item {
-    color: #222 !important;
+    color: var(--text-color-dark) !important;
   }
 
   .custom-navbar .navbar-collapse .dropdown-menu {

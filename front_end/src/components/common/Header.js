@@ -149,7 +149,7 @@ const Header = () => {
       {/* =================== Header =================== */}
       <header className={`header ${scrolled ? "scrolled" : ""}`}>
         <Container fluid>
-          <Row className="align-items-center">
+          <Row className="align-items-center justify-content-start">
             {/* Logo */}
             <Col className="logo-image" xs={2}>
               <Image
@@ -164,8 +164,16 @@ const Header = () => {
 
             <Col
               xs={7}
-              className="d-flex justify-content-between align-items-center" // căn top
-              style={{ gap: "10px", position: "relative" }}>
+              className="d-flex justify-content-center align-items-center"
+              style={{
+                gap: "10px",
+                position: "relative",
+                paddingLeft: "50px",
+                paddingRight: "30px",
+                fontSize: "1.2rem",
+                textAlign: "center",
+                cursor: "pointer",
+              }}>
               {/* Nút search icon */}
 
               <Image
@@ -185,7 +193,7 @@ const Header = () => {
                   onSubmit={handleSearchSubmit}
                   className="search-overlay"
                   style={{
-                    position: "absolute",
+                    position: "relative",
                     top: 0,
                     left: 0,
                     background: "white",
@@ -212,7 +220,7 @@ const Header = () => {
                 className={`custom-navbar flex-grow-1 ${
                   scrolled ? "scrolled" : ""
                 }`}
-                expand="lg">
+                expand="xxl">
                 <Navbar.Toggle aria-controls="main-navbar" />
                 <Navbar.Collapse id="main-navbar">
                   <Nav
@@ -291,30 +299,33 @@ const Header = () => {
                   </Nav>
                 </Navbar.Collapse>
               </Navbar>
-
-              <Link
-                className="nav-link position-relative"
-                to={"/cart"}
-                style={{ paddingLeft: "50px" }}>
-                <Image
-                  src="../cart-icon.png"
-                  alt="Cart"
-                  width={"30px"}
-                  height={"30px"}
-                  className={`cart-icon ${scrolled ? "dark" : "light"}`}
-                />
-                <Badge
-                  pill
-                  bg="danger"
-                  className="position-absolute top-0 start-100 translate-middle">
-                  {cartItemCount}
-                </Badge>
-              </Link>
             </Col>
 
             <Col
               xs={3}
-              className="d-flex justify-content-center align-items-center">
+              className="d-flex justify-content-end align-items-center">
+              <div
+                style={{
+                  paddingLeft: "30px",
+                  paddingRight: "50px",
+                  position: "relative",
+                }}>
+                <Link className="nav-link position-relative" to={"/cart"}>
+                  <Image
+                    src="../cart-icon.png"
+                    alt="Cart"
+                    width={"30px"}
+                    height={"30px"}
+                    className={`cart-icon ${scrolled ? "dark" : "light"}`}
+                  />
+                  <Badge
+                    pill
+                    bg="danger"
+                    className="position-absolute top-0 start-100 translate-middle">
+                    {cartItemCount}
+                  </Badge>
+                </Link>
+              </div>
               {state.user ? (
                 <div className="d-flex align-items-center">
                   <Image
@@ -334,11 +345,18 @@ const Header = () => {
                     className={`navbar-text me-2 ${
                       scrolled ? "text-dark" : "text-white"
                     }`}
-                    style={{ cursor: "pointer", transition: "color 0.3s ease" }}
+                    style={{
+                      cursor: "pointer",
+                      transition: "color 0.3s ease",
+                      fontSize: "1.2rem",
+                    }}
                     onClick={() => navigate("/profile")}>
                     {state.user.first_name} {state.user.last_name}
                   </span>
-                  <button className="btn btn-outline" onClick={handleLogout}>
+                  <button
+                    className="btn btn-outline"
+                    onClick={handleLogout}
+                    style={{ fontSize: "1.2rem" }}>
                     Logout
                   </button>
                 </div>
