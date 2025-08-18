@@ -5,7 +5,7 @@ const URL = {
   ADMIN_USERS: BASE + "/Admin/admin_users.php",
   ADMIN_POSTS: BASE + "/Admin/admin_posts.php",
   ADMIN_ACTIVITIES: BASE + "/Admin/admin_activities.php",
-  ADMIN_EQUIPMENT: BASE + "/Admin/admin_equipment.php",
+  ADMIN_EQUIPMENT: BASE + "/Admin/admin_equipments.php",
   //AUTH
   LOGIN: BASE + "/auth/login.php",
   REGISTER: BASE + "/auth/register.php",
@@ -24,6 +24,7 @@ const URL = {
   ALL_ACTIVITIES: BASE + "/Activities/all_activities.php",
   CATEGORY_LIST: BASE + "/Activities/categories.php",
   SEARCH_ACTIVITIES: BASE + "/Activities/search_activities.php",
+  SEARCH: BASE + "/search.php",
   //GEARS
   ALL_EQUIPMENTS: BASE + "/Equipments/equipments.php",
   EQUIPMENT_CATEGORIES: BASE + "/Equipments/equipment_categories.php",

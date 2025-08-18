@@ -51,7 +51,7 @@ function AdminPost() {
   const [formData, setFormData] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchUsers = React.useCallback(() => {
+  const fetchPosts = React.useCallback(() => {
     setLoading(true);
     const params = new URLSearchParams({
       search: searchTerm,
@@ -74,8 +74,8 @@ function AdminPost() {
 
   useEffect(() => {
     if (!state.user || state.user.role !== "admin") return;
-    fetchUsers();
-  }, [state.user, fetchUsers]);
+    fetchPosts();
+  }, [state.user, fetchPosts]);
 
   const handleSort = (column) => {
     if (sortBy === column) setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -101,8 +101,8 @@ function AdminPost() {
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, [startDate, endDate, fetchUsers]);
+    fetchPosts();
+  }, [startDate, endDate, fetchPosts]);
 
   const handleApprove = async (postId) => {
     if (!window.confirm("Are you sure you want to approve this post?")) return;
@@ -121,7 +121,7 @@ function AdminPost() {
       const result = await res.json();
       if (result.success) {
         alert("Post approved successfully!"); // Hoặc dùng toast/notification
-        fetchUsers(); // Tải lại danh sách để cập nhật giao diện
+        fetchPosts(); // Tải lại danh sách để cập nhật giao diện
       } else {
         alert("Approve failed: " + (result.error || "Unknown error"));
       }
@@ -156,7 +156,7 @@ function AdminPost() {
       if (result.success) {
         alert("Updated successfully");
         setShowModal(false);
-        fetchUsers();
+        fetchPosts();
       } else {
         alert("Update failed: " + result.message);
       }
@@ -178,7 +178,7 @@ function AdminPost() {
       const result = await res.json();
       if (result.success) {
         alert("Deleted successfully");
-        fetchUsers();
+        fetchPosts();
       } else {
         alert("Delete failed: " + result.message);
       }

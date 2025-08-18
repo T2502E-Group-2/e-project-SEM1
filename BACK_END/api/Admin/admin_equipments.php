@@ -26,16 +26,16 @@ $conn = connect();
 
 // Handle DELETE request
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $activityId = intval($_GET['id'] ?? 0);
+    $equipmentId = intval($_GET['id'] ?? 0);
 
-    if ($activityId <= 0) {
+    if ($equipmentId <= 0) {
         http_response_code(400);
-        echo json_encode(["error" => "Invalid activity ID"]);
+        echo json_encode(["error" => "Invalid equipment ID"]);
         exit();
     }
 
-    $stmt = $conn->prepare("DELETE FROM activities WHERE activity_id = ?");
-    $stmt->bind_param("i", $activityId);
+    $stmt = $conn->prepare("DELETE FROM equipments WHERE equipment_id = ?");
+    $stmt->bind_param("i", $equipmentId);
     if ($stmt->execute()) {
         echo json_encode(["success" => true]);
     } else {
@@ -51,42 +51,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
-    if (!$data || !isset($data['activity_id'])) {
+    if (!$data || !isset($data['equipment_id'])) {
         http_response_code(400);
-        echo json_encode(["error" => "Invalid input, activity_id is required"]);
+        echo json_encode(["error" => "Invalid input, equipment_id is required"]);
         exit();
     }
 
     $stmt = $conn->prepare("
-        UPDATE activities
-        SET title = ?, category_id = ?, description = ?, detail = ?, max_participants = ?, 
-            price = ?, duration = ?, location_id = ?, registration_deadline = ?, 
-            start_date = ?, end_date = ?, status = ?, difficulty_level = ?, is_featured = ?, thumbnail_id = ?, updated_at = NOW()
-        WHERE activity_id = ?
+        UPDATE equipments
+        SET name = ?, description = ?, equipment_category_id = ?, sub_category = ?, 
+            image_url = ?, brand = ?, model = ?, price = ?, stock = ?, is_featured = ?
+        WHERE equipment_id = ?
     ");
 
     $stmt->bind_param(
-        "sissidsissssssii",
-        $data['title'],
-        $data['category_id'],
+        "ssissssdiii",
+        $data['name'],
         $data['description'],
-        $data['detail'],
-        $data['max_participants'],
+        $data['equipment_category_id'],
+        $data['sub_category'],
+        $data['image_url'],
+        $data['brand'],
+        $data['model'],
         $data['price'],
-        $data['duration'],
-        $data['location_id'],
-        $data['registration_deadline'],
-        $data['start_date'],
-        $data['end_date'],
-        $data['status'],
-        $data['difficulty_level'],
+        $data['stock'],
         $data['is_featured'],
-        $data['thumbnail_id'],
-        $data['activity_id']
+        $data['equipment_id']
     );
 
     if ($stmt->execute()) {
-        echo json_encode(["success" => true, "message" => "Activity updated successfully."]);
+        echo json_encode(["success" => true, "message" => "Equipment updated successfully."]);
     } else {
         http_response_code(500);
         echo json_encode(["error" => $stmt->error]);
@@ -98,14 +92,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Handle GET request for searching and filtering
 $search = $_GET['search'] ?? '';
-$sortBy = $_GET['sort_by'] ?? 'created_at';
+$sortBy = $_GET['sort_by'] ?? 'equipment_id';
 $sortOrder = $_GET['sort_order'] ?? 'DESC';
-$startDate = $_GET['start_date'] ?? '';
-$endDate = $_GET['end_date'] ?? '';
 
-$allowedSortColumns = ['activity_id', 'title', 'created_at', 'updated_at', 'status', 'is_featured'];
+$allowedSortColumns = ['equipment_id', 'name', 'brand', 'price', 'stock', 'is_featured'];
 if (!in_array($sortBy, $allowedSortColumns)) {
-    $sortBy = 'created_at';
+    $sortBy = 'equipment_id';
 }
 $sortOrder = strtoupper($sortOrder);
 if (!in_array($sortOrder, ['ASC', 'DESC'])) {
@@ -114,16 +106,10 @@ if (!in_array($sortOrder, ['ASC', 'DESC'])) {
 
 $sql = "
     SELECT 
-        a.activity_id, a.title, c.category_name, a.description, a.detail, 
-        a.max_participants, a.price, a.duration, l.name as location_name, 
-        a.registration_deadline, a.start_date, a.end_date, a.status, 
-        a.difficulty_level, a.is_featured, g.url as thumbnail_url,
-        DATE_FORMAT(a.created_at, '%Y-%m-%d %H:%i:%s') AS created_at,
-        DATE_FORMAT(a.updated_at, '%Y-%m-%d %H:%i:%s') AS updated_at
-    FROM activities a
-    LEFT JOIN categories c ON a.category_id = c.category_id
-    LEFT JOIN locations l ON a.location_id = l.location_id
-    LEFT JOIN galleries g ON a.thumbnail_id = g.media_id
+        e.equipment_id, e.name, e.description, c.category_name as category, e.sub_category, 
+        e.image_url, e.brand, e.model, e.price, e.stock, e.is_featured
+    FROM equipments e
+    LEFT JOIN categories c ON e.equipment_category_id = c.category_id
 ";
 
 $params = [];
@@ -131,16 +117,10 @@ $types = '';
 $where = [];
 
 if (!empty($search)) {
-    $where[] = "(a.title LIKE ? OR a.description LIKE ? OR c.category_name LIKE ? OR l.name LIKE ?)";
+    $where[] = "(e.name LIKE ? OR e.description LIKE ? OR c.category_name LIKE ? OR e.brand LIKE ?)";
     $searchTerm = "%" . $search . "%";
     array_push($params, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
     $types .= 'ssss';
-}
-
-if (!empty($startDate) && !empty($endDate)) {
-    $where[] = "DATE(a.created_at) BETWEEN ? AND ?";
-    array_push($params, $startDate, $endDate);
-    $types .= 'ss';
 }
 
 if (count($where) > 0) {
@@ -162,13 +142,13 @@ if (!empty($params)) {
 
 $stmt->execute();
 $result = $stmt->get_result();
-$activities = [];
+$equipments = [];
 while ($row = $result->fetch_assoc()) {
-    $activities[] = $row;
+    $equipments[] = $row;
 }
 
 header('Content-Type: application/json');
-echo json_encode($activities);
+echo json_encode($equipments);
 
 $stmt->close();
 $conn->close();

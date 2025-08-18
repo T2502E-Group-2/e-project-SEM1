@@ -1031,7 +1031,7 @@ main {
   overflow-x: auto;
   border-radius: 8px;
   border: 1px solid #ddd;
-  background-color: var(--text-color-light) f;
+  background-color: var(--text-color-light);
 }
 
 .tableStyle {
