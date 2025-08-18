@@ -90,7 +90,7 @@ function AdminOrder() {
 
   if (!state.user || state.user.role !== "admin") {
     return (
-      <Container style={{ paddingTop: "200px" }}>
+      <Container style={{ paddingTop: "160px" }}>
         <Card>
           <h3 className="text-center text-danger p-3 mb-3 ">
             ⚠️ You do not have permission to access this page! ⚠️
@@ -109,7 +109,7 @@ function AdminOrder() {
         style={{
           color: "#ffff",
           textShadow: "1px 1px 2px #000",
-          paddingTop: "200px",
+          paddingTop: "160px",
         }}>
         {" "}
         There are no orders.
@@ -144,7 +144,7 @@ function AdminOrder() {
     <Container
       fluid
       style={{
-        paddingTop: "200px",
+        paddingTop: "160px",
         paddingBottom: "50px",
         paddingLeft: "50px",
         paddingRight: "50px",

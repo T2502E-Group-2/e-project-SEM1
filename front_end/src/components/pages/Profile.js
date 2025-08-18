@@ -121,7 +121,7 @@ const Profile = () => {
   return (
     <Container
       className="container-fluid user-details-page-wrapper"
-      style={{ paddingTop: "200px" }}>
+      style={{ paddingTop: "160px" }}>
       <Row className="justify-content-center">
         <Col md={12} lg={10}>
           <h1 className="mb-4 topic-card-text animate-in">

@@ -217,7 +217,7 @@ const EquipmentPage = () => {
   };
 
   return (
-    <Container fluid className="topic-card" style={{ paddingTop: "182px" }}>
+    <Container fluid className="topic-card" style={{ paddingTop: "120px" }}>
       <Row>
         <Col lg={2} md={12} className="mb-4 sidebar-filter">
           <FilterSidebar

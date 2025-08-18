@@ -86,7 +86,7 @@ const ActivityPage = () => {
   if (error) return <div className="text-center text-danger mt-5">{error}</div>;
 
   return (
-    <div className="container-fluid" style={{ paddingTop: "200px" }}>
+    <div className="container-fluid" style={{ paddingTop: "160px" }}>
       <Row>
         {/* Main Content: All Activities */}
         <Col lg={12}>

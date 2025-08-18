@@ -12,6 +12,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import axios_instance from "../../util/axios_instance";
 import AuthModal from "./AuthModal";
+import useClickOutside from "../hooks/useClickOutside";
 import URL from "../../util/url";
 import CartContext from "../../context/CartContext";
 import UserContext from "../../context/context";
@@ -29,43 +30,13 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef(null);
+  useClickOutside(searchRef, () => setSearchOpen(false));
   const searchBtnRef = useRef(null);
+
   const [expanded, setExpanded] = useState(false);
 
   const navRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        searchOpen &&
-        searchRef.current &&
-        !searchRef.current.contains(event.target) &&
-        searchBtnRef.current &&
-        !searchBtnRef.current.contains(event.target)
-      ) {
-        setSearchOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [searchOpen]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        expanded &&
-        navRef.current &&
-        !navRef.current.contains(event.target)
-      ) {
-        setExpanded(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [expanded]);
+  useClickOutside(navRef, () => setExpanded(false));
 
   const navigate = useNavigate();
 
@@ -85,7 +56,7 @@ const Header = () => {
     if (searchTerm.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
       setSearchTerm("");
-      setSearchOpen(false); // đóng sau khi tìm
+      setSearchOpen(false);
     }
   };
 
@@ -106,43 +77,33 @@ const Header = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Fetch data
   useEffect(() => {
-    (async () => {
+    const fetchAllCategories = async () => {
       try {
-        const rs = await axios_instance.get(URL.EQUIPMENT_CATEGORIES);
-        if (rs.data.status && rs.data.data) setGearCategories(rs.data.data);
+        const [gears, activities, posts] = await Promise.all([
+          axios_instance.get(URL.EQUIPMENT_CATEGORIES),
+          axios_instance.get(URL.ACTIVITY_CATEGORIES),
+          axios_instance.get(URL.POST_CATEGORIES),
+        ]);
+
+        if (gears.data.status) setGearCategories(gears.data.data);
+        if (activities.data.status) setActivityCategories(activities.data.data);
+        if (posts.data.status) setPostCategories(posts.data.data);
       } catch (err) {
-        console.error("Failed load gears:", err);
+        console.error("Failed to load categories:", err);
       }
-    })();
+    };
+
+    fetchAllCategories();
   }, []);
-  useEffect(() => {
-    (async () => {
-      try {
-        const rs = await axios_instance.get(URL.ACTIVITY_CATEGORIES);
-        if (rs.data.status && rs.data.data) setActivityCategories(rs.data.data);
-      } catch (err) {
-        console.error("Failed load activities:", err);
-      }
-    })();
-  }, []);
-  useEffect(() => {
-    (async () => {
-      try {
-        const rs = await axios_instance.get(URL.POST_CATEGORIES);
-        if (rs.data.status && Array.isArray(rs.data.data))
-          setPostCategories(rs.data.data);
-      } catch (err) {
-        console.error("Failed load posts:", err);
-      }
-    })();
-  }, []);
+
+  //
 
   return (
     <>
@@ -193,13 +154,14 @@ const Header = () => {
                   onSubmit={handleSearchSubmit}
                   className="search-overlay"
                   style={{
-                    position: "relative",
+                    position: "absolute",
                     top: 0,
                     left: 0,
                     background: "white",
-                    padding: "10px",
-                    width: "300px",
+                    padding: "5px",
+                    width: "500px",
                     boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+                    borderRadius: "10px",
                     zIndex: 2000,
                   }}>
                   <Form.Control
@@ -273,7 +235,8 @@ const Header = () => {
                     </Nav.Item>
                     <Nav.Item className="dropdown">
                       <Nav.Link
-                        onClick={() => (window.location.href = "/equipment")}
+                        as={Link}
+                        to="/equipment"
                         className="dropdown-toggle">
                         Gears
                       </Nav.Link>

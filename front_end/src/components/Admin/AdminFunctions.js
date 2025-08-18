@@ -9,7 +9,7 @@ function AdminFunction() {
   // Prevent access if user is not an admin
   if (!state.user || state.user.role !== "admin") {
     return (
-      <Container style={{ paddingTop: "200px" }}>
+      <Container style={{ paddingTop: "160px" }}>
         <Card>
           <h3 className="text-center text-danger p-3 mb-3 ">
             ⚠️ You do not have permission to access this page! ⚠️
@@ -48,7 +48,7 @@ function AdminFunction() {
   };
 
   return (
-    <Container style={{ paddingTop: "200px" }}>
+    <Container style={{ paddingTop: "160px" }}>
       <h1
         className="text-center mb-4"
         style={{

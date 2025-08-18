@@ -14,7 +14,7 @@ import UserContext from "../../context/context";
 import URL from "../../util/url";
 
 const PermissionWarning = () => (
-  <Container style={{ paddingTop: "200px" }}>
+  <Container style={{ paddingTop: "160px" }}>
     <h3
       className="text-center text-danger p-5"
       style={{
@@ -212,7 +212,7 @@ function AdminPost() {
       fluid
       className="container-fluid"
       style={{
-        paddingTop: "200px",
+        paddingTop: "160px",
         paddingBottom: "50px",
         paddingLeft: "50px",
         paddingRight: "50px",

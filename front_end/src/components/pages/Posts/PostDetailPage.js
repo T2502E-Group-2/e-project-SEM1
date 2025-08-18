@@ -114,7 +114,7 @@ const PostDetailPage = () => {
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "200px" }}>
+      style={{ paddingTop: "160px" }}>
       <Row className="justify-content-center ">
         {/* Main content */}
         <Col md={8}>

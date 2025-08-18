@@ -218,7 +218,7 @@ const EquipmentDetail = () => {
   }
 
   return (
-    <Container style={{ paddingTop: "200px", paddingBottom: "50px" }}>
+    <Container style={{ paddingTop: "160px", paddingBottom: "50px" }}>
       <Row className="bg-white p-3 rounded">
         <Row>
           <Col md={4}>

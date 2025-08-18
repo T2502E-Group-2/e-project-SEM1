@@ -91,7 +91,7 @@ const ActivityBooking = () => {
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "200px" }}>
+      style={{ paddingTop: "160px" }}>
       <Row>
         <Col md={12}>
           <Card className="p-4">

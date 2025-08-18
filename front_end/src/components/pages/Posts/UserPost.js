@@ -127,7 +127,7 @@ const UserPost = () => {
   };
 
   return (
-    <Container fluid style={{ paddingTop: "200px" }}>
+    <Container fluid style={{ paddingTop: "160px" }}>
       <h2
         className="mb-4 text-center"
         style={{ color: "#ffff", textShadow: "1px 1px 2px black" }}>

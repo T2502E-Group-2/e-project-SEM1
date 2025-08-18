@@ -87,7 +87,7 @@ const MyOrders = () => {
   const renderSearchForm = () => (
     <Container
       className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "200px" }}>
+      style={{ paddingTop: "160px" }}>
       <h2
         className="text-center mb-4"
         style={{
@@ -154,7 +154,7 @@ const MyOrders = () => {
   if (userState.user?.user_id) {
     if (orderState.loading) {
       return (
-        <Container className="text-center mt-5" style={{ paddingTop: "200px" }}>
+        <Container className="text-center mt-5" style={{ paddingTop: "160px" }}>
           <Spinner animation="border" variant="primary" />
           <p>Loading...</p>
         </Container>
@@ -163,7 +163,7 @@ const MyOrders = () => {
 
     if (orderState.error) {
       return (
-        <Container className="mt-5" style={{ paddingTop: "200px" }}>
+        <Container className="mt-5" style={{ paddingTop: "160px" }}>
           <Alert variant="danger">{orderState.error}</Alert>
         </Container>
       );
@@ -173,7 +173,7 @@ const MyOrders = () => {
       return (
         <Container
           className="container-fluid post-detail-page-wrapper"
-          style={{ paddingTop: "200px" }}>
+          style={{ paddingTop: "160px" }}>
           <Alert variant="info">You do not have any orders yet.</Alert>
         </Container>
       );
@@ -189,7 +189,7 @@ const MyOrders = () => {
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "200px" }}>
+      style={{ paddingTop: "160px" }}>
       <h2 className="text-center mb-4">
         {userState.user?.user_id ? "My Orders" : "Search Results"}
       </h2>

@@ -4,7 +4,7 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 const AboutPage = () => {
   return (
     <div
-      style={{ paddingTop: "200px", color: "white", fontFamily: "sans-serif" }}>
+      style={{ paddingTop: "160px", color: "white", fontFamily: "sans-serif" }}>
       {/* Hero Section */}
       <div className="about-hero-section">
         <Container className="text-center">

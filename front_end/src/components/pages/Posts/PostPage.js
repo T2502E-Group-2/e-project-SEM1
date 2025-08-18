@@ -206,7 +206,7 @@ const PostPage = () => {
   return (
     <div
       className="post-page-wrapper"
-      style={{ paddingTop: "200px", paddingBottom: "50px" }}>
+      style={{ paddingTop: "160px", paddingBottom: "50px" }}>
       <Container>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h1

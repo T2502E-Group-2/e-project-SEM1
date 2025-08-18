@@ -4,7 +4,7 @@ import UserContext from "../../context/context";
 import URL from "../../util/url";
 
 const PermissionWarning = () => (
-  <Container style={{ paddingTop: "200px" }}>
+  <Container style={{ paddingTop: "160px" }}>
     <h3
       className="text-center text-danger p-5"
       style={{
@@ -128,7 +128,7 @@ function AdminEquipment() {
   };
 
   return (
-    <Container className="container-fluid" style={{ paddingTop: "200px" }}>
+    <Container className="container-fluid" style={{ paddingTop: "160px" }}>
       <h1
         className="text-center mb-4"
         style={{ color: "#fff", textShadow: "1px 1px 2px #000" }}>

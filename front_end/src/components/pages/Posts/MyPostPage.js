@@ -86,7 +86,7 @@ const MyPostsPage = () => {
   if (error) return <Alert variant="danger">{error}</Alert>;
 
   return (
-    <Container style={{ paddingTop: "200px" }}>
+    <Container style={{ paddingTop: "160px" }}>
       <h1
         className="mb-4 text-center"
         style={{ color: "#ffff", textShadow: "1px 1px 2px black" }}>

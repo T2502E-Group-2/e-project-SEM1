@@ -226,7 +226,7 @@ const Cart = () => {
   };
 
   return (
-    <Container style={{ paddingTop: "200px", paddingBottom: "50px" }}>
+    <Container style={{ paddingTop: "160px", paddingBottom: "50px" }}>
       <h2
         className="mb-4"
         style={{ color: "white", textShadow: "1px 1px 2px #000" }}>

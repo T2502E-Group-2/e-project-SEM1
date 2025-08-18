@@ -94,7 +94,13 @@ const FilterSidebar = ({ onFilterChange, selectedFilters }) => {
 
   return (
     <div>
-      <h5 style={{ fontWeight: "bold", color: "white", fontSize: "1.2rem" }}>
+      <h5
+        style={{
+          fontWeight: "bold",
+          color: "white",
+          fontSize: "1.2rem",
+          marginBottom: "20px",
+        }}>
         CATEGORIES
       </h5>
       {categories.map((category) => (
