@@ -1148,3 +1148,249 @@ main {
     background-color: transparent;
   }
 }
+
+/*=====GALLERY PAGE STYLES=====*/
+/* Page General Styles */
+.gallery-page {
+  width: 90%;
+  max-width: 1200px;
+  font-family: sans-serif;
+  margin: 0 auto;
+  padding: 2rem;
+
+  padding: 0;
+}
+
+.gallery-status {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+}
+.gallery-status.error {
+  color: #d9534f;
+}
+
+/* Lưới ảnh thumbnails */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.grid-item {
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.grid-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* === LIGHTBOX STYLES === */
+
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Lightbox contents */
+.lightbox-content {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Close button (X) */
+.close-button {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 3rem;
+  cursor: pointer;
+  z-index: 1010;
+}
+
+/* Nav buttons */
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.4);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 1rem;
+  z-index: 1010;
+  transition: background-color 0.2s ease;
+}
+.nav-button:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.nav-button.prev {
+  left: 10px;
+}
+.nav-button.next {
+  right: 10px;
+}
+
+/* Main viewing photo */
+.main-image-container {
+  width: 100%;
+  height: calc(100% - 120px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-image {
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  display: block;
+  animation: zoomIn 0.4s ease;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* The bottom thumbnails*/
+.thumbnail-strip-container {
+  position: absolute;
+  bottom: 0;
+  width: 80%;
+  max-width: 1000px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.thumbnail-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 5px;
+  scrollbar-width: thin;
+  scrollbar-color: #555 #333;
+}
+.thumbnail-strip::-webkit-scrollbar {
+  height: 8px;
+}
+.thumbnail-strip::-webkit-scrollbar-track {
+  background: #333;
+}
+.thumbnail-strip::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 6px;
+}
+
+.strip-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.strip-thumbnail:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.strip-thumbnail.active {
+  opacity: 1;
+  border-color: #fff;
+}
+
+/* === ALBUM TAGS STYLES === */
+.album-browser {
+  padding-top: 120px;
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+.album-browser h2 {
+  text-align: center;
+  text-shadow: 2px 2px 8px #000;
+  margin-bottom: 1.5rem;
+}
+
+.album-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}
+
+.album-tag {
+  padding: 0.3rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 25px;
+  background-color: #6666668a;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-transform: capitalize;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.album-tag:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: #fff;
+}
+
+.album-tag.active {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff;
+  box-shadow: 0 0 10px var(--primary-color);
+}

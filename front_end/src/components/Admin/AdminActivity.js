@@ -106,7 +106,6 @@ function AdminActivity() {
   const handleApprove = async (activityId) => {
     if (!window.confirm("Are you sure you want to approve this activity?"))
       return;
-
     try {
       const res = await fetch(URL.ADMIN_ACTIVITIES, {
         method: "POST",
@@ -114,7 +113,7 @@ function AdminActivity() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           activity_id: activityId,
-          action: "approve", // Gửi action đặc biệt để backend nhận diện
+          action: "approve",
         }),
       });
 

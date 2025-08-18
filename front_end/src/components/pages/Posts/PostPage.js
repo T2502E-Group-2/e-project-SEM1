@@ -14,7 +14,6 @@ import axios_instance from "../../../util/axios_instance";
 import URL from "../../../util/url";
 import UserContext from "../../../context/context";
 
-// Tách hàm tiện ích ra ngoài component để tránh việc bị tạo lại mỗi lần render
 const formatDate = (dateString) => {
   if (!dateString) return "";
   const date = new Date(dateString);

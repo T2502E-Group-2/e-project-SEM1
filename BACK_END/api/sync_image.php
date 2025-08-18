@@ -17,7 +17,7 @@ $password = 'root';
 $database = 'e-project-1';
 $tableName = "galleries";
 $columnName = "url";
-$descriptionColumn = "description";
+$albumColumn = "album";
 
 $conn = new mysqli($host, $user, $password, $database);
 
@@ -44,22 +44,22 @@ $total_updated_count = 0;
 $total_skipped_count = 0;
 
 try {
-    $sql = "INSERT INTO `$tableName` (`$columnName`, `type`, `$descriptionColumn`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `$columnName` = VALUES(`$columnName`), `$descriptionColumn` = VALUES(`$descriptionColumn`)";
+    $sql = "INSERT INTO `$tableName` (`$columnName`, `type`, `$albumColumn`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `$columnName` = VALUES(`$columnName`), `$albumColumn` = VALUES(`$albumColumn`)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
         throw new Exception("SQL prepare failed: " . $conn->error);
     }
 
-    $folderDescription = '';
+    $folderalbum = '';
     $fileUrl = '';
     
-    $stmt->bind_param("sss", $fileUrl, $mediaType, $folderDescription);
+    $stmt->bind_param("sss", $fileUrl, $mediaType, $folderalbum);
 
     foreach ($folders as $folder) {
         echo "Processing folder: <b>" . htmlspecialchars($folder) . "</b><br>";        
        
-        $folderDescription = basename($folder);
+        $folderalbum = basename($folder);
 
         $response = $guzzleClient->request('GET', $apiBaseUrl, [
             'query' => ['path' => $folder],

@@ -29,12 +29,11 @@ if (empty(trim($query))) {
     exit();
 }
 
-// Chuẩn bị tham số để tránh SQL Injection
 $searchTerm = "%" . $query . "%";
 $results = [];
 
 try {
-    // 1. Tìm kiếm trong bảng 'activities'
+    // 1. Search in the 'Activities' table
     $stmt = $conn->prepare("
     SELECT 
         a.activity_id as id, 
@@ -57,7 +56,7 @@ try {
         }
         $stmt->close();
 
-    // 2. Tìm kiếm trong bảng 'equipments'
+    // 2. Search in the 'Equipments' table
     $stmt = $conn->prepare("SELECT equipment_id as id, name as title, description, image_url, 'equipment' as type FROM equipments WHERE name LIKE ? OR description LIKE ? OR brand LIKE ?");
     $stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
     $stmt->execute();
@@ -67,7 +66,7 @@ try {
     }
     $stmt->close();
 
-    // 3. Tìm kiếm trong bảng 'posts'
+    // 3. Search in the 'Posts' table
     $stmt = $conn->prepare("SELECT post_id as id, title, content as description, thumbnail_url as image_url, 'post' as type FROM posts WHERE title LIKE ? OR content LIKE ?");
     $stmt->bind_param("ss", $searchTerm, $searchTerm);
     $stmt->execute();
@@ -76,8 +75,29 @@ try {
         $results[] = $row;
     }
     $stmt->close();
+
+    //4. Search in the 'galleries' table
+    $stmt = $conn->prepare("
+        SELECT 
+            media_id as id,
+            COALESCE(title, album) as title,
+            album as description,
+            url as image_url,
+            'gallery' as type
+        FROM 
+            galleries
+        WHERE 
+            (title LIKE ? OR album LIKE ?) AND type = 'image'
+    ");
+    $stmt->bind_param("ss", $searchTerm, $searchTerm);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $results[] = $row;
+    }
+    $stmt->close();
     
-    // // 4. Tìm kiếm trong bảng 'locations'
+    // // 5. Search in the 'locations' table
     // $stmt = $conn->prepare("SELECT location_id as id, name as title, description, 'location' as type FROM locations WHERE name LIKE ? OR description LIKE ?");
     // $stmt->bind_param("ss", $searchTerm, $searchTerm);
     // $stmt->execute();
@@ -87,7 +107,7 @@ try {
     // }
     // $stmt->close();
 
-    // // 5. Tìm kiếm trong bảng 'categories'
+    // // 6. Tìm kiếm trong bảng 'categories'
     // $stmt = $conn->prepare("SELECT category_id as id, category_name as title, type as description, 'category' as type FROM categories WHERE category_name LIKE ?");
     // $stmt->bind_param("s", $searchTerm);
     // $stmt->execute();
@@ -97,7 +117,6 @@ try {
     // }
     // $stmt->close();
 
-    // Trả về kết quả dưới dạng JSON
     echo json_encode($results);
 
 } catch (Exception $e) {

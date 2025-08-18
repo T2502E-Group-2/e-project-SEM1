@@ -86,7 +86,7 @@ const PaginationComponent = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <Pagination className="justify-content-center my-4">
+    <Pagination className="justify-content-center mt-4">
       <Pagination.First
         onClick={() => handlePageClick(1)}
         disabled={currentPage === 1}

@@ -228,6 +228,11 @@ const Header = () => {
                             {c.category_name}
                           </Link>
                         ))}
+                        <Link
+                          to="/posts/photo-gallery"
+                          className="dropdown-item">
+                          Photos Gallery
+                        </Link>
                         <Link to="/posts/my-posts" className="dropdown-item">
                           My Posts
                         </Link>

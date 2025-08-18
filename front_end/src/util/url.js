@@ -38,6 +38,9 @@ const URL = {
   UPLOAD_IMAGE: BASE + "/upload_image.php",
   POST_ACTIONS: BASE + "/Posts/user_post_actions.php",
   POST_CATEGORIES: BASE + "/Posts/post_categories.php",
+  GALLERIES: BASE + "/Galleries/galleries.php",
+  GET_ALBUMS: BASE + "/Galleries/get_albums.php",
+
   //PAYMENT
   PAYMENT: BASE + "/Payments/payment.php",
   //ORDERS

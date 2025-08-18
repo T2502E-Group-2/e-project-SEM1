@@ -38,6 +38,7 @@ import PostPage from "./components/pages/Posts/PostPage";
 import PostDetailPage from "./components/pages/Posts/PostDetailPage";
 import MyPostsPage from "./components/pages/Posts/MyPostPage";
 import UserPost from "./components/pages/Posts/UserPost";
+import GalleryPage from "./components/pages/Posts/GalleryPage";
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -114,6 +115,7 @@ function App() {
                 <Route path="/posts/my-posts" element={<MyPostsPage />} />
                 <Route path="/posts/create" element={<UserPost />} />
                 <Route path="/posts/edit/:postId" element={<UserPost />} />
+                <Route path="/posts/photo-gallery" element={<GalleryPage />} />
               </Routes>
             </UserOrderProvider>
           </main>

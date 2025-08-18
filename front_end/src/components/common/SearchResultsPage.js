@@ -18,7 +18,7 @@ const SearchResultsPage = () => {
   const navigate = useNavigate();
 
   const [results, setResults] = useState([]);
-  const [groupedResults, setGroupedResults] = useState({}); // State mới để chứa kết quả đã nhóm
+  const [groupedResults, setGroupedResults] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -45,7 +45,7 @@ const SearchResultsPage = () => {
     fetchSearchResults();
   }, [query]);
 
-  // useEffect để nhóm kết quả sau khi lấy dữ liệu xong
+  // useEffect to group results after finishing the data
   useEffect(() => {
     const grouped = results.reduce((acc, item) => {
       const key = item.type;
@@ -59,7 +59,6 @@ const SearchResultsPage = () => {
   }, [results]);
 
   const getResultUrl = (item) => {
-    // ... (hàm này giữ nguyên như cũ)
     switch (item.type) {
       case "activity":
         return `/activities/${item.id}`;
@@ -80,7 +79,7 @@ const SearchResultsPage = () => {
       : plainText;
   };
 
-  // Hàm render nội dung chính
+  // Main content render function
   const renderContent = () => {
     if (loading) {
       return (
@@ -117,19 +116,18 @@ const SearchResultsPage = () => {
             {items.map((item, index) => (
               <div
                 key={`${item.type}-${item.id}`}
-                className="search-result-row"
                 onClick={() => navigate(getResultUrl(item))}>
                 <Row className="g-3 align-items-center">
                   <Col xs={12} md={5} lg={4}>
                     <Image
                       src={item.image_url || "/no-image-icon.png"}
                       thumbnail
-                      className="w-100"
+                      className="w-70"
                     />
                   </Col>
                   <Col xs={12} md={7} lg={8}>
-                    <h5 className="mb-1 text-light">{item.title}</h5>
-                    <p className="text-muted mb-2">
+                    <h5 className="mb-1 text-dark">{item.title}</h5>
+                    <p className="text-capitalize text-muted mb-2">
                       {createSnippet(item.description)}
                     </p>
                     <Link
