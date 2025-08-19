@@ -114,14 +114,14 @@ function AdminPost() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           post_id: postId,
-          action: "approve", // Gửi action đặc biệt để backend nhận diện
+          action: "approve",
         }),
       });
 
       const result = await res.json();
       if (result.success) {
-        alert("Post approved successfully!"); // Hoặc dùng toast/notification
-        fetchPosts(); // Tải lại danh sách để cập nhật giao diện
+        alert("Post approved successfully!");
+        fetchPosts();
       } else {
         alert("Approve failed: " + (result.error || "Unknown error"));
       }

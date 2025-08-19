@@ -96,11 +96,10 @@ if ($count_stmt) {
     exit();
 }
 
-// 2. Lấy dữ liệu đã được phân trang và lọc
+// 2. Get paginated and filtered data
 $data_sql = "SELECT *, equipment_id as id FROM equipments" . $where_sql . " ORDER BY equipment_id ASC LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($data_sql);
 
-// Thêm limit và offset vào danh sách params để bind
 $all_params = $params;
 $all_params[] = $limit;
 $all_params[] = $offset;

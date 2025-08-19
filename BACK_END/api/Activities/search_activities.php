@@ -18,7 +18,6 @@ if (empty($searchQuery)) {
     exit;
 }
 
-// Sử dụng prepared statements để chống SQL Injection
 $sql = "SELECT * FROM activities WHERE title LIKE ? ORDER BY activity_id DESC LIMIT 8";
 $stmt = $conn->prepare($sql);
 

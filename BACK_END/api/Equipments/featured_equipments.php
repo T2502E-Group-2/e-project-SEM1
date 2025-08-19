@@ -14,7 +14,8 @@ ini_set('display_errors', 1);
 
 require_once("../../db/connect.php");
 
-$sql = "select *, equipment_id as id from equipments where featured = 1"; // Lấy các thiết bị nổi bật
+//Get featured equipments
+$sql = "select *, equipment_id as id from equipments where featured = 1";
 $rs = query($sql);
 
 if ($rs) {
@@ -28,7 +29,7 @@ if ($rs) {
         "data"=> $list
     ];
 } else {
-    http_response_code(500); // Internal Server Error
+    http_response_code(500);
     $data = [
         "status" => false,
         "message" => "Failed to execute query. Please check the database connection and the 'featured' column in the 'equipments' table."

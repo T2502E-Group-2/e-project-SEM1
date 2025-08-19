@@ -18,10 +18,10 @@ const FilterSidebar = ({ onFilterChange, selectedFilters }) => {
         if (response.data.status) {
           setCategories(response.data.data);
         } else {
-          setError("Không thể tải danh mục.");
+          setError("Can not load the category.");
         }
       } catch (err) {
-        setError("Không thể tải danh mục. Vui lòng thử lại sau.");
+        setError("Can not load the category. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -30,7 +30,6 @@ const FilterSidebar = ({ onFilterChange, selectedFilters }) => {
   }, []);
 
   // Handling function when an item is selected
-  // Hàm xử lý khi một item được chọn
   const handleItemCheck = (key, value, isChecked) => {
     let newFilters = { ...selectedFilters };
 

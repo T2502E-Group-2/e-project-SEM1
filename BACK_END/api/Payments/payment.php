@@ -10,7 +10,6 @@ header("Access-Control-Allow-Methods: *");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header("Access-Control-Allow-Credentials: true");
 
-// Handle OPTIONS preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -38,7 +37,7 @@ if (
 $conn->begin_transaction();
 
 try {
-    // Lấy dữ liệu từ request
+    // Get data from request
     $user_id = isset($data['user_id']) ? (int)$data['user_id'] : (isset($data['userId']) ? (int)$data['userId'] : null);
     $paypal_order_id = (string)$data['paypalOrderId'];
     $total_amount = (float)$data['totalAmount'];
@@ -59,12 +58,12 @@ $stmt_order->execute();
 $order_id = $conn->insert_id;
 $stmt_order->close();
 
-// 2) Chuẩn bị insert items - ĐÚNG cột và ĐÚNG kiểu
+// 2) Prepare insert items - right columns and style
 $sql_item = "INSERT INTO order_items (order_id, activity_id, equipment_id, quantity, price_at_time_of_purchase)
              VALUES (?, ?, ?, ?, ?)";
 $stmt_item = $conn->prepare($sql_item);
 
-// 3) Lặp items: kiểm XOR, tra giá server-side, tính tổng
+// 3) ITEMS: Xor test, server-side price, total calculation
 $computed_full_total = 0.0;
 
 foreach ($data['cartItems'] as $item) {
@@ -78,9 +77,9 @@ foreach ($data['cartItems'] as $item) {
     }
     if ($quantity <= 0) throw new Exception("Invalid quantity.");
 
-    // Tra giá từ DB (không dùng giá client)
+    // Look up the price from DB (not use client price)
     if ($hasEquipment) {
-        // Lấy giá và kiểm tra tồn kho
+        // Get prices and check stock
         $q = $conn->prepare("SELECT price, stock FROM equipments WHERE equipment_id=?");
         $q->bind_param("i", $equipment_id);
         $q->execute();
@@ -90,18 +89,18 @@ foreach ($data['cartItems'] as $item) {
         }
         $q->close();
 
-        // Kiểm tra tồn kho
+        // Stock check
         if ($current_stock < $quantity) {
             throw new Exception("Not enough stock for equipment ID {$equipment_id}. Requested: {$quantity}, Available: {$current_stock}");
         }
 
-        // Cập nhật tồn kho
+        // Stock update
         $update_stock_stmt = $conn->prepare("UPDATE equipments SET stock = stock - ? WHERE equipment_id = ?");
         $update_stock_stmt->bind_param("ii", $quantity, $equipment_id);
         $update_stock_stmt->execute();
         $update_stock_stmt->close();
     } else {
-        // Lấy giá và kiểm tra số lượng người tham gia còn lại
+        // Get price and check remaining max slots for participants
         $q = $conn->prepare("SELECT price, max_participants FROM activities WHERE activity_id=?");
         $q->bind_param("i", $activity_id);
         $q->execute();
@@ -111,12 +110,11 @@ foreach ($data['cartItems'] as $item) {
         }
         $q->close();
 
-        // Kiểm tra số lượng chỗ còn lại
+        // Slots update
         if ($current_slots < $quantity) {
             throw new Exception("Not enough slots for activity ID {$activity_id}. Requested: {$quantity}, Available: {$current_slots}");
         }
 
-        // Cập nhật số lượng chỗ
         $update_slots_stmt = $conn->prepare("UPDATE activities SET max_participants = max_participants - ? WHERE activity_id = ?");
         $update_slots_stmt->bind_param("ii", $quantity, $activity_id);
         $update_slots_stmt->execute();
@@ -130,7 +128,7 @@ foreach ($data['cartItems'] as $item) {
 }
 $stmt_item->close();
 
-// 4) So khớp tổng và cập nhật đơn -> completed
+// 4) Match sum and update order -> completed
 
 $expected_payment = $computed_full_total;
 if ($type === 'activity') {

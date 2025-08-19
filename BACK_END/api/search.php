@@ -95,27 +95,7 @@ try {
     while ($row = $result->fetch_assoc()) {
         $results[] = $row;
     }
-    $stmt->close();
-    
-    // // 5. Search in the 'locations' table
-    // $stmt = $conn->prepare("SELECT location_id as id, name as title, description, 'location' as type FROM locations WHERE name LIKE ? OR description LIKE ?");
-    // $stmt->bind_param("ss", $searchTerm, $searchTerm);
-    // $stmt->execute();
-    // $result = $stmt->get_result();
-    // while ($row = $result->fetch_assoc()) {
-    //     $results[] = $row;
-    // }
-    // $stmt->close();
-
-    // // 6. Tìm kiếm trong bảng 'categories'
-    // $stmt = $conn->prepare("SELECT category_id as id, category_name as title, type as description, 'category' as type FROM categories WHERE category_name LIKE ?");
-    // $stmt->bind_param("s", $searchTerm);
-    // $stmt->execute();
-    // $result = $stmt->get_result();
-    // while ($row = $result->fetch_assoc()) {
-    //     $results[] = $row;
-    // }
-    // $stmt->close();
+    $stmt->close();    
 
     echo json_encode($results);
 

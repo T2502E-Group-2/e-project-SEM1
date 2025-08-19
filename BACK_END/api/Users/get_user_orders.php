@@ -45,7 +45,6 @@ try {
     while ($order_row = $result->fetch_assoc()) {
       $order_row['items'] = [];
       
-      // ✅ SỬA LẠI CÂU TRUY VẤN: Sử dụng LEFT JOIN để lấy tên từ các bảng liên quan
       $sql_items = "
         SELECT
           oi.*,
@@ -63,8 +62,6 @@ try {
       $result_items = $stmt_items->get_result();
       
       while ($item_row = $result_items->fetch_assoc()) {
-        // ✅ Thêm logic để gán tên sản phẩm
-        // Kiểm tra xem trường nào không NULL để lấy tên tương ứng
         if ($item_row['activity_id']) {
             $item_row['product_name'] = $item_row['activity_name'];
         } else if ($item_row['equipment_id']) {
@@ -73,7 +70,6 @@ try {
             $item_row['product_name'] = 'Unknown Product';
         }
 
-        // Xóa các cột tạm thời để giữ cho response gọn gàng
         unset($item_row['activity_name']);
         unset($item_row['equipment_name']);
         

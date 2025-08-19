@@ -351,7 +351,7 @@ function AdminUser() {
                   name="is_active"
                   value={formData.is_active || "0"}
                   onChange={handleModalChange}>
-                  <option value="1">Actived</option>
+                  <option value="1">Active</option>
                   <option value="0">Inactive</option>
                 </Form.Select>
               </Form.Group>

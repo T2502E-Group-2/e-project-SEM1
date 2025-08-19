@@ -119,8 +119,8 @@ function AdminActivity() {
 
       const result = await res.json();
       if (result.success) {
-        alert("Activity approved successfully!"); // Hoặc dùng toast/notification
-        fetchActivities(); // Tải lại danh sách để cập nhật giao diện
+        alert("Activity approved successfully!");
+        fetchActivities();
       } else {
         alert("Approve failed: " + (result.error || "Unknown error"));
       }

@@ -24,8 +24,7 @@ if ($conn->connect_error) {
 }
 
 try {
-    // Câu lệnh SQL để lấy các danh mục có type = 'Post'
-    // và chỉ lấy những danh mục có bài viết (post_count > 0)
+    // Get categories which have posts (post_count > 0)
     $sql = "
         SELECT 
             c.category_id, 

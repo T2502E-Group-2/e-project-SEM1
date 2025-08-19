@@ -31,7 +31,6 @@ const PostDetailPage = () => {
         if (response.data?.status) {
           setPost(response.data.data);
 
-          // redirect nếu slug sai
           if (response.data.data.slug !== slug) {
             navigate(`/posts/${id}/${response.data.data.slug}`, {
               replace: true,
@@ -49,7 +48,6 @@ const PostDetailPage = () => {
     fetchPost();
   }, [id, slug, navigate]);
 
-  // Fetch related/featured posts (mock data hoặc API)
   useEffect(() => {
     const fetchRelated = async () => {
       try {
@@ -85,12 +83,11 @@ const PostDetailPage = () => {
 
   if (!post) return null;
 
-  // ======================= DEBUGGING BLOCK =======================
-  console.log("--- KIỂM TRA QUYỀN SỞ HỮU ---");
-  console.log("Đối tượng user đăng nhập (state.user):", state.user);
-  console.log("Đối tượng bài viết (post):", post);
+  // === DEBUGGING BLOCK ===
+  console.log("--- Check ownership ---");
+  console.log("User login (state.user):", state.user);
+  console.log("Post (post):", post);
 
-  // Chỉ log chi tiết ID nếu user và post tồn tại
   if (state.user && post) {
     console.log(
       "ID người dùng:",

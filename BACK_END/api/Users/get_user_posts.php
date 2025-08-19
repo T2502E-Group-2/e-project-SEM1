@@ -1,9 +1,7 @@
 <?php
-// Môi trường development: Bật lỗi. Môi trường production: Tắt đi
-ini_set('display_errors', 1); // Đổi thành 0 khi deploy
-error_reporting(E_ALL);     // Đổi thành 0 khi deploy
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-// Cài đặt header
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
 }
@@ -12,7 +10,6 @@ header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 header("Access-Control-Allow-Credentials: true");
 
-// Xử lý dứt điểm OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -25,7 +22,6 @@ require_once("../../db/connect.php");
 $conn = connect();
 $current_user_id = intval($_SESSION['user_id']);
 
-// Câu lệnh SQL để lấy tất cả bài viết của một author_id cụ thể
 $sql = "SELECT 
             p.post_id, 
             p.author_id,
@@ -41,7 +37,7 @@ $sql = "SELECT
         LEFT JOIN 
             users u ON p.author_id = u.user_id
         WHERE 
-            p.author_id = ? -- Chỉ lấy bài của người dùng hiện tại
+            p.author_id = ?
         ORDER BY 
             p.created_at DESC";
 

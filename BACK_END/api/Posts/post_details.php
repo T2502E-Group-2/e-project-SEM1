@@ -65,7 +65,7 @@ if ($result->num_rows === 0) {
 
 $post = $result->fetch_assoc();
 
-// Truy vấn bài viết trước
+// Previous post query
 $sqlPrev = "SELECT post_id, slug, title 
             FROM posts 
             WHERE post_id < ? AND status = 'posted'
@@ -77,7 +77,7 @@ $stmtPrev->execute();
 $prevResult = $stmtPrev->get_result();
 $prevPost = $prevResult->fetch_assoc();
 
-// Truy vấn bài viết sau
+// Next post query
 $sqlNext = "SELECT post_id, slug, title 
             FROM posts 
             WHERE post_id > ? AND status = 'posted'
@@ -89,7 +89,7 @@ $stmtNext->execute();
 $nextResult = $stmtNext->get_result();
 $nextPost = $nextResult->fetch_assoc();
 
-// Gắn vào dữ liệu trả về
+// Hook to response data
 $post['prev_post'] = $prevPost ?: null;
 $post['next_post'] = $nextPost ?: null;
 

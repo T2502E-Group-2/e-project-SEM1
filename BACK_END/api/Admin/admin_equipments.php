@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once '../../db/connect.php';
 
-// Limit user access to admins only
+// Limit user access for admins only
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     http_response_code(403);
     echo json_encode(["error" => "Access Denied"]);

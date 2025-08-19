@@ -56,7 +56,6 @@ const PostPage = () => {
             setPageTitle("All Posts");
           }
         } else {
-          // Xử lý trường hợp API trả về status: true nhưng data không phải mảng
           setPosts([]);
           console.warn("API response data is not an array:", response.data);
         }
@@ -80,7 +79,6 @@ const PostPage = () => {
     }
 
     try {
-      // Sử dụng URL.POST_ACTIONS thay vì URL.USER_POST_ACTIONS để nhất quán
       const response = await axios_instance.delete(
         `${URL.POST_ACTIONS}?id=${postId}`
       );

@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Check if the user has logged in
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(401); // Unauthorized
+    http_response_code(401);
     echo json_encode(["status" => false, "message" => "You must be logged in to create a post."]);
     exit;
 }

@@ -27,23 +27,23 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 
 $conn = connect();
 
-// Lấy các tham số tìm kiếm và sắp xếp từ query string
+// Take search parameters and arrange from Query String
 $search = $_GET['search'] ?? '';
 $sortBy = $_GET['sort_by'] ?? 'created_at';
 $sortOrder = $_GET['sort_order'] ?? 'DESC';
 $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
 $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
-// Whitelist các cột được phép sắp xếp để tránh SQL Injection
+// Whitelist === The columns are allowed to arrange to avoid SQL Injection
 $allowedSortColumns = ['id', 'created_at','status', 'full_name'];
 if (!in_array($sortBy, $allowedSortColumns)) {
-    $sortBy = 'created_at'; // Mặc định
+    $sortBy = 'created_at'; 
 }
 
-// Whitelist thứ tự sắp xếp
+// Whitelist === Orderly
 $sortOrder = strtoupper($sortOrder);
 if ($sortOrder !== 'ASC' && $sortOrder !== 'DESC') {
-    $sortOrder = 'DESC'; // Mặc định
+    $sortOrder = 'DESC'; 
 }
 
 $sql = "

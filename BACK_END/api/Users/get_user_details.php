@@ -1,5 +1,4 @@
 <?php
-// get_user_details.php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -17,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// ✅ Kiểm tra đăng nhập
+// Login check
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
     echo json_encode(["success" => false, "message" => "Chưa đăng nhập"]);

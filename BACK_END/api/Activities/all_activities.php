@@ -15,7 +15,7 @@ $category_id = isset($_GET['category_id']) ? intval($_GET['category_id']) : null
 
 try {
     if ($category_id) {
-        // Lọc theo category_id
+        // Filter by category_ID
         $sql = "SELECT c.*, g.url AS thumbnail_url
                 FROM activities c
                 LEFT JOIN galleries g ON c.thumbnail_id = g.media_id
@@ -24,7 +24,7 @@ try {
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $category_id);
     } else {
-        // Lấy tất cả
+        // Get All activities
         $sql = "SELECT c.*, g.url AS thumbnail_url
                 FROM activities c
                 LEFT JOIN galleries g ON c.thumbnail_id = g.media_id

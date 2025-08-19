@@ -118,13 +118,11 @@ const EquipmentPage = () => {
       console.log("filters:", filters);
       console.log("Fetching URL:", URL.ALL_EQUIPMENTS);
       try {
-        // Xây dựng params cho URL, bao gồm cả phân trang và bộ lọc
         const params = new URLSearchParams({
           page: currentPage,
           limit: itemsPerPage,
         });
 
-        // Thêm các bộ lọc đang active vào params
         Object.entries(filters).forEach(([key, value]) => {
           if (value !== null && value !== "") {
             if (Array.isArray(value)) {
@@ -209,11 +207,10 @@ const EquipmentPage = () => {
     }
   };
 
-  // Hàm xử lý khi bộ lọc thay đổi, được truyền xuống FilterSidebar
   const handleFilterChange = (newFilters, rawState) => {
     setCurrentPage(1);
-    setFilters(newFilters); // dùng để fetch dữ liệu
-    setSelectedFilters(rawState); // lưu trạng thái check để truyền xuống
+    setFilters(newFilters);
+    setSelectedFilters(rawState);
   };
 
   return (

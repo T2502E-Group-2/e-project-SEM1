@@ -63,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Channel: Check if this is an Approve or Update Action
     if (isset($data['action']) && $data['action'] === 'approve') {
-        // === Logic quick approve ===
         $stmt = $conn->prepare("
             UPDATE posts
             SET status = 'published', published_at = NOW() 
@@ -79,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
     } else {
-        // === UPDATE LOGIC ===
+        // === HANDLE UPDATE ===
         $stmt = $conn->prepare("
             UPDATE posts
             SET title = ?, slug = ?, content = ?, status = ?, thumbnail_url = ?, 

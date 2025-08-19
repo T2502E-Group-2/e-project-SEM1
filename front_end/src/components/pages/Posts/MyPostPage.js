@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-// Import các component cần thiết giống như PostPage.js
 import {
   Container,
   Row,
@@ -56,7 +55,7 @@ const MyPostsPage = () => {
   };
 
   useEffect(() => {
-    // Nếu chưa đăng nhập, chuyển về trang chủ hoặc trang đăng nhập
+    //If not logged in, transfer to the homepage or login page
     if (!state.user) {
       navigate("/login");
       return;
@@ -65,7 +64,6 @@ const MyPostsPage = () => {
     const fetchMyPosts = async () => {
       try {
         setLoading(true);
-        // Gọi đến API mới để lấy bài viết của tôi
         const response = await axios_instance.get(URL.GET_USER_POSTS);
         if (response.data?.status) {
           setMyPosts(response.data.data);
@@ -94,7 +92,6 @@ const MyPostsPage = () => {
       </h1>
       {myPosts.length > 0 ? (
         <Row>
-          {/* Lặp qua và hiển thị các bài viết của bạn, có thể tái sử dụng component Card từ PostPage */}
           {myPosts.map((post) => {
             const isOwner = state.user && post.author_id === state.user.user_id;
             return (

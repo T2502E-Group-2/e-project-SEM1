@@ -69,7 +69,7 @@ h6 {
   color: black;
 }
 
-/* When header scrollled, change black text */
+/* When header scrolled, change black text */
 .custom-navbar.scrolled .navbar-collapse {
   background: white;
 }
@@ -711,7 +711,7 @@ main {
 
 /* Transparent header state styles */
 .header-and-menu-container:not(.scrolled) .custom-navbar .dropdown-menu {
-  background-color: rgba(34, 34, 34, 0.9); /* Dark transparent background */
+  background-color: rgba(34, 34, 34, 0.9);
 }
 .header-and-menu-container:not(.scrolled) .custom-navbar .dropdown-item {
   color: var(--text-color-light) !important;
@@ -719,7 +719,7 @@ main {
 .header-and-menu-container:not(.scrolled) .custom-navbar .dropdown-item:hover {
   background-color: var(--primary-color);
 }
-/*Equipment Page*/
+/*EQUIPMENT PAGE STYLES*/
 /*Sidebar-filter*/
 .sidebar-filter {
   padding-top: 125px;
@@ -829,7 +829,7 @@ main {
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12) !important;
 }
 
-/*POSTPAGE CSS*/
+/*POSTPAGE STYLES*/
 .post-page-wrapper {
   padding-top: 200px;
   padding-bottom: 50px;
@@ -1170,7 +1170,7 @@ main {
   color: #d9534f;
 }
 
-/* Lưới ảnh thumbnails */
+/* Thumbnails photos grid*/
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

@@ -16,16 +16,16 @@ import PostEditor from "../../common/PostEditor";
 import UserContext from "../../../context/context";
 
 const UserPost = () => {
-  const { postId } = useParams(); //Get post_id from the URL, it will be undefined if it is a new creation page
-  const isEditMode = Boolean(postId); // Determine whether the edit is not
+  const { postId } = useParams();
+  const isEditMode = Boolean(postId);
 
-  const { state } = useContext(UserContext); // Get information user login
+  const { state } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [content, setContent] = useState("");
-  const [category, setCategory] = useState("12"); // default = Blog
+  const [category, setCategory] = useState("12");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -35,14 +35,12 @@ const UserPost = () => {
 
   useEffect(() => {
     if (isEditMode) {
-      // Nếu là mode edit, fetch dữ liệu bài viết
       const fetchPostData = async () => {
         try {
           const res = await axios_instance.get(
             `${URL.POST_ACTIONS}?id=${postId}`
           );
           const postData = res.data;
-          // Điền dữ liệu vào form
           setTitle(postData.title);
           setContent(postData.content);
           setThumbnail(postData.thumbnail_url);

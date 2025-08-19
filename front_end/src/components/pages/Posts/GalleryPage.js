@@ -24,7 +24,7 @@ const GalleryPage = () => {
   useEffect(() => {
     const fetchAlbums = async () => {
       try {
-        const response = await axios_instance.get(URL.GET_ALBUMS); // Gọi API mới
+        const response = await axios_instance.get(URL.GET_ALBUMS);
         if (response.data && response.data.status) {
           setAlbums(response.data.data);
         }

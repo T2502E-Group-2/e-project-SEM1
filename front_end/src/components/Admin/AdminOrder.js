@@ -101,7 +101,7 @@ function AdminOrder() {
   }
 
   if (loading) return <div>Loading orders ...</div>;
-  if (error) return <div>Lỗi: {error}</div>;
+  if (error) return <div>Error: {error}</div>;
   if (!orders.length)
     return (
       <h3

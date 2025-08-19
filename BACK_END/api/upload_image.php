@@ -65,8 +65,7 @@ try {
     }
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mimeType = $finfo->file($tmpFilePath);
-    // var_dump($mimeType); // debug: xem MIME type
-
+    
     // --- 3. Prepare for ImageKit Upload ---
     $privateKey = "private_LyqnjbFtFFH5vP9+hpuKWvGmSsE=";
     $endpoint = "https://upload.imagekit.io/api/v1/files/upload";

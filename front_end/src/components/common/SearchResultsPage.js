@@ -22,7 +22,6 @@ const SearchResultsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // useEffect để lấy dữ liệu
   useEffect(() => {
     if (!query) {
       setLoading(false);
@@ -95,7 +94,7 @@ const SearchResultsPage = () => {
       return <Alert variant="info">No results found for "{query}".</Alert>;
     }
 
-    // Render theo từng nhóm
+    // Render by group
     return (
       <CardGroup
         className="flex-column"
@@ -133,13 +132,11 @@ const SearchResultsPage = () => {
                     <Link
                       to={getResultUrl(item)}
                       className="btn btn-view-details"
-                      onClick={(e) => e.stopPropagation()} // Ngăn sự kiện click của div cha
-                    >
+                      onClick={(e) => e.stopPropagation()}>
                       View Details
                     </Link>
                   </Col>
                 </Row>
-                {/* Dòng kẻ ngăn cách */}
                 {index < items.length - 1 && (
                   <hr
                     style={{ borderColor: "#666", opacity: 0.5 }}

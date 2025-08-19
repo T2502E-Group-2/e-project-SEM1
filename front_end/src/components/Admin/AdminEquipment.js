@@ -164,7 +164,6 @@ function AdminEquipment() {
                 <SortableHeader column="name" label="Name" />
                 <th style={thStyle}>Description</th>
                 <SortableHeader column="price" label="Price" />
-                {/* API hiện không whitelist stock_quantity để sort → chỉ hiển thị */}
                 <th style={thStyle}>Stock</th>
                 <SortableHeader column="created_at" label="Created At" />
               </tr>

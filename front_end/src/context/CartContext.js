@@ -4,12 +4,12 @@ const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
-    // Lấy dữ liệu giỏ hàng từ localStorage khi khởi tạo
+    //Get shopping cart data from localstorage when creating
     const localData = localStorage.getItem("cart");
     return localData ? JSON.parse(localData) : [];
   });
 
-  // useEffect để lưu giỏ hàng vào localStorage mỗi khi nó thay đổi
+  // useEffect to store shopping carts into localstorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);

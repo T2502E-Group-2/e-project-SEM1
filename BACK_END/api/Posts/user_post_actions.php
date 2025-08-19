@@ -18,7 +18,7 @@ ini_set('display_errors', 1);
 
 require_once '../../db/connect.php';
 
-// (1) BẢO MẬT: KIỂM TRA NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP CHƯA
+// (1) SECURITY: CHECK USER IS LOGIN STATUS
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
     echo json_encode(["error" => "Unauthorized. Please log in."]);
@@ -28,10 +28,8 @@ if (!isset($_SESSION['user_id'])) {
 $conn = connect();
 $current_user_id = intval($_SESSION['user_id']);
 
-// (2) PHÂN LUỒNG DỰA TRÊN PHƯƠNG THỨC HTTP
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-        // Dùng để lấy dữ liệu của một bài viết cụ thể để chỉnh sửa
         $postId = intval($_GET['id'] ?? 0);
         if ($postId <= 0) {
             http_response_code(400);
@@ -54,7 +52,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case 'POST':
-        // Xử lý cập nhật (Update) bài viết
         $data = json_decode(file_get_contents("php://input"), true);
         $postId = intval($data['post_id'] ?? 0);
 
@@ -64,7 +61,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             exit();
         }
 
-        // (3) BẢO MẬT CỐT LÕI: Luôn kiểm tra author_id trong mệnh đề WHERE!!!
+        // (3) CORE SECURITY: Always check author_id in WHERE clauses!!!
         $stmt = $conn->prepare("
             UPDATE posts 
             SET title = ?, content = ?, thumbnail_url = ?, post_category_id = ?, updated_at = NOW()
@@ -77,7 +74,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $data['thumbnail_url'],
             $data['post_category_id'],
             $postId,
-            $current_user_id // Chỉ cho phép update nếu author_id khớp
+            $current_user_id
         );
 
         if ($stmt->execute()) {
@@ -93,9 +90,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         $stmt->close();
         break;
-
+//=== HANDLE DELETE ===
     case 'DELETE':
-        // Xử lý xóa bài viết
         $postId = intval($_GET['id'] ?? 0);
         if ($postId <= 0) {
             http_response_code(400);
@@ -103,7 +99,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             exit();
         }
 
-        // (3) Core security: Check author_id when deleted
+        // (3) CORE SECURITY: Always check author_id before deleting
         $stmt = $conn->prepare("DELETE FROM posts WHERE post_id = ? AND author_id = ?");
         $stmt->bind_param("ii", $postId, $current_user_id);
 

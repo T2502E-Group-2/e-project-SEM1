@@ -1,5 +1,4 @@
 <?php
-// update_profile.php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 session_start();
@@ -21,7 +20,7 @@ require_once '../../db/connect.php';
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401); // Unauthorized
-    echo json_encode(["success" => false, "message" => "Vui lòng đăng nhập để cập nhật thông tin."]);
+    echo json_encode(["success" => false, "message" => "Please log in to update information."]);
     exit;
 }
 
@@ -30,7 +29,7 @@ $conn = connect();
 
 if ($conn->connect_error) {
     http_response_code(503);
-    echo json_encode(["success" => false, "message" => "Lỗi kết nối cơ sở dữ liệu: " . $conn->connect_error]);
+    echo json_encode(["success" => false, "message" => "Database connection error:" . $conn->connect_error]);
     exit;
 }
 
@@ -39,7 +38,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 // Validate input data
 if (!isset($data['first_name']) || !isset($data['last_name']) || !isset($data['email'])) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Dữ liệu không hợp lệ. Vui lòng điền đầy đủ thông tin bắt buộc."]);
+    echo json_encode(["success" => false, "message" => "The data is invalid. Please fill in mandatory information."]);
     $conn->close();
     exit;
 }
@@ -64,7 +63,7 @@ $check_result = $check_stmt->get_result();
 
 if ($check_result->num_rows > 0) {
     http_response_code(409); // Conflict
-    echo json_encode(["success" => false, "message" => "Email này đã được sử dụng bởi một tài khoản khác."]);
+    echo json_encode(["success" => false, "message" => "This email has been used by another account."]);
     $check_stmt->close();
     $conn->close();
     exit;
@@ -83,10 +82,10 @@ if ($update_stmt->execute()) {
     $updatedUser = $user_data_stmt->get_result()->fetch_assoc();
     $user_data_stmt->close();
 
-    echo json_encode(["success" => true, "message" => "Cập nhật thông tin thành công.", "user" => $updatedUser]);
+    echo json_encode(["success" => true, "message" => "Profile update successfully! ", "user" => $updatedUser]);
 } else {
     http_response_code(500);
-    echo json_encode(["success" => false, "message" => "Lỗi khi cập nhật thông tin: " . $conn->error]);
+    echo json_encode(["success" => false, "message" => "An error occurred while updating the profile: " . $conn->error]);
 }
 
 $update_stmt->close();

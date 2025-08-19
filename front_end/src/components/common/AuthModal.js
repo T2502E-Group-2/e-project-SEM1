@@ -54,10 +54,12 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
           onClose();
         }, 1500);
       } else {
-        setError(response.data.message || "Đăng nhập thất bại");
+        setError(response.data.message || "Log in failed.");
       }
     } catch (err) {
-      setError("Lỗi khi đăng nhập");
+      setError(
+        "An error occurred while attempting to log in. Please try again."
+      );
       console.error(err);
     }
   };
@@ -65,14 +67,16 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     if (registerData.password !== registerData.confirm_password) {
-      setRegisterMessage("Mật khẩu xác nhận không khớp!");
+      setRegisterMessage("Passwords do not match!");
       return;
     }
     setRegisterMessage("");
     try {
       const response = await axios_instance.post(URL.REGISTER, registerData);
       if (response.data.success) {
-        setRegisterMessage("Đăng ký thành công! Đang chuyển hướng...");
+        setRegisterMessage(
+          "Registration successfully! Redirecting to you profile..."
+        );
 
         // Dispatch action to save user to context and localStorage
         dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });
@@ -83,8 +87,7 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
           navigate("/profile");
         }, 1500);
       } else {
-        // This part is unlikely to be reached if the server uses proper HTTP status codes
-        setRegisterMessage(response.data.message || "Đăng ký thất bại.");
+        setRegisterMessage(response.data.message || "Register failure.");
       }
     } catch (error) {
       if (
@@ -92,10 +95,9 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
         error.response.data &&
         error.response.data.message
       ) {
-        // Hiển thị lỗi cụ thể từ server, ví dụ "Email đã tồn tại."
         setRegisterMessage(error.response.data.message);
       } else {
-        setRegisterMessage("Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại.");
+        setRegisterMessage("Error occurs when registering. Please try again.");
       }
       console.error(error);
     }
@@ -104,14 +106,14 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Xác thực người dùng</Modal.Title>
+        <Modal.Title>User authentication</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Tabs
           activeKey={mode}
           onSelect={(k) => setAuthMode(k)}
           className="mb-3">
-          <Tab eventKey="login" title="Đăng nhập">
+          <Tab eventKey="login" title="Log in">
             {loginMessage && <Alert variant="success">{loginMessage}</Alert>}
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleLoginSubmit}>
@@ -119,7 +121,7 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="email"
-                  placeholder="Nhập email"
+                  placeholder="Enter email"
                   name="email"
                   value={loginData.email}
                   onChange={handleLoginChange}
@@ -128,10 +130,10 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="loginPassword">
-                <Form.Label>Mật khẩu</Form.Label>
+                <Form.Label>Password</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="Nhập mật khẩu"
+                  placeholder="Enter the password"
                   name="password"
                   value={loginData.password}
                   onChange={handleLoginChange}
@@ -139,19 +141,26 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 />
               </Form.Group>
 
-              <Button variant="primary" type="submit" className="w-100">
-                Đăng nhập
+              <Button
+                variant="primary"
+                type="submit"
+                className="w-100"
+                style={{
+                  backgroundColor: "darkorange",
+                  borderColor: "darkorange",
+                }}>
+                Log in
               </Button>
             </Form>
           </Tab>
-          <Tab eventKey="register" title="Đăng ký">
+          <Tab eventKey="register" title="Register">
             {registerMessage && <Alert variant="info">{registerMessage}</Alert>}
             <Form onSubmit={handleRegisterSubmit}>
               <Form.Group className="mb-3" controlId="registerFirstName">
-                <Form.Label>Họ</Form.Label>
+                <Form.Label>First name</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Nhập họ"
+                  placeholder="Enter your first name"
                   name="first_name"
                   value={registerData.first_name}
                   onChange={handleRegisterChange}
@@ -159,10 +168,10 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerLastName">
-                <Form.Label>Tên</Form.Label>
+                <Form.Label>Last name</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Nhập tên"
+                  placeholder="Enter your last name"
                   name="last_name"
                   value={registerData.last_name}
                   onChange={handleRegisterChange}
@@ -173,7 +182,7 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="email"
-                  placeholder="Nhập email"
+                  placeholder="Enter your email"
                   name="email"
                   value={registerData.email}
                   onChange={handleRegisterChange}
@@ -181,10 +190,10 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerPhoneNumber">
-                <Form.Label>Số điện thoại</Form.Label>
+                <Form.Label>Phone number</Form.Label>
                 <Form.Control
                   type="tel"
-                  placeholder="Nhập số điện thoại"
+                  placeholder="Enter your phone number"
                   name="phone_number"
                   value={registerData.phone_number}
                   onChange={handleRegisterChange}
@@ -192,70 +201,74 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerAddress1">
-                <Form.Label>Địa chỉ 1 (Tùy chọn)</Form.Label>
+                <Form.Label>
+                  Address line 1 (Optional: No., Street, Building, Apartment)
+                </Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Nhập địa chỉ"
+                  placeholder="Enter your address line 1"
                   name="address_line1"
                   value={registerData.address_line1}
                   onChange={handleRegisterChange}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerAddress2">
-                <Form.Label>Địa chỉ 2 (Tùy chọn)</Form.Label>
+                <Form.Label>
+                  Address line 2 (Optional: Ward, Community, District)
+                </Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Nhập địa chỉ bổ sung"
+                  placeholder="Enter your address line 2"
                   name="address_line2"
                   value={registerData.address_line2}
                   onChange={handleRegisterChange}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerCity">
-                <Form.Label>Thành phố (Tùy chọn)</Form.Label>
+                <Form.Label>City (Optional)</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Nhập thành phố"
+                  placeholder="Enter your city"
                   name="city"
                   value={registerData.city}
                   onChange={handleRegisterChange}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerState">
-                <Form.Label>Tỉnh/Bang (Tùy chọn)</Form.Label>
+                <Form.Label>Province/State (Optional)</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Nhập tỉnh/bang"
+                  placeholder="Enter your province/state"
                   name="state_province"
                   value={registerData.state_province}
                   onChange={handleRegisterChange}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerZip">
-                <Form.Label>Mã ZIP (Tùy chọn)</Form.Label>
+                <Form.Label>ZIP code (Optional)</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Nhập mã ZIP/bưu chính"
+                  placeholder="Enter Zip code"
                   name="zip_code"
                   value={registerData.zip_code}
                   onChange={handleRegisterChange}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerCountry">
-                <Form.Label>Quốc gia (Tùy chọn)</Form.Label>
+                <Form.Label>Country (Optional)</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Nhập quốc gia"
+                  placeholder="Enter your country"
                   name="country"
                   value={registerData.country}
                   onChange={handleRegisterChange}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerPassword">
-                <Form.Label>Mật khẩu</Form.Label>
+                <Form.Label>Password</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="Nhập mật khẩu"
+                  placeholder="Enter your password"
                   name="password"
                   value={registerData.password}
                   onChange={handleRegisterChange}
@@ -263,10 +276,10 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="registerConfirmPassword">
-                <Form.Label>Xác nhận mật khẩu</Form.Label>
+                <Form.Label>Password confirmation</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="Nhập lại mật khẩu"
+                  placeholder="Please input your password again"
                   name="confirm_password"
                   value={registerData.confirm_password}
                   onChange={handleRegisterChange}
@@ -274,8 +287,15 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 />
               </Form.Group>
 
-              <Button variant="success" type="submit" className="w-100">
-                Đăng ký
+              <Button
+                variant="success"
+                type="submit"
+                className="w-100"
+                style={{
+                  backgroundColor: "darkorange",
+                  borderColor: "darkorange",
+                }}>
+                Register
               </Button>
             </Form>
           </Tab>

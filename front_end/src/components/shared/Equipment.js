@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 const Equipment = ({ equipment }) => {
-  // Add a guard clause to prevent crashes if the equipment prop is not provided.
   if (!equipment) {
     return null;
   }

@@ -40,7 +40,7 @@ const Profile = () => {
           setError(response.data.message);
         }
       } catch (err) {
-        setError("Không thể tải thông tin người dùng");
+        setError("Can't load user information");
       } finally {
         setLoading(false);
       }
@@ -61,13 +61,16 @@ const Profile = () => {
       const response = await axios_instance.post(URL.UPDATE_PROFILE, formData);
       if (response.data.success) {
         dispatch({ type: UPDATE_USER_SUCCESS, payload: response.data.user });
-        setSuccessMessage("Cập nhật thông tin thành công!");
+        setSuccessMessage("Update information successfully!");
         setIsEditMode(false);
       } else {
-        setError(response.data.message || "Cập nhật thất bại.");
+        setError(response.data.message || "Update failure.");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Đã xảy ra lỗi khi cập nhật.");
+      setError(
+        err.response?.data?.message ||
+          "An Error occurred when updated information."
+      );
       console.error(err);
     } finally {
       setSubmitting(false);
@@ -90,9 +93,11 @@ const Profile = () => {
           color: "white",
           textShadow: "2px 2px 8px rgba(0, 0, 0, 0.7)",
         }}>
-        <h2>Bạn chưa đăng nhập</h2>
-        <p>Vui lòng đăng nhập để xem thông tin tài khoản.</p>
-        <Button onClick={() => navigate("/")}>Về trang chủ</Button>
+        <h2>You have not logged in</h2>
+        <p>Please login to view account information.</p>
+        <Button onClick={() => navigate("/")}>
+          Redirecting to the Homepage
+        </Button>
       </Container>
     );
   }
@@ -103,7 +108,7 @@ const Profile = () => {
         className="my-5 text-center"
         style={{ paddingTop: "150px", minHeight: "60vh" }}>
         <Spinner animation="border" variant="primary" />
-        <p className="mt-2">Đang tải thông tin...</p>
+        <p className="mt-2">Loading information...</p>
       </Container>
     );
   }
@@ -113,7 +118,7 @@ const Profile = () => {
       <Container
         className="my-5"
         style={{ paddingTop: "150px", minHeight: "60vh" }}>
-        <Alert variant="danger">{error || "Không thể tải dữ liệu."}</Alert>
+        <Alert variant="danger">{error || "Unable to load data."}</Alert>
       </Container>
     );
   }

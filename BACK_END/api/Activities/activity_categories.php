@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 }
 
 try {
-    // 1. Lấy tất cả danh mục chính cho Activities
+    // 1. Get all the main categories for Activities
     $main_categories_sql = "
         SELECT c.category_id, c.category_name, COUNT(a.activity_id) AS activity_count
         FROM categories c

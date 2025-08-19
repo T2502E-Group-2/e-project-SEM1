@@ -3,19 +3,19 @@ import React, { createContext, useReducer } from "react";
 // Tạo UserOrderContext
 const UserOrderContext = createContext();
 
-// Định nghĩa action types cho việc quản lý đơn hàng
+// Definition of Action Types for order management
 export const FETCH_ORDERS_REQUEST = "FETCH_ORDERS_REQUEST";
 export const FETCH_ORDERS_SUCCESS = "FETCH_ORDERS_SUCCESS";
 export const FETCH_ORDERS_FAILURE = "FETCH_ORDERS_FAILURE";
 
-// Trạng thái ban đầu
+// Initial state
 const initialState = {
   orders: [],
   loading: false,
   error: null,
 };
 
-// Hàm reducer để xử lý các action
+// Action creator functions
 const orderReducer = (state, action) => {
   switch (action.type) {
     case FETCH_ORDERS_REQUEST:

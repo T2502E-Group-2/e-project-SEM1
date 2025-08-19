@@ -18,12 +18,12 @@ $conn = connect();
 
 if ($conn->connect_error) {
     http_response_code(500);
-    echo json_encode(["status" => false, "message" => "Failure connection: " . $conn->connect_error]);
+    echo json_encode(["status" => false, "message" => "Database connection failed: " . $conn->connect_error]);
     exit();
 }
 
 try {
-    // 1. Lấy tất cả danh mục chính từ bảng categories
+    // 1. Get all the main categories from the categories table
     
     $main_categories_sql = "SELECT category_id, category_name FROM categories WHERE type = 'Equipment' ORDER BY category_name ASC";
     $main_categories_stmt = $conn->prepare($main_categories_sql);
@@ -41,7 +41,7 @@ try {
     }
     $main_categories_stmt->close();
 
-    // 2. Lấy và nhóm các sub_category từ bảng equipments
+    // 2. Take and group sub_categories from the Equipments table
     
     $sub_categories_sql = "SELECT equipment_category_id as category_id, sub_category, COUNT(*) AS equipment_count FROM equipments WHERE sub_category IS NOT NULL AND sub_category != '' GROUP BY equipment_category_id, sub_category ORDER BY sub_category ASC";
     $sub_categories_stmt = $conn->prepare($sub_categories_sql);
@@ -67,13 +67,13 @@ try {
     http_response_code(200);
     echo json_encode([
         "status" => true,
-        "message" => "Lấy danh mục thành công",
+        "message" => "Get categories successfully",
         "data" => $response_data
     ]);
 
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(["status" => false, "message" => "Lỗi: " . $e->getMessage()]);
+    echo json_encode(["status" => false, "message" => "Error: " . $e->getMessage()]);
 }
 
 $conn->close();

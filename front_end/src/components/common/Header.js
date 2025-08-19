@@ -135,7 +135,7 @@ const Header = () => {
                 textAlign: "center",
                 cursor: "pointer",
               }}>
-              {/* Nút search icon */}
+              {/* Search icon button */}
 
               <Image
                 ref={searchBtnRef}
