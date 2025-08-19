@@ -60,13 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare("
         UPDATE activities
         SET title = ?, category_id = ?, description = ?, detail = ?, max_participants = ?, 
-            price = ?, duration = ?, location_id = ?, registration_deadline = ?, 
+            price = ?, duration = ?, registration_deadline = ?, 
             start_date = ?, end_date = ?, status = ?, difficulty_level = ?, is_featured = ?, thumbnail_id = ?, updated_at = NOW()
         WHERE activity_id = ?
     ");
 
     $stmt->bind_param(
-        "sissidsissssssii",
+        "sissidsssssssii",
         $data['title'],
         $data['category_id'],
         $data['description'],
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['max_participants'],
         $data['price'],
         $data['duration'],
-        $data['location_id'],
+        
         $data['registration_deadline'],
         $data['start_date'],
         $data['end_date'],
@@ -115,14 +115,13 @@ if (!in_array($sortOrder, ['ASC', 'DESC'])) {
 $sql = "
     SELECT 
         a.activity_id, a.title, c.category_name, a.description, a.detail, 
-        a.max_participants, a.price, a.duration, l.name as location_name, 
+        a.max_participants, a.price, a.duration,
         a.registration_deadline, a.start_date, a.end_date, a.status, 
         a.difficulty_level, a.is_featured, g.url as thumbnail_url,
         DATE_FORMAT(a.created_at, '%Y-%m-%d %H:%i:%s') AS created_at,
         DATE_FORMAT(a.updated_at, '%Y-%m-%d %H:%i:%s') AS updated_at
     FROM activities a
     LEFT JOIN categories c ON a.category_id = c.category_id
-    LEFT JOIN locations l ON a.location_id = l.location_id
     LEFT JOIN galleries g ON a.thumbnail_id = g.media_id
 ";
 
