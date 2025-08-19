@@ -95,7 +95,8 @@ const BannerSlider = () => {
             <div
               key={index}
               className="banner-slide"
-              style={{ backgroundImage: `url(${bannerData.image})` }}>
+              style={{ backgroundImage: `url(${bannerData.image})` }}
+            >
               <div className="gradient dark"></div>
               <div className="container text" style={{ paddingTop: "140px" }}>
                 <h1 className="white flex-animation">
@@ -104,12 +105,12 @@ const BannerSlider = () => {
                 <h2 className="white flex-animation">
                   {renderMultilineText(slide.subtitle)}
                 </h2>
-                <a
+                {/* <a
                   href={slide.buttonLink}
                   className="shadow btn-alt small activetwo margin-bottom-null flex-animation"
                   tabIndex={currentSlide === index ? 0 : -1}>
                   {slide.buttonText}
-                </a>
+                </a> */}
               </div>
             </div>
           ))}
