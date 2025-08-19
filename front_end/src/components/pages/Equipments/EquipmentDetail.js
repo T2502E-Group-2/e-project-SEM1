@@ -117,6 +117,9 @@ const EquipmentDetail = () => {
     if (!userInfo.phone) {
       formIsValid = false;
       errors.phone = "The phone number is not allowed to leave blank";
+    } else if (!/^\d+$/.test(userInfo.phone)) {
+      formIsValid = false;
+      errors.phone = "Phone number must only contain numbers.";
     }
 
     setFormErrors(errors);
@@ -198,7 +201,8 @@ const EquipmentDetail = () => {
     return (
       <Container
         className="text-center mt-5 vh-100"
-        style={{ paddingTop: "140px" }}>
+        style={{ paddingTop: "140px" }}
+      >
         <Spinner animation="border" variant="primary" />
         <p>Loading Equipment Details...</p>
       </Container>
@@ -245,15 +249,15 @@ const EquipmentDetail = () => {
               {" "}
               <Button
                 variant="outline-secondary"
-                onClick={() =>
-                  setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
-                }>
+                onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
+              >
                 -
               </Button>
               <span className="mx-2 fs-5">{quantity}</span>
               <Button
                 variant="outline-secondary"
-                onClick={() => setQuantity((prev) => prev + 1)}>
+                onClick={() => setQuantity((prev) => prev + 1)}
+              >
                 +
               </Button>
             </div>
@@ -265,7 +269,8 @@ const EquipmentDetail = () => {
                   backgroundColor: "darkorange",
                   borderColor: "darkorange",
                 }}
-                onClick={handleBuyNow}>
+                onClick={handleBuyNow}
+              >
                 Buy now
               </Button>
               <Button
@@ -274,7 +279,8 @@ const EquipmentDetail = () => {
                   borderColor: "darkorange",
                   color: "black",
                 }}
-                onClick={handleAddToCart}>
+                onClick={handleAddToCart}
+              >
                 Add to cart
               </Button>
             </div>
@@ -293,7 +299,8 @@ const EquipmentDetail = () => {
         show={showModal}
         onHide={() => setShowModal(false)}
         centered
-        size="lg">
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Confirm order</Modal.Title>
         </Modal.Header>
@@ -304,14 +311,16 @@ const EquipmentDetail = () => {
                 className="img-thumbnail mx-3 my-3 border-0"
                 style={{ width: "200px", cursor: "pointer" }}
                 src={equipment.image_url}
-                alt={equipment.name}></img>
+                alt={equipment.name}
+              ></img>
             </Col>
             <Col
               md={8}
               style={{
                 fontSize: "lg",
                 alignContent: "center",
-              }}>
+              }}
+            >
               <h4 style={{ fontWeight: "bold", paddingBottom: "10px" }}>
                 You're Purchasing for:
               </h4>
@@ -371,11 +380,14 @@ const EquipmentDetail = () => {
                 Phone number<span className="text-danger">*</span>
               </Form.Label>
               <Form.Control
-                type="text"
+                type="tel"
                 value={userInfo.phone || ""}
-                onChange={(e) =>
-                  setUserInfo({ ...userInfo, phone: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^[0-9]*$/.test(value)) {
+                    setUserInfo({ ...userInfo, phone: value });
+                  }
+                }}
                 isInvalid={!!formErrors.phone}
               />
               <Form.Control.Feedback type="invalid">

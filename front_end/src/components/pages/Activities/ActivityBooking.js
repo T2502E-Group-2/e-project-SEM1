@@ -71,6 +71,9 @@ const ActivityBooking = () => {
     if (!form.phone.trim()) {
       errors.phone = "Phone number is required";
       valid = false;
+    } else if (!/^\d+$/.test(form.phone)) {
+      errors.phone = "Phone number must only contain numbers.";
+      valid = false;
     }
     if (!form.email.trim()) {
       errors.email = "Email is required";
@@ -91,7 +94,8 @@ const ActivityBooking = () => {
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "160px" }}>
+      style={{ paddingTop: "160px" }}
+    >
       <Row>
         <Col md={12}>
           <Card className="p-4">
@@ -124,7 +128,12 @@ const ActivityBooking = () => {
                   type="tel"
                   name="phone"
                   value={form.phone}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^[0-9]*$/.test(value)) {
+                      setForm({ ...form, phone: value });
+                    }
+                  }}
                   isInvalid={!!formErrors.phone}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -153,7 +162,8 @@ const ActivityBooking = () => {
                 <InputGroup style={{ width: "150px" }}>
                   <Button
                     variant="outline-secondary"
-                    onClick={() => changeParticipants(-1)}>
+                    onClick={() => changeParticipants(-1)}
+                  >
                     -
                   </Button>
                   <Form.Control
@@ -173,7 +183,8 @@ const ActivityBooking = () => {
                   />
                   <Button
                     variant="outline-secondary"
-                    onClick={() => changeParticipants(1)}>
+                    onClick={() => changeParticipants(1)}
+                  >
                     +
                   </Button>
                 </InputGroup>
@@ -189,7 +200,8 @@ const ActivityBooking = () => {
               <h5>Total Estimated Cost: ${totalCost}</h5>
               <h6
                 className="mt-3"
-                style={{ fontSize: "18px", fontWeight: "bold" }}>
+                style={{ fontSize: "18px", fontWeight: "bold" }}
+              >
                 Pay in Deposit (30%): ${Math.round(totalCost * 0.3)}
               </h6>
 
