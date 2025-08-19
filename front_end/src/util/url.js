@@ -5,7 +5,7 @@ const URL = {
   ADMIN_USERS: BASE + "/Admin/admin_users.php",
   ADMIN_POSTS: BASE + "/Admin/admin_posts.php",
   ADMIN_ACTIVITIES: BASE + "/Admin/admin_activities.php",
-  ADMIN_EQUIPMENT: BASE + "/Admin/admin_equipments.php",
+  ADMIN_EQUIPMENTS: BASE + "/Admin/admin_equipments.php",
   //AUTH
   LOGIN: BASE + "/auth/login.php",
   REGISTER: BASE + "/auth/register.php",
