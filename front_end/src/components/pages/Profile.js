@@ -304,7 +304,13 @@ const Profile = () => {
                   ) : (
                     <Button
                       variant="outline-primary"
-                      onClick={() => setIsEditMode(true)}>
+                      onClick={() => setIsEditMode(true)}
+                      style={{
+                        color: "#fff",
+                        fontSize: "1.2rem",
+                        backgroundColor: "darkorange",
+                        borderColor: "darkorange",
+                      }}>
                       Edit information
                     </Button>
                   )}
