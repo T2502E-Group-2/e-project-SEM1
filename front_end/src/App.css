@@ -1394,3 +1394,10 @@ main {
   color: #fff;
   box-shadow: 0 0 10px var(--primary-color);
 }
+
+.description-content * {
+  font-size: 1rem;
+  font-family: var(--font-primary);
+  text-align: justify;
+  color: #666 !important;
+}

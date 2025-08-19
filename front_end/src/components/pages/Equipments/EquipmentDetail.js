@@ -289,7 +289,8 @@ const EquipmentDetail = () => {
         <div className="lead mt-3">
           <strong className="fw-bold">Descriptions:</strong>
           <div
-            className="mt-2"
+            className="description-content mt-2"
+            style={{ fontSize: "20px", color: "#666" }}
             dangerouslySetInnerHTML={{ __html: equipment.description }}
           />
         </div>
