@@ -4,7 +4,7 @@ I. FRONTEND
 - React-slick and Slick-carousel : npm install react-slick slick-carousel
 - React PayPal : npm i @paypal/react-paypal-js
 - Axios, Router DOM, Bootstrap, React-bootstrap-icons: npm i axios react-router-dom react-bootstrap react-bootstrap-icons
-  ;; - CKEditor : npm i ckeditor5 ckeditor5-premium-features @ckeditor/ckeditor5-react (not suitable for this project)
+  <!--- CKEditor : npm i ckeditor5 ckeditor5-premium-features @ckeditor/ckeditor5-react (not suitable for this project) -->
 - React-Quill : npm install react-quill@2.0.0 --force npm install react-quill-new
 - Quill Plugin : npm install quill-html-edit-button
 
@@ -17,7 +17,10 @@ II. BACKEND
 * ...MAMP\bin\[phpversion]\php.ini: extension=curl extension=fileinfo
 * ...MAMP\conf\[phpversion]\php.ini: Fine line of: extension=php_curl.dll, add: extension=fileinfo
 
-- Notes: If you want to know exactly where your Apache Server used php.ini, run api "info.php" on your local host server. Ex: http://localhost:8888/API/info.php
+- Notes:
+
+* If you want to know exactly where your Apache Server used php.ini, run api "info.php" on your local host server Ex: http://localhost:8888/API/info.php.
+* Check if the php.ini is correct setting: Access the page via check_env.php (http://localhost:8888/API/check_env.php)
 
 B. FUNCTION TEST
 I. PayPal Sandbox acount
