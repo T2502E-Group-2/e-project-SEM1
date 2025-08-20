@@ -134,8 +134,7 @@ const Header = () => {
                 fontSize: "1.2rem",
                 textAlign: "center",
                 cursor: "pointer",
-              }}
-            >
+              }}>
               {/* Search icon button */}
 
               <Image
@@ -144,8 +143,9 @@ const Header = () => {
                 src="../search-circle-ico.png"
                 alt="Search"
                 width="40px"
-                className={`search-icon ${scrolled ? "dark" : "light"}`}
-              ></Image>
+                className={`search-icon ${
+                  scrolled ? "dark" : "light"
+                }`}></Image>
 
               {/* Form search overlay */}
               {searchOpen && (
@@ -163,8 +163,7 @@ const Header = () => {
                     boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
                     borderRadius: "10px",
                     zIndex: 2000,
-                  }}
-                >
+                  }}>
                   <Form.Control
                     type="text"
                     placeholder="Type what you are looking for..."
@@ -183,14 +182,12 @@ const Header = () => {
                 className={`custom-navbar flex-grow-1 ${
                   scrolled ? "scrolled" : ""
                 }`}
-                expand="xxl"
-              >
+                expand="xxl">
                 <Navbar.Toggle aria-controls="main-navbar" />
                 <Navbar.Collapse id="main-navbar">
                   <Nav
                     className="navbar-links mx-auto align-items-start"
-                    onSelect={handleNavSelect}
-                  >
+                    onSelect={handleNavSelect}>
                     <Nav.Link as={Link} to="/" onClick={handleNavSelect}>
                       Home
                     </Nav.Link>
@@ -202,8 +199,7 @@ const Header = () => {
                         as={Link}
                         to="/activities"
                         className="dropdown-toggle"
-                        onClick={handleNavSelect}
-                      >
+                        onClick={handleNavSelect}>
                         Activities
                       </Nav.Link>
                       <div className="dropdown-menu">
@@ -212,8 +208,7 @@ const Header = () => {
                             key={c.category_id}
                             to={`/activities?category_id=${c.category_id}`}
                             className="dropdown-item"
-                            onClick={handleNavSelect}
-                          >
+                            onClick={handleNavSelect}>
                             {c.category_name}
                           </Link>
                         ))}
@@ -224,8 +219,7 @@ const Header = () => {
                         as={Link}
                         to="/posts"
                         className="dropdown-toggle"
-                        onClick={handleNavSelect}
-                      >
+                        onClick={handleNavSelect}>
                         Posts
                       </Nav.Link>
                       <div className="dropdown-menu">
@@ -234,23 +228,20 @@ const Header = () => {
                             key={c.category_id}
                             to={`/posts?category=${c.category_id}`}
                             className="dropdown-item"
-                            onClick={handleNavSelect}
-                          >
+                            onClick={handleNavSelect}>
                             {c.category_name}
                           </Link>
                         ))}
                         <Link
                           to="/posts/photo-gallery"
                           className="dropdown-item"
-                          onClick={handleNavSelect}
-                        >
+                          onClick={handleNavSelect}>
                           Photos Gallery
                         </Link>
                         <Link
                           to="/posts/my-posts"
                           className="dropdown-item"
-                          onClick={handleNavSelect}
-                        >
+                          onClick={handleNavSelect}>
                           My Posts
                         </Link>
                       </div>
@@ -260,8 +251,7 @@ const Header = () => {
                         as={Link}
                         to="/equipment"
                         className="dropdown-toggle"
-                        onClick={handleNavSelect}
-                      >
+                        onClick={handleNavSelect}>
                         Gears
                       </Nav.Link>
                       <div className="dropdown-menu">
@@ -270,8 +260,7 @@ const Header = () => {
                             key={c.category_id}
                             to={`/equipment?category_id=${c.category_id}`}
                             className="dropdown-item"
-                            onClick={handleNavSelect}
-                          >
+                            onClick={handleNavSelect}>
                             {c.category_name}
                           </Link>
                         ))}
@@ -280,8 +269,7 @@ const Header = () => {
                     <Nav.Link
                       as={Link}
                       to="/my-orders"
-                      onClick={handleNavSelect}
-                    >
+                      onClick={handleNavSelect}>
                       My Orders
                     </Nav.Link>
                     {state.user && state.user.role === "admin" && (
@@ -296,15 +284,13 @@ const Header = () => {
 
             <Col
               xs={3}
-              className="d-flex justify-content-end align-items-center"
-            >
+              className="d-flex justify-content-end align-items-center">
               <div
                 style={{
                   paddingLeft: "30px",
                   paddingRight: "50px",
                   position: "relative",
-                }}
-              >
+                }}>
                 <Link className="nav-link position-relative" to={"/cart"}>
                   <Image
                     src="../cart-icon.png"
@@ -316,8 +302,7 @@ const Header = () => {
                   <Badge
                     pill
                     bg="danger"
-                    className="position-absolute top-0 start-100 translate-middle"
-                  >
+                    className="position-absolute top-0 start-100 translate-middle">
                     {cartItemCount}
                   </Badge>
                 </Link>
@@ -346,15 +331,13 @@ const Header = () => {
                       transition: "color 0.3s ease",
                       fontSize: "1.2rem",
                     }}
-                    onClick={() => navigate("/profile")}
-                  >
+                    onClick={() => navigate("/profile")}>
                     {state.user.first_name} {state.user.last_name}
                   </span>
                   <button
                     className="btn btn-outline"
                     onClick={handleLogout}
-                    style={{ fontSize: "1.2rem" }}
-                  >
+                    style={{ fontSize: "1.2rem" }}>
                     Logout
                   </button>
                 </div>
@@ -363,25 +346,23 @@ const Header = () => {
                   <button
                     className="btn btn-primary me-2"
                     style={{
-                      backgroundColor: "darkorange",
+                      backgroundColor: "transparent",
                       color: "white",
                       fontSize: "1.2rem",
-                      borderColor: "darkorange",
+                      borderColor: "transparent",
                     }}
-                    onClick={() => handleOpenAuthModal("login")}
-                  >
+                    onClick={() => handleOpenAuthModal("login")}>
                     Login
                   </button>
                   <button
                     className="btn btn-success"
                     style={{
-                      backgroundColor: "darkorange",
+                      backgroundColor: "transparent",
                       color: "white",
                       fontSize: "1.2rem",
-                      borderColor: "darkorange",
+                      borderColor: "transparent",
                     }}
-                    onClick={() => handleOpenAuthModal("register")}
-                  >
+                    onClick={() => handleOpenAuthModal("register")}>
                     Register
                   </button>
                 </div>

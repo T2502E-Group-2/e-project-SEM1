@@ -155,7 +155,7 @@ const PostPage = () => {
                     }}
                   />
                   <Card.Body className="p-2">
-                    <Card.Title className="card-title h6">
+                    <Card.Title className="card-title activity-title">
                       {post.title}
                     </Card.Title>
                     <Card.Text className="text-muted small mb-0">
@@ -167,7 +167,10 @@ const PostPage = () => {
                     <Card.Text
                       className="small mb-0"
                       style={{
-                        color: post.status === "published" ? "darkorange" : "",
+                        color:
+                          post.status === "published"
+                            ? "var(--primary-color)"
+                            : "",
                       }}>
                       {post.status}
                     </Card.Text>
@@ -217,7 +220,10 @@ const PostPage = () => {
           </h1>
           {state.user && (
             <Button
-              style={{ backgroundColor: "darkorange", border: "none" }}
+              style={{
+                backgroundColor: "var(--primary-color)",
+                border: "none",
+              }}
               onClick={() => navigate("/posts/create")}
               variant="success">
               <i className="bi bi-plus-circle-fill me-2"></i>

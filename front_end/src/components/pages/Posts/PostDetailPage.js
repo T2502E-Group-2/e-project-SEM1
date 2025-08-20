@@ -170,7 +170,10 @@ const PostDetailPage = () => {
             {state.user && (
               <Container className="mt-3">
                 <Button
-                  style={{ backgroundColor: "darkorange", border: "none" }}
+                  style={{
+                    backgroundColor: "var(--primary-color)",
+                    border: "none",
+                  }}
                   onClick={() => navigate("/posts/create")}
                   variant="success">
                   <i className="bi bi-plus-circle-fill me-2"></i>

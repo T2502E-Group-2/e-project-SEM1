@@ -195,7 +195,7 @@ function AdminEquipment() {
                 <Button type="submit">Search</Button>
                 <Button
                   variant="secondary"
-                  style={{ backgroundColor: "darkorange" }}
+                  style={{ backgroundColor: "var(--primary-color)" }}
                   onClick={clearSearch}>
                   Clear
                 </Button>

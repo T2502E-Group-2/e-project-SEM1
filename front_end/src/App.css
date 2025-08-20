@@ -1,6 +1,6 @@
 /*CSS ROOT*/
 :root {
-  --primary-color: darkorange;
+  --primary-color: rgb(0, 88, 24);
   --text-color-light: #fff;
   --text-color-dark: #222;
   --text-color-secondary: #6e6b66;
@@ -20,7 +20,7 @@ h6 {
 }
 h5 {
   vertical-align: baseline;
-  font-family: var(--font-primary);
+  font-family: var(--font-secondary);
   font-size: 20px;
   font-weight: bold;
   line-height: 24px;
@@ -165,7 +165,7 @@ main {
       rgba(100, 80, 50, 0.4),
       rgba(100, 80, 50, 0.4)
     ),
-    url("../public/Background/bg_8.jpg");
+    url("../public/Background/bg_1.jpg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -387,6 +387,13 @@ main {
   transform: scale(1.1);
 }
 
+.card-text {
+  font-size: 0.75rem;
+}
+.card-title {
+  font-size: 1rem;
+}
+
 .card-text,
 .card-title {
   display: -webkit-box;
@@ -395,7 +402,6 @@ main {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0;
   color: #646464;
@@ -460,7 +466,7 @@ main {
   box-shadow: 0 1px 1.5px 0 rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.24);
 }
 .content {
-  padding: 36px;
+  padding: 10px;
   position: relative;
 }
 .text-center {
@@ -735,6 +741,17 @@ main {
   height: fit-content;
   z-index: 1020; */
 }
+.product-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 50vh;
+}
+
+.product-card .card-title,
+.product-card .card-text {
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
 
 .product-card .card-img-top {
   width: 100%;
@@ -742,6 +759,11 @@ main {
   object-fit: contain;
   padding: 10px;
   background-color: var(--text-color-light);
+}
+
+.product-card .card-body {
+  display: flex;
+  flex-direction: column;
 }
 
 .product-link {
@@ -965,7 +987,7 @@ main {
 /*AUTH MODAL STYLES*/
 /* modal.css */
 .modal-overlay {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   right: 0;

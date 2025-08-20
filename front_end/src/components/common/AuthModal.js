@@ -104,7 +104,7 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
   };
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal show={show} onHide={onClose} style={{ paddingTop: "100px" }}>
       <Modal.Header closeButton>
         <Modal.Title>User authentication</Modal.Title>
       </Modal.Header>
@@ -146,8 +146,8 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 type="submit"
                 className="w-100"
                 style={{
-                  backgroundColor: "darkorange",
-                  borderColor: "darkorange",
+                  backgroundColor: "var(--primary-color)",
+                  borderColor: "var(--primary-color)",
                 }}>
                 Log in
               </Button>
@@ -292,8 +292,8 @@ const AuthModal = ({ show, onClose, mode, setAuthMode }) => {
                 type="submit"
                 className="w-100"
                 style={{
-                  backgroundColor: "darkorange",
-                  borderColor: "darkorange",
+                  backgroundColor: "var(--primary-color)",
+                  borderColor: "var(--primary-color)",
                 }}>
                 Register
               </Button>

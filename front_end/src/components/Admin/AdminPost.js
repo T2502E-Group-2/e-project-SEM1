@@ -238,7 +238,7 @@ function AdminPost() {
                 <Button type="submit">Search</Button>
                 <Button
                   variant="secondary"
-                  style={{ backgroundColor: "darkorange" }}
+                  style={{ backgroundColor: "var(--primary-color)" }}
                   onClick={clearSearch}>
                   Clear
                 </Button>
@@ -258,7 +258,7 @@ function AdminPost() {
                 />
                 <Button
                   variant="secondary"
-                  style={{ backgroundColor: "darkorange" }}
+                  style={{ backgroundColor: "var(--primary-color)" }}
                   onClick={clearDateFilters}>
                   Clear
                 </Button>
@@ -305,7 +305,9 @@ function AdminPost() {
                         color: "#fff",
                         fontWeight: "bold",
                         backgroundColor:
-                          p.status === "published" ? "#28a745" : "darkorange",
+                          p.status === "published"
+                            ? "#28a745"
+                            : "var(--primary-color)",
                         fontSize: "0.8em",
                       }}>
                       {p.status.charAt(0).toUpperCase() + p.status.slice(1)}

@@ -109,7 +109,7 @@ const SearchResultsPage = () => {
           <div key={type} className="mb-3">
             <h2
               className="text-capitalize border-bottom border-secondary pb-2 mb-3"
-              style={{ color: "darkorange", fontWeight: "bold" }}>
+              style={{ color: "var(--primary-color)", fontWeight: "bold" }}>
               {type}
             </h2>
             {items.map((item, index) => (

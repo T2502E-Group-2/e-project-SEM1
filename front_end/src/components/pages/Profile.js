@@ -308,8 +308,8 @@ const Profile = () => {
                       style={{
                         color: "#fff",
                         fontSize: "1.2rem",
-                        backgroundColor: "darkorange",
-                        borderColor: "darkorange",
+                        backgroundColor: "var(--primary-color)",
+                        borderColor: "var(--primary-color)",
                       }}>
                       Edit information
                     </Button>

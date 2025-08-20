@@ -21,6 +21,15 @@ require_once("../../db/connect.php");
 
 $conn = connect();
 $current_user_id = intval($_SESSION['user_id']);
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    echo json_encode([
+        "status" => false,
+        "message" => "User not logged in."
+    ]);
+    exit();
+}
+
 
 $sql = "SELECT 
             p.post_id, 

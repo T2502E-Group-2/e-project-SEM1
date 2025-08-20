@@ -269,7 +269,7 @@ const EquipmentPage = () => {
                     sm={6}
                     md={4}
                     lg={3}
-                    className="mb-4 slider-item">
+                    className="mb-2 slider-item">
                     <Equipment equipment={equipment} />
                   </Col>
                 ))

@@ -174,7 +174,7 @@ function AdminOrder() {
                 </Button>
                 <Button
                   variant="secondary"
-                  style={{ backgroundColor: "darkorange" }}
+                  style={{ backgroundColor: "var(--primary-color)" }}
                   onClick={clearSearch}>
                   Clear
                 </Button>
@@ -194,7 +194,7 @@ function AdminOrder() {
                 />
                 <Button
                   variant="secondary"
-                  style={{ backgroundColor: "darkorange" }}
+                  style={{ backgroundColor: "var(--primary-color)" }}
                   onClick={clearDateFilters}>
                   Clear
                 </Button>

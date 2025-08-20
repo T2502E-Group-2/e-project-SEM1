@@ -25,8 +25,7 @@ const PermissionWarning = () => (
         alignItems: "center",
         gap: "12px",
         animation: "blink 1.2s infinite",
-      }}
-    >
+      }}>
       ⚠️ You do not have permission to access this page. ⚠️
     </h3>
     <style>{`@keyframes blink { 50% { opacity: 0.35; } }`}</style>
@@ -199,8 +198,7 @@ function AdminActivity() {
       <th
         className="thStyle"
         style={{ cursor: "pointer", whiteSpace: "nowrap" }}
-        onClick={() => handleSort(column)}
-      >
+        onClick={() => handleSort(column)}>
         {label}
         <span style={{ marginLeft: 6, fontSize: "0.85em" }}>
           {active ? sortOrder === "asc" ? "▲" : "▼" : <span>▲▼</span>}
@@ -218,12 +216,10 @@ function AdminActivity() {
         paddingBottom: "50px",
         paddingLeft: "50px",
         paddingRight: "50px",
-      }}
-    >
+      }}>
       <h1
         className="text-center mb-4"
-        style={{ color: "#fff", textShadow: "1px 1px 2px #000" }}
-      >
+        style={{ color: "#fff", textShadow: "1px 1px 2px #000" }}>
         Activities Management (Admin)
       </h1>
 
@@ -242,9 +238,8 @@ function AdminActivity() {
                 <Button type="submit">Search</Button>
                 <Button
                   variant="secondary"
-                  style={{ backgroundColor: "darkorange" }}
-                  onClick={clearSearch}
-                >
+                  style={{ backgroundColor: "var(--primary-color)" }}
+                  onClick={clearSearch}>
                   Clear
                 </Button>
               </InputGroup>
@@ -263,9 +258,8 @@ function AdminActivity() {
                 />
                 <Button
                   variant="secondary"
-                  style={{ backgroundColor: "darkorange" }}
-                  onClick={clearDateFilters}
-                >
+                  style={{ backgroundColor: "var(--primary-color)" }}
+                  onClick={clearDateFilters}>
                   Clear
                 </Button>
               </InputGroup>
@@ -299,8 +293,7 @@ function AdminActivity() {
               {rows.map((activity, idx) => (
                 <tr
                   key={idx}
-                  style={{ background: idx % 2 ? "#f9f9f9" : "#fff" }}
-                >
+                  style={{ background: idx % 2 ? "#f9f9f9" : "#fff" }}>
                   <td className="tdStyle">{activity.activity_id}</td>
                   <td className="tdStyle">{activity.title}</td>
                   <td className="tdStyle">{activity.category_name}</td>
@@ -321,15 +314,13 @@ function AdminActivity() {
                       <Button
                         size="sm"
                         variant="warning"
-                        onClick={() => handleEdit(activity)}
-                      >
+                        onClick={() => handleEdit(activity)}>
                         Edit
                       </Button>
                       <Button
                         size="sm"
                         variant="danger"
-                        onClick={() => handleDelete(activity.activity_id)}
-                      >
+                        onClick={() => handleDelete(activity.activity_id)}>
                         Delete
                       </Button>
                     </ButtonGroup>
@@ -372,8 +363,7 @@ function AdminActivity() {
                 <Form.Select
                   name="status"
                   value={formData.status || "draft"}
-                  onChange={handleModalChange}
-                >
+                  onChange={handleModalChange}>
                   <option value="draft">Draft</option>
                   <option value="published">Published</option>{" "}
                   <option value="upcoming">Upcoming</option>
@@ -388,8 +378,7 @@ function AdminActivity() {
                 <Form.Select
                   name="activity_category_id"
                   value={formData.activity_category_id || ""}
-                  onChange={handleModalChange}
-                >
+                  onChange={handleModalChange}>
                   <option value="">
                     --Select to change--{" "}
                     <p style={{ fontStyle: "italic" }}>
@@ -416,8 +405,7 @@ function AdminActivity() {
                 <Form.Select
                   name="is_featured"
                   value={formData.is_featured || "0"}
-                  onChange={handleModalChange}
-                >
+                  onChange={handleModalChange}>
                   <option value="1">Featured</option>
                   <option value="0">Non-featured</option>
                 </Form.Select>
