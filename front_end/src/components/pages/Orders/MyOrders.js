@@ -189,7 +189,11 @@ const MyOrders = () => {
   return (
     <Container
       className="container-fluid post-detail-page-wrapper"
-      style={{ paddingTop: "160px" }}>
+      style={{
+        paddingTop: "160px",
+        color: "white",
+        textShadow: "1px 1px 2px #000",
+      }}>
       <h2 className="text-center mb-4">
         {userState.user?.user_id ? "My Orders" : "Search Results"}
       </h2>

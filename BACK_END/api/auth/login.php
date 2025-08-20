@@ -64,7 +64,7 @@ if ($result->num_rows === 1) {
 
         echo json_encode([
             "success" => true,
-            "message" => "Đăng nhập thành công.",
+            "message" => "Login successful",
             "user" => $user
         ]);
     } else {
