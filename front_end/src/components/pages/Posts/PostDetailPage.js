@@ -110,11 +110,12 @@ const PostDetailPage = () => {
 
   return (
     <Container
+      fluid
       className="container-fluid post-detail-page-wrapper"
       style={{ paddingTop: "160px" }}>
       <Row className="justify-content-center ">
         {/* Main content */}
-        <Col md={8}>
+        <Col md={8} style={{ paddingTop: "45px" }}>
           <Card className="mb-4 shadow-sm position-relative">
             {isOwner && (
               <Button

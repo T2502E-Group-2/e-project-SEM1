@@ -66,14 +66,14 @@ const BannerSlider = () => {
     dots: false,
     arrows: false,
     infinite: true,
-    speed: 1000,
+    speed: 1500,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 4000,
     pauseOnHover: false,
     fade: true,
-    cssEase: "ease-in-out",
+    cssEase: "linear",
     afterChange: (current) => setCurrentSlide(current),
   };
 
@@ -95,10 +95,9 @@ const BannerSlider = () => {
             <div
               key={index}
               className="banner-slide"
-              style={{ backgroundImage: `url(${bannerData.image})` }}
-            >
+              style={{ backgroundImage: `url(${bannerData.image})` }}>
               <div className="gradient dark"></div>
-              <div className="container text" style={{ paddingTop: "100px" }}>
+              <div className="container text" style={{ paddingTop: "130px" }}>
                 <h1 className="white flex-animation">
                   {renderMultilineText(slide.title)}
                 </h1>
