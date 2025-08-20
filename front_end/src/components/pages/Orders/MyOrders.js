@@ -98,49 +98,51 @@ const MyOrders = () => {
         Search for your order
       </h2>
 
-      <Card onSubmit={handleSearchSubmit} className="p-4 border rounded p-3">
-        <Form.Group className="mb-3">
-          <Form.Label>
-            <strong>Option 1: Search by Paypal order code</strong>
-          </Form.Label>
-          <Form.Control
-            typ="text"
-            name="paypal_order_id"
-            value={searchParams.paypal_order_id}
-            onChange={handleSearchChange}
-            placeholder="Enter your Paypal Order ID"
-          />
-        </Form.Group>
-        <p className="text-center" style={{ fontSize: "1.2rem" }}>
-          <strong>OR</strong>
-        </p>
-        <Form.Group className="mb-3">
-          <Form.Label>
-            <strong>Option 2: Search by Email and Phone number</strong>
-          </Form.Label>
-          <Form.Control
-            type="email"
-            name="email"
-            value={searchParams.email}
-            onChange={handleSearchChange}
-            className="mb-2"
-            placeholder="Enter your email"
-          />
-          <Form.Control
-            type="tel"
-            name="phone"
-            value={searchParams.phone}
-            onChange={handleSearchChange}
-            placeholder="Enter your phone number"
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit" disabled={orderState.loading}>
-          {orderState.loading ? (
-            <Spinner animation="border" size="sm" />
-          ) : (
-            "Search"
-          )}
-        </Button>
+      <Card className="p-4 border rounded p-3">
+        <Form onSubmit={handleSearchSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <strong>Option 1: Search by Paypal order code</strong>
+            </Form.Label>
+            <Form.Control
+              type="text"
+              name="paypal_order_id"
+              value={searchParams.paypal_order_id}
+              onChange={handleSearchChange}
+              placeholder="Enter your Paypal Order ID"
+            />
+          </Form.Group>
+          <p className="text-center" style={{ fontSize: "1.2rem" }}>
+            <strong>OR</strong>
+          </p>
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <strong>Option 2: Search by Email and Phone number</strong>
+            </Form.Label>
+            <Form.Control
+              type="email"
+              name="email"
+              value={searchParams.email}
+              onChange={handleSearchChange}
+              className="mb-2"
+              placeholder="Enter your email"
+            />
+            <Form.Control
+              type="tel"
+              name="phone"
+              value={searchParams.phone}
+              onChange={handleSearchChange}
+              placeholder="Enter your phone number"
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit" disabled={orderState.loading}>
+            {orderState.loading ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              "Search"
+            )}
+          </Button>
+        </Form>
       </Card>
 
       {orderState.error && (
